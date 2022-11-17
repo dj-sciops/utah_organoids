@@ -47,12 +47,7 @@ def read_qstring(fid):
         (c,) = struct.unpack("<H", fid.read(2))
         data.append(c)
 
-    if sys.version_info >= (3, 0):
-        a = "".join([chr(c) for c in data])
-    else:
-        a = "".join([unichr(c) for c in data])
-
-    return a
+    return "".join(chr(c) for c in data)
 
 
 def read_header(fid):
