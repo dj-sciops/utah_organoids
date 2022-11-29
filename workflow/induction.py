@@ -8,7 +8,7 @@ if "custom" not in dj.config:
 
 db_prefix = dj.config["custom"].get("database.prefix", "")
 
-schema = dj.schema(db_prefix + "protocol")
+schema = dj.schema(db_prefix + "induction")
 
 
 @schema
