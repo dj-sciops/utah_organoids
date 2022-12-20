@@ -1,0 +1,348 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1563pt" height="398pt" viewBox="0.00 0.00 1562.50 398.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 394)">
+<polygon fill="white" stroke="none" points="-4,4 -4,-394 1558.5,-394 1558.5,4 -4,4"/>
+<!-- induction.InductionCultureCondition -->
+<g id="node1" class="node">
+<title>induction.InductionCultureCondition</title>
+<g id="a_node1"><a xlink:title="→ induction.InductionCultureinduction_condition_date ------------------------------induction_step       media_change=null    density=null         discontinued=null    → [nullable] induction.Supplement→ [nullable] induction.Media→ [nullable] induction.Substrateinduction_condition_note=&quot;&quot; ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="373,-35 165,-35 165,0 373,0 373,-35"/>
+<text text-anchor="start" x="173" y="-15.4" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">induction.InductionCultureCondition</text>
+</a>
+</g>
+</g>
+<!-- induction.InductionDNA -->
+<g id="node2" class="node">
+<title>induction.InductionDNA</title>
+<g id="a_node2"><a xlink:title="→ induction.InductionCulture------------------------------g_dna                ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="311.5,-106 168.5,-106 168.5,-71 311.5,-71 311.5,-106"/>
+<text text-anchor="middle" x="240" y="-85.4" font-family="arial" font-size="12.00" fill="darkgreen">induction.InductionDNA</text>
+</a>
+</g>
+</g>
+<!-- induction.Substrate -->
+<g id="node3" class="node">
+<title>induction.Substrate</title>
+<g id="a_node3"><a xlink:title="substrate            ">
+<polygon fill="#000000" fill-opacity="0.125490" stroke="none" points="597.5,-106 496.5,-106 496.5,-71 597.5,-71 597.5,-106"/>
+<text text-anchor="start" x="504.5" y="-87" font-family="arial" text-decoration="underline" font-size="10.00">induction.Substrate</text>
+</a>
+</g>
+</g>
+<!-- induction.Substrate&#45;&gt;induction.InductionCultureCondition -->
+<g id="edge1" class="edge">
+<title>induction.Substrate-&gt;induction.InductionCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M496.29,-73.43C493.15,-72.6 490.03,-71.78 487,-71 438.18,-58.41 382.97,-45.13 340.32,-35.07"/>
+</g>
+<!-- induction.OrganoidCultureCondition -->
+<g id="node6" class="node">
+<title>induction.OrganoidCultureCondition</title>
+<g id="a_node6"><a xlink:title="→ induction.OrganoidCultureorganoid_condition_date ------------------------------organoid_relative_date → [nullable] induction.Supplement→ [nullable] induction.Media→ [nullable] induction.Substrateorganoid_condition_note=&quot;&quot; ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="818.5,-35 609.5,-35 609.5,0 818.5,0 818.5,-35"/>
+<text text-anchor="start" x="617.5" y="-15.4" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">induction.OrganoidCultureCondition</text>
+</a>
+</g>
+</g>
+<!-- induction.Substrate&#45;&gt;induction.OrganoidCultureCondition -->
+<g id="edge2" class="edge">
+<title>induction.Substrate-&gt;induction.OrganoidCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M587,-70.97C613.34,-60.09 647.7,-45.89 674.04,-35.01"/>
+</g>
+<!-- induction.RosetteCultureCondition -->
+<g id="node12" class="node">
+<title>induction.RosetteCultureCondition</title>
+<g id="a_node12"><a xlink:title="→ induction.RosetteCulturerosette_condition_date ------------------------------rosette_relative_date → [nullable] induction.Supplement→ [nullable] induction.Media→ [nullable] induction.Substraterosette_condition_note=&quot;&quot; ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="591,-35 391,-35 391,0 591,0 591,-35"/>
+<text text-anchor="start" x="399" y="-15.4" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">induction.RosetteCultureCondition</text>
+</a>
+</g>
+</g>
+<!-- induction.Substrate&#45;&gt;induction.RosetteCultureCondition -->
+<g id="edge3" class="edge">
+<title>induction.Substrate-&gt;induction.RosetteCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M533.44,-70.8C524.64,-59.95 513.21,-45.87 504.43,-35.05"/>
+</g>
+<!-- induction.Supplement -->
+<g id="node4" class="node">
+<title>induction.Supplement</title>
+<g id="a_node4"><a xlink:title="supplement           concentration        ">
+<polygon fill="#000000" fill-opacity="0.125490" stroke="none" points="478,-106 368,-106 368,-71 478,-71 478,-106"/>
+<text text-anchor="start" x="376" y="-87" font-family="arial" text-decoration="underline" font-size="10.00">induction.Supplement</text>
+</a>
+</g>
+</g>
+<!-- induction.Supplement&#45;&gt;induction.InductionCultureCondition -->
+<g id="edge4" class="edge">
+<title>induction.Supplement-&gt;induction.InductionCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M386.11,-70.97C361.82,-60.09 330.14,-45.89 305.85,-35.01"/>
+</g>
+<!-- induction.Supplement&#45;&gt;induction.OrganoidCultureCondition -->
+<g id="edge5" class="edge">
+<title>induction.Supplement-&gt;induction.OrganoidCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M478.14,-73.19C481.13,-72.44 484.1,-71.71 487,-71 538.08,-58.51 595.82,-45.17 640.28,-35.06"/>
+</g>
+<!-- induction.Supplement&#45;&gt;induction.RosetteCultureCondition -->
+<g id="edge6" class="edge">
+<title>induction.Supplement-&gt;induction.RosetteCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M439.46,-70.8C450.15,-59.95 464.03,-45.87 474.69,-35.05"/>
+</g>
+<!-- induction.OrganoidCulture.Organoid -->
+<g id="node5" class="node">
+<title>induction.OrganoidCulture.Organoid</title>
+<g id="a_node5"><a xlink:title="→ induction.OrganoidCulture→ induction.RosetteCulture">
+<polygon fill="none" stroke="none" points="1168.5,-27 997.5,-27 997.5,-8 1168.5,-8 1168.5,-27"/>
+<text text-anchor="middle" x="1083" y="-15" font-family="arial" font-size="10.00">induction.OrganoidCulture.Organoid</text>
+</a>
+</g>
+</g>
+<!-- induction.OrganoidCulture -->
+<g id="node7" class="node">
+<title>induction.OrganoidCulture</title>
+<g id="a_node7"><a xlink:title="→ differentiation.Inductionmatrigel_id          ------------------------------organoid_embed_date  ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="1161.5,-106 1004.5,-106 1004.5,-71 1161.5,-71 1161.5,-106"/>
+<text text-anchor="start" x="1012.5" y="-86.4" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">induction.OrganoidCulture</text>
+</a>
+</g>
+</g>
+<!-- induction.OrganoidCulture&#45;&gt;induction.OrganoidCulture.Organoid -->
+<g id="edge7" class="edge">
+<title>induction.OrganoidCulture-&gt;induction.OrganoidCulture.Organoid</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M1083,-70.8C1083,-57.08 1083,-38.19 1083,-27.27"/>
+</g>
+<!-- induction.OrganoidCulture&#45;&gt;induction.OrganoidCultureCondition -->
+<g id="edge8" class="edge">
+<title>induction.OrganoidCulture-&gt;induction.OrganoidCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M1004.29,-72.78C945.03,-61.7 863.76,-46.5 802.29,-35.01"/>
+</g>
+<!-- induction.OrganoidExperiment -->
+<g id="node20" class="node">
+<title>induction.OrganoidExperiment</title>
+<g id="a_node20"><a xlink:title="→ induction.OrganoidCulture------------------------------→ induction.Experimentexperiment_plan      ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="1554.5,-35 1375.5,-35 1375.5,0 1554.5,0 1554.5,-35"/>
+<text text-anchor="middle" x="1465" y="-14.4" font-family="arial" font-size="12.00" fill="darkgreen">induction.OrganoidExperiment</text>
+</a>
+</g>
+</g>
+<!-- induction.OrganoidCulture&#45;&gt;induction.OrganoidExperiment -->
+<g id="edge9" class="edge">
+<title>induction.OrganoidCulture-&gt;induction.OrganoidExperiment</title>
+<path fill="none" stroke="#000000" stroke-width="2" stroke-opacity="0.250980" d="M1161.69,-73.29C1223.82,-62.06 1310.56,-46.4 1375.37,-34.69"/>
+</g>
+<!-- induction.InductionCulture -->
+<g id="node8" class="node">
+<title>induction.InductionCulture</title>
+<g id="a_node8"><a xlink:title="→ differentiation.Inductiondish_id              ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="418,-177 262,-177 262,-142 418,-142 418,-177"/>
+<text text-anchor="start" x="270" y="-157.4" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">induction.InductionCulture</text>
+</a>
+</g>
+</g>
+<!-- induction.InductionCulture&#45;&gt;induction.InductionCultureCondition -->
+<g id="edge10" class="edge">
+<title>induction.InductionCulture-&gt;induction.InductionCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M338.87,-141.76C337.04,-123.41 332.28,-93.59 320,-71 312.54,-57.27 300.47,-44.61 289.95,-35.17"/>
+</g>
+<!-- induction.InductionCulture&#45;&gt;induction.InductionDNA -->
+<g id="edge11" class="edge">
+<title>induction.InductionCulture-&gt;induction.InductionDNA</title>
+<path fill="none" stroke="#000000" stroke-width="2" stroke-opacity="0.250980" d="M316.05,-141.97C300.33,-131.13 279.85,-117 264.1,-106.13"/>
+</g>
+<!-- induction.InductionImage -->
+<g id="node10" class="node">
+<title>induction.InductionImage</title>
+<g id="a_node10"><a xlink:title="→ induction.InductionCultureinduction_image_date ------------------------------directory            ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="150,-106 0,-106 0,-71 150,-71 150,-106"/>
+<text text-anchor="start" x="8" y="-86.4" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">induction.InductionImage</text>
+</a>
+</g>
+</g>
+<!-- induction.InductionCulture&#45;&gt;induction.InductionImage -->
+<g id="edge12" class="edge">
+<title>induction.InductionCulture-&gt;induction.InductionImage</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M276.53,-141.97C234.72,-131.09 180.2,-116.89 138.41,-106.01"/>
+</g>
+<!-- induction.RosetteCulture -->
+<g id="node17" class="node">
+<title>induction.RosetteCulture</title>
+<g id="a_node17"><a xlink:title="→ induction.InductionCultureplate_id             well_id              ------------------------------→ induction.Usersingle_rosette_date  induction_date       amplification_date   UNIQUE INDEX (induction_id, dish_id, plate_id, well_id)">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="982.5,-106 833.5,-106 833.5,-71 982.5,-71 982.5,-106"/>
+<text text-anchor="start" x="841.5" y="-86.4" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">induction.RosetteCulture</text>
+</a>
+</g>
+</g>
+<!-- induction.InductionCulture&#45;&gt;induction.RosetteCulture -->
+<g id="edge13" class="edge">
+<title>induction.InductionCulture-&gt;induction.RosetteCulture</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M418.08,-149.01C527.71,-135.7 725.84,-111.63 833.49,-98.55"/>
+</g>
+<!-- induction.RosetteImage -->
+<g id="node9" class="node">
+<title>induction.RosetteImage</title>
+<g id="a_node9"><a xlink:title="→ induction.RosetteCulturerosette_image_date   ------------------------------directory            ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="979.5,-35 836.5,-35 836.5,0 979.5,0 979.5,-35"/>
+<text text-anchor="start" x="844.5" y="-15.4" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">induction.RosetteImage</text>
+</a>
+</g>
+</g>
+<!-- differentiation.Induction.Sequence -->
+<g id="node11" class="node">
+<title>differentiation.Induction.Sequence</title>
+<g id="a_node11"><a xlink:title="→ differentiation.Inductionsequence             ">
+<polygon fill="none" stroke="none" points="244,-169 80,-169 80,-150 244,-150 244,-169"/>
+<text text-anchor="start" x="88" y="-158" font-family="arial" text-decoration="underline" font-size="10.00">differentiation.Induction.Sequence</text>
+</a>
+</g>
+</g>
+<!-- induction.Media -->
+<g id="node13" class="node">
+<title>induction.Media</title>
+<g id="a_node13"><a xlink:title="media                ">
+<polygon fill="#000000" fill-opacity="0.125490" stroke="none" points="700.5,-106 615.5,-106 615.5,-71 700.5,-71 700.5,-106"/>
+<text text-anchor="start" x="623.5" y="-87" font-family="arial" text-decoration="underline" font-size="10.00">induction.Media</text>
+</a>
+</g>
+</g>
+<!-- induction.Media&#45;&gt;induction.InductionCultureCondition -->
+<g id="edge14" class="edge">
+<title>induction.Media-&gt;induction.InductionCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M615.3,-73.38C612.16,-72.52 609.04,-71.72 606,-71 583.56,-65.72 463.68,-47.43 373.24,-33.92"/>
+</g>
+<!-- induction.Media&#45;&gt;induction.OrganoidCultureCondition -->
+<g id="edge15" class="edge">
+<title>induction.Media-&gt;induction.OrganoidCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M671.56,-70.8C680.36,-59.95 691.79,-45.87 700.57,-35.05"/>
+</g>
+<!-- induction.Media&#45;&gt;induction.RosetteCultureCondition -->
+<g id="edge16" class="edge">
+<title>induction.Media-&gt;induction.RosetteCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M618,-70.97C591.66,-60.09 557.3,-45.89 530.96,-35.01"/>
+</g>
+<!-- differentiation.Induction -->
+<g id="node14" class="node">
+<title>differentiation.Induction</title>
+<g id="a_node14"><a xlink:title="induction_id         ------------------------------→ differentiation.Family→ differentiation.Passage">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="232,-248 92,-248 92,-213 232,-213 232,-248"/>
+<text text-anchor="start" x="100" y="-228.4" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">differentiation.Induction</text>
+</a>
+</g>
+</g>
+<!-- differentiation.Induction&#45;&gt;induction.OrganoidCulture -->
+<g id="edge17" class="edge">
+<title>differentiation.Induction-&gt;induction.OrganoidCulture</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M232.21,-229.92C401.98,-230.13 830.53,-225.67 964,-177 1005.68,-161.8 1045.37,-127.18 1066.73,-106.34"/>
+</g>
+<!-- differentiation.Induction&#45;&gt;induction.InductionCulture -->
+<g id="edge18" class="edge">
+<title>differentiation.Induction-&gt;induction.InductionCulture</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M204.64,-212.97C232.71,-202.09 269.33,-187.89 297.4,-177.01"/>
+</g>
+<!-- differentiation.Induction&#45;&gt;differentiation.Induction.Sequence -->
+<g id="edge19" class="edge">
+<title>differentiation.Induction-&gt;differentiation.Induction.Sequence</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M162,-212.8C162,-199.08 162,-180.19 162,-169.27"/>
+</g>
+<!-- differentiation.Family -->
+<g id="node15" class="node">
+<title>differentiation.Family</title>
+<g id="a_node15"><a xlink:title="family               ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="150,-319 22,-319 22,-284 150,-284 150,-319"/>
+<text text-anchor="start" x="30" y="-299.4" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">differentiation.Family</text>
+</a>
+</g>
+</g>
+<!-- differentiation.Family&#45;&gt;differentiation.Induction -->
+<g id="edge20" class="edge">
+<title>differentiation.Family-&gt;differentiation.Induction</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M104.4,-283.8C116.35,-272.95 131.86,-258.87 143.77,-248.05"/>
+</g>
+<!-- induction.RosetteExperiment -->
+<g id="node16" class="node">
+<title>induction.RosetteExperiment</title>
+<g id="a_node16"><a xlink:title="→ induction.RosetteCulture------------------------------→ [nullable] induction.Experimentrosette_plan         ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="1357,-35 1187,-35 1187,0 1357,0 1357,-35"/>
+<text text-anchor="middle" x="1272" y="-14.4" font-family="arial" font-size="12.00" fill="darkgreen">induction.RosetteExperiment</text>
+</a>
+</g>
+</g>
+<!-- induction.RosetteCulture&#45;&gt;induction.OrganoidCulture.Organoid -->
+<g id="edge21" class="edge">
+<title>induction.RosetteCulture-&gt;induction.OrganoidCulture.Organoid</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M949.92,-70.97C984.9,-57.18 1033.38,-38.06 1061.14,-27.12"/>
+</g>
+<!-- induction.RosetteCulture&#45;&gt;induction.RosetteImage -->
+<g id="edge22" class="edge">
+<title>induction.RosetteCulture-&gt;induction.RosetteImage</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M908,-70.8C908,-59.95 908,-45.87 908,-35.05"/>
+</g>
+<!-- induction.RosetteCulture&#45;&gt;induction.RosetteCultureCondition -->
+<g id="edge23" class="edge">
+<title>induction.RosetteCulture-&gt;induction.RosetteCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M833.45,-75.16C765.75,-63.96 665.37,-47.35 590.77,-35.01"/>
+</g>
+<!-- induction.RosetteCulture&#45;&gt;induction.RosetteExperiment -->
+<g id="edge24" class="edge">
+<title>induction.RosetteCulture-&gt;induction.RosetteExperiment</title>
+<path fill="none" stroke="#000000" stroke-width="2" stroke-opacity="0.250980" d="M982.54,-73.37C1041.82,-62.13 1124.79,-46.4 1186.71,-34.67"/>
+</g>
+<!-- differentiation.Passage -->
+<g id="node18" class="node">
+<title>differentiation.Passage</title>
+<g id="a_node18"><a xlink:title="passage_id           → differentiation.Line">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="307.5,-319 168.5,-319 168.5,-284 307.5,-284 307.5,-319"/>
+<text text-anchor="start" x="176.5" y="-299.4" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">differentiation.Passage</text>
+</a>
+</g>
+</g>
+<!-- differentiation.Passage&#45;&gt;differentiation.Induction -->
+<g id="edge25" class="edge">
+<title>differentiation.Passage-&gt;differentiation.Induction</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M219.6,-283.8C207.65,-272.95 192.14,-258.87 180.23,-248.05"/>
+</g>
+<!-- induction.User -->
+<g id="node19" class="node">
+<title>induction.User</title>
+<g id="a_node19"><a xlink:title="user                 ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="955,-177 861,-177 861,-142 955,-142 955,-177"/>
+<text text-anchor="start" x="869" y="-157.4" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">induction.User</text>
+</a>
+</g>
+</g>
+<!-- induction.User&#45;&gt;induction.RosetteCulture -->
+<g id="edge26" class="edge">
+<title>induction.User-&gt;induction.RosetteCulture</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M908,-141.8C908,-130.95 908,-116.87 908,-106.05"/>
+</g>
+<!-- differentiation.Line -->
+<g id="node21" class="node">
+<title>differentiation.Line</title>
+<g id="a_node21"><a xlink:title="line                 ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="295.5,-390 180.5,-390 180.5,-355 295.5,-355 295.5,-390"/>
+<text text-anchor="start" x="188.5" y="-370.4" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">differentiation.Line</text>
+</a>
+</g>
+</g>
+<!-- differentiation.Line&#45;&gt;differentiation.Passage -->
+<g id="edge27" class="edge">
+<title>differentiation.Line-&gt;differentiation.Passage</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M238,-354.8C238,-343.95 238,-329.87 238,-319.05"/>
+</g>
+<!-- induction.Experiment -->
+<g id="node22" class="node">
+<title>induction.Experiment</title>
+<g id="a_node22"><a xlink:title="experiment_id        ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="1432.5,-106 1303.5,-106 1303.5,-71 1432.5,-71 1432.5,-106"/>
+<text text-anchor="start" x="1311.5" y="-86.4" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">induction.Experiment</text>
+</a>
+</g>
+</g>
+<!-- induction.Experiment&#45;&gt;induction.RosetteExperiment -->
+<g id="edge28" class="edge">
+<title>induction.Experiment-&gt;induction.RosetteExperiment</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M1344.76,-70.8C1329.67,-59.95 1310.08,-45.87 1295.02,-35.05"/>
+</g>
+<!-- induction.Experiment&#45;&gt;induction.OrganoidExperiment -->
+<g id="edge29" class="edge">
+<title>induction.Experiment-&gt;induction.OrganoidExperiment</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M1391.48,-70.8C1406.73,-59.95 1426.53,-45.87 1441.74,-35.05"/>
+</g>
+</g>
+</svg>
