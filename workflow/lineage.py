@@ -6,29 +6,7 @@ if "custom" not in dj.config:
 
 db_prefix = dj.config["custom"].get("database.prefix", "")
 
-schema = dj.schema(db_prefix + "differentiation")
-
-
-@schema
-class Family(dj.Manual):
-    definition = """
-    family: varchar(8)
-    """
-
-
-@schema
-class Line(dj.Manual):
-    definition = """
-    line: varchar(8)
-    """
-
-
-@schema
-class Passage(dj.Manual):
-    definition = """
-    passage_id: int
-    -> Line
-    """
+schema = dj.schema(db_prefix + "lineage")
 
 
 @schema
@@ -36,8 +14,9 @@ class Induction(dj.Manual):
     definition = """
     induction_id: varchar(8)     # de-identified code
     ---
-    -> Family
-    -> Passage
+    family: varchar(8)
+    line: varchar(8)
+    passage_id: int
     """
 
     class Sequence(dj.Part):
