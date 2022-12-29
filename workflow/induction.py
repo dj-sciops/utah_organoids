@@ -1,6 +1,6 @@
 import datajoint as dj
 
-from . import differentiation
+from . import lineage
 
 schema = dj.schema()
 if "custom" not in dj.config:
@@ -21,7 +21,7 @@ class User(dj.Manual):
 @schema
 class InductionCulture(dj.Manual):
     definition = """
-    -> differentiation.Induction
+    -> lineage.Induction
     dish_id: int
     """
 
@@ -57,10 +57,10 @@ class InductionCultureMedia(dj.Manual):
     -> InductionCultureCondition
     media_name: varchar(32)
     ---
-    media_amount: int        # Percentage of the media used in the culture, 1%-100%
+    media_amount: int        # Percentage of the media used in the culture, 1-100
     manufacturer='': varchar(32)
     catalog_number='': varchar(32)
-    media_note='':
+    media_note='': varchar(256)
     """
 
 
@@ -142,10 +142,10 @@ class RosetteCultureMedia(dj.Manual):
     -> RosetteCultureCondition
     media_name: varchar(32)
     ---
-    media_amount: int        # Percentage of the media used in the culture, 1%-100%
+    media_amount: int        # Percentage of the media used in the culture, 1-100
     manufacturer='': varchar(32)
     catalog_number='': varchar(32)
-    media_note='':
+    media_note='': varchar(256)
     """
 
 
@@ -180,7 +180,7 @@ class RosetteExperiment(dj.Manual):
 @schema
 class OrganoidCulture(dj.Manual):
     definition = """ # Organoids embedded in matrigel 10cm dish for up to 5 months
-    -> differentiation.Induction
+    -> lineage.Induction
     matrigel_id: int
     ---
     organoid_embed_date: date
@@ -223,10 +223,10 @@ class OrganoidCultureMedia(dj.Manual):
     -> OrganoidCultureCondition
     media_name: varchar(32)
     ---
-    media_amount: int        # Percentage of the media used in the culture, 1%-100%
+    media_amount: int        # Percentage of the media used in the culture, 1-100
     manufacturer='': varchar(32)
     catalog_number='': varchar(32)
-    media_note='':
+    media_note='': varchar(256)
     """
 
 
