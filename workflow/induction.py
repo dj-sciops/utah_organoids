@@ -92,13 +92,6 @@ class InductionDNA(dj.Manual):
 
 
 @schema
-class Experiment(dj.Manual):
-    definition = """
-    experiment_id: varchar(8) # i.e. rosette id and organoid id, e.g. AS001
-    """
-
-
-@schema
 class RosetteCulture(dj.Manual):
     definition = """
     -> InductionCulture
@@ -164,6 +157,13 @@ class RosetteImage(dj.Manual):
     rosette_image_date: date
     ---
     directory: varchar(256) # Images stored with "code_datetime" naming convention.
+    """
+
+
+@schema
+class Experiment(dj.Manual):
+    definition = """
+    experiment_id: varchar(8) # i.e. rosette id and organoid id, e.g. AS001
     """
 
 
