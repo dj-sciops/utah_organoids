@@ -1,29 +1,26 @@
 from element_array_ephys import probe
-from element_array_ephys import ephys_no_curation as ephys, ephys_report
-
+from element_array_ephys import ephys_no_curation as ephys
 from .induction import OrganoidExperiment
 
 from workflow import db_prefix
 from workflow.pipeline import reference
-from workflow.utils.paths import (
-    get_ephys_root_data_dir,
-    get_processed_root_data_dir,
-    get_session_directory,
-)
+from workflow.pipeline.core import session
 
-__all__ = ["ephys", "ephys_report", "probe"]
+
+__all__ = ["ephys", "probe"]
 
 
 # ------------- Activate "ephys" schema -------------
 
 SkullReference = reference.SkullReference
-Session = OrganoidExperiment
+Session = session.Session
+# Session = OrganoidExperiment
 
 if not ephys.schema.is_activated():
     ephys.activate(db_prefix + "ephys", db_prefix + "probe", linking_module=__name__)
 
 
-# add a default kilosort2 paramset
+# Add a default kilosort2 paramset
 
 default_params = {
     "fs": 30000,

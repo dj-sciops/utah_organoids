@@ -1,7 +1,7 @@
 import datajoint as dj
 from element_animal import subject
 from element_lab import lab
-from element_session import session_with_id as session
+from element_session import session_with_datetime as session
 
 from workflow import db_prefix
 
