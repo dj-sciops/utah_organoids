@@ -2,7 +2,7 @@ from pathlib import Path
 from workflow import db_prefix
 
 import datajoint as dj
-
+from element_interface import intan_loader as intan
 from workflow.pipeline import session, ephys, probe
 from workflow.utils import get_ephys_root_data_dir
 
@@ -29,7 +29,9 @@ class EphysIngestion(dj.Imported):
             raise FileNotFoundError(
             f"Ephys data path {data_path} doesn't exist."
             )
-
+        
+        # Load the data
+        data = intan.load_rhs(data_path)
         
         # Populate ephys.AcquisitionSoftware
         ephys.AcquisitionSoftware.insert1(
@@ -48,14 +50,75 @@ class EphysIngestion(dj.Imported):
             {"insertion_number": insertion_number, "probe": probe_id} | key
         )
 
-        # Read from probe.ProbeType.Electrode to get location of electrode site for the session probe.
-        electrodes, x_coords, y_coords = (
-            probe.ProbeType.Electrode & f"probe_type = '{probe_type}'"
-        ).fetch("electrode", "x_coord", "y_coord")
+        # Fill in dummy parameters including probe config
+        probe_type = "NeuroNexus-01"
+        probe_id = "001"
+        acq_software = "Intan"
+        recording_datetime = (session.Session & key).fetch1("session_datetime")
 
-        location_to_electrode_site_map: dict[tuple, int] = dict(
-            zip(zip(x_coords, y_coords), electrodes)
-        )  # {(0, 0) : 10}
+
+        # Populate ephys.AcquisitionSoftware
+        ephys.AcquisitionSoftware.insert1(
+            {"acq_software": acq_software},
+            skip_duplicates=True,
+        )
+
+        probe_config = dict(
+                        probe_type=probe_type,
+                        site_count_per_shank=16,
+                        col_spacing=None,
+                        row_spacing=20,
+                        white_spacing=None,
+                        col_count_per_shank=1,
+                        shank_count=2,
+                        shank_spacing=100,
+                    )
+
+        electrode_layouts = probe.build_electrode_layouts(**probe_config)
+        probe.ProbeType.insert1(dict(probe_type=probe_type), skip_duplicates=True)
+        probe.ProbeType.Electrode.insert(electrode_layouts, skip_duplicates=True)
+
+        probe.Probe.insert1(dict(
+                        probe=probe_id,
+                        probe_type=probe_type,
+                        probe_comment="dummy probe"
+            ), skip_duplicates=True)
+
+
+        # Get used electrodes for the session
+        used_electrodes = [''.join(channel.split("-")[1:]) for channel in data["recordings"].keys() if channel.startswith("amp")]
+        [e for e in used_electrodes ]
+
+        used_electrodes = [int(e[1:]) if e.startswith("B") else int(e[1:]) + 16 for e in used_electrodes]
+
+        # Populate probe.ElectrodeConfig and probe.ElectrodeConfig.Electrode
+        econfig = ephys.generate_electrode_config(
+            probe_type=probe_type,
+            electrode_keys=[
+                {"probe_type": probe_type, "electrode": e}
+                for e in used_electrodes
+            ],
+        )
+
+        # Populate ephys.ProbeInsertion
+        insertion_number = 0  # just for this session
+        ephys.ProbeInsertion.insert1(
+            {"insertion_number": insertion_number, "probe": probe_id} | key, skip_duplicates=True
+        )
+
+        # Populate ephys.EphysRecording
+        ephys.EphysRecording.insert1(
+            {
+                "insertion_number": insertion_number,
+                "acq_software": acq_software,
+                "sampling_rate": data["header"]["sample_rate"],
+                "recording_datetime": recording_datetime,
+                "recording_duration": data["timestamps"][-1],
+            }
+            | key
+            | econfig,
+            allow_direct_insert=True,
+        )
 
 
 
