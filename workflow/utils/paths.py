@@ -2,9 +2,8 @@ import datajoint as dj
 import pathlib
 
 
-
-def get_raw_root_data_dir():
-    return dj.config.get("custom", {}).get("raw_root_data_dir", None)
+def get_ephys_root_data_dir():
+    return dj.config.get("custom", {}).get("ephys_root_data_dir", None)
 
 
 def get_session_directory(session_key: dict) -> str:
