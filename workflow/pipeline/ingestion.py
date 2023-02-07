@@ -2,6 +2,8 @@ from pathlib import Path
 from workflow import db_prefix
 
 import datajoint as dj
+import numpy as np
+
 from element_interface import intan_loader as intan
 from workflow.pipeline import session, ephys, probe
 from workflow.utils import get_ephys_root_data_dir
@@ -86,7 +88,7 @@ class EphysIngestion(dj.Imported):
 
 
         # Get used electrodes for the session
-        used_electrodes = [''.join(channel.split("-")[1:]) for channel in data["recordings"].keys() if channel.startswith("amp")]
+        used_electrodes = [''.join(channel.split("-")[1:]) for channel in data["recordings"] if channel.startswith("amp")]
         [e for e in used_electrodes ]
 
         used_electrodes = [int(e[1:]) if e.startswith("B") else int(e[1:]) + 16 for e in used_electrodes]
@@ -119,7 +121,37 @@ class EphysIngestion(dj.Imported):
             | econfig,
             allow_direct_insert=True,
         )
+        
+        # Populate ephys.LFP
+        ephys_recording_key = (ephys.EphysRecording & key).fetch1("KEY")
 
+        ephys.LFP.insert1(
+        ephys_recording_key | 
+            {
+            "lfp_sampling_rate": data["header"]["sample_rate"],
+            "lfp_time_stamps": data["timestamps"],
+            "lfp_mean": np.mean(np.array([data["recordings"][d] for d in data["recordings"] if d.startswith("amp")]), axis=0)
+            }, 
+            allow_direct_insert=True
+        )
+        
+        # Populate ephys.LFP.Electrode
+        electrode_query = (
+            probe.ProbeType.Electrode
+            * probe.ElectrodeConfig.Electrode
+            * ephys.EphysRecording
+            & key 
+        )
+        
+        lfp_channel_ind = [electrode for electrode in data["recordings"] if electrode.startswith("amp")]
+
+        for recorded_site in lfp_channel_ind:
+            ephys.LFP.Electrode.insert1(
+                ephys_recording_key |
+                ephys_recording_key |
+                {"lfp": data["recordings"][recorded_site]},
+            allow_direct_insert=True
+            )
 
 
 def insert_clustering_parameters() -> None:
