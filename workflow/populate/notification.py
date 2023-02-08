@@ -1,11 +1,9 @@
 import datajoint as dj
-from datajoint_utilities.dj_notification.notifier.email_notifier import (
-    HubSpotTemplateEmailNotifier,
-)
-from datajoint_utilities.dj_notification.notifier.slack_notifier import (
-    SlackWebhookNotifier,
-)
 from datajoint_utilities.dj_notification.loghandler import PopulateHandler
+from datajoint_utilities.dj_notification.notifier.email_notifier import \
+    HubSpotTemplateEmailNotifier
+from datajoint_utilities.dj_notification.notifier.slack_notifier import \
+    SlackWebhookNotifier
 
 from workflow import db_prefix
 from workflow.pipeline import ephys

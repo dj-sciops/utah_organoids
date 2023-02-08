@@ -1,9 +1,10 @@
-import datajoint as dj
 import pathlib
 
-from datajoint_utilities.dj_worker import DataJointWorker, WorkerLog, ErrorLog
+import datajoint as dj
+from datajoint_utilities.dj_worker import DataJointWorker, ErrorLog, WorkerLog
+
 from workflow import db_prefix, worker_max_idled_cycle
-from workflow.pipeline import session, ephys, ephys_report, get_session_status
+from workflow.pipeline import ephys, ephys_report, get_session_status, session
 from workflow.support import ephys_support
 from workflow.utils.paths import get_session_directory
 

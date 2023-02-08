@@ -1,5 +1,7 @@
-import datajoint as dj
 from pathlib import Path
+
+import datajoint as dj
+
 from workflow.pipeline import induction
 
 

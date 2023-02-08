@@ -1,4 +1,4 @@
-from workflow.pipeline import session, ephys
+from workflow.pipeline import ephys, session
 
 
 def get_session_status():
