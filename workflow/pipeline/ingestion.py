@@ -94,7 +94,6 @@ class EphysIngestion(dj.Imported):
                 lfp_amp_concat = lfp_amp
             else: 
                 lfp_amp_concat = np.hstack((lfp_amp_concat, lfp_amp))
-            break
         
         # Populate ephys.EphysRecording
         ephys.EphysRecording.insert1(
