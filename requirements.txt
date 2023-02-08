@@ -9,3 +9,4 @@ ecephys-spike-sorting @ git+https://github.com/datajoint-company/ecephys_spike_s
 
 element-array-ephys-support @ git+ssh://git@github.com/dj-sciops/element-array-ephys-support.git
 plotly
+graphviz
