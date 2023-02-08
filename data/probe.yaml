@@ -1,11 +1,12 @@
 maker: NeuroNexus
 type: A4x16-Poly2-5mm-23s-200-177-H64LP_30mm
-serial_number: 001
-site_count_per_shank: 16
-col_spacing: None
-row_spacing: 20
-white_spacing: None
-col_count_per_shank: 1
-shank_count: 2
-shank_spacing: 100
-note: "dummy probe"
+comment: "dummy probe"
+config:
+  serial_number: "001" # probe_id
+  site_count_per_shank: 16
+  col_spacing: None
+  row_spacing: 20
+  white_spacing: None
+  col_count_per_shank: 1
+  shank_count: 2
+  shank_spacing: 100
