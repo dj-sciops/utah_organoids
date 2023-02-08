@@ -1,12 +1,15 @@
-from pathlib import Path
-from workflow import db_prefix
+
+from datetime import datetime, timedelta
+from typing import Any
 
 import datajoint as dj
 import numpy as np
-
 from element_interface import intan_loader as intan
-from workflow.pipeline import session, ephys, probe
-from workflow.utils import get_ephys_root_data_dir
+from element_interface.utils import find_full_path
+
+from workflow import db_prefix
+from workflow.pipeline import ephys, induction, probe
+from workflow.utils import get_ephys_root_data_dir, get_session_dir
 
 logger = dj.logger  
 schema = dj.schema(db_prefix + "ingestion")
@@ -17,121 +20,104 @@ class EphysIngestion(dj.Imported):
     definition = """
     -> session.Session
     ---
-    ingestion_time  : DATETIME    # Stores the start time of ephys data ingestion
+    ingestion_time  : datetime    # Stores the start time of ephys data ingestion
     """
 
     def make(self, key):
-
-        # Fetch data file
-        data_path = (
-                Path(get_ephys_root_data_dir()) / (session.SessionDirectory & key).fetch1("session_dir")
-            )
-
-        if not data_path.exists():
-            raise FileNotFoundError(
-            f"Ephys data path {data_path} doesn't exist."
-            )
         
-        # Load the data
-        data = intan.load_rhs(data_path)
+        # Fetch probe meta information from the session directory
+        probe_info = get_probe_info(key)
         
-        # Populate ephys.AcquisitionSoftware
-        ephys.AcquisitionSoftware.insert1(
-            {"acq_software": "Intan"},
-            skip_duplicates=True,
-        )
-
         # Populate ephys.ProbeInsertion
         # Fill in dummy probe config
-        probe_type = "NeuroNexus-01"
-        probe_id = "001"
-
-        logger.info(f"Populating ephys.ProbeInsertion for <{key}>")
-        insertion_number = 0  # just for this session
+        insertion_number = 0
         ephys.ProbeInsertion.insert1(
-            {"insertion_number": insertion_number, "probe": probe_id} | key
+            key | {"insertion_number": insertion_number, "probe": probe_info["serial_number"]}, skip_duplicates=True
         )
 
+        # Populate the probe schema
         # Fill in dummy parameters including probe config
-        probe_type = "NeuroNexus-01"
-        probe_id = "001"
-        acq_software = "Intan"
-        recording_datetime = (session.Session & key).fetch1("session_datetime")
-
-
-        # Populate ephys.AcquisitionSoftware
-        ephys.AcquisitionSoftware.insert1(
-            {"acq_software": acq_software},
-            skip_duplicates=True,
-        )
-
-        probe_config = dict(
-                        probe_type=probe_type,
-                        site_count_per_shank=16,
-                        col_spacing=None,
-                        row_spacing=20,
-                        white_spacing=None,
-                        col_count_per_shank=1,
-                        shank_count=2,
-                        shank_spacing=100,
-                    )
-
-        electrode_layouts = probe.build_electrode_layouts(**probe_config)
-        probe.ProbeType.insert1(dict(probe_type=probe_type), skip_duplicates=True)
+        electrode_layouts = probe.build_electrode_layouts({"probe_type": probe_info["type"]} | probe_info["config"])
+        
+        probe.ProbeType.insert1(dict(probe_type=probe_info["type"]), skip_duplicates=True)
+        
         probe.ProbeType.Electrode.insert(electrode_layouts, skip_duplicates=True)
 
         probe.Probe.insert1(dict(
-                        probe=probe_id,
-                        probe_type=probe_type,
-                        probe_comment="dummy probe"
+                        probe=probe_info["serial_number"],
+                        probe_type=probe_info["type"],
+                        probe_comment=probe_info["comment"]
             ), skip_duplicates=True)
 
+        # Get the session data path
+        session_dir = get_session_dir(key)
+        data_dirs = sorted(list(session_dir.glob("[!probe]*")))
 
-        # Get used electrodes for the session
-        used_electrodes = [''.join(channel.split("-")[1:]) for channel in data["recordings"] if channel.startswith("amp")]
+        # Load data
+        timestamp_concat = lfp_mean_concat =  lfp_amp_concat = np.array([], dtype=np.float64)  # initialize
 
-        used_electrodes = [int(e[1:]) if e.startswith("B") else int(e[1:]) + 16 for e in used_electrodes]
+        for dir_ in data_dirs:
+            
+            data = intan.load_rhs(dir_)
 
-        # Populate probe.ElectrodeConfig and probe.ElectrodeConfig.Electrode
-        econfig = ephys.generate_electrode_config(
-            probe_type=probe_type,
-            electrode_keys=[
-                {"probe_type": probe_type, "electrode": e}
-                for e in used_electrodes
-            ],
-        )
+            if "base" in str(dir_): # Get meta information from the baseline session
+                lfp_channels = [ch for ch in data["recordings"] if ch.startswith("amp")]
+                lfp_sampling_rate = data["header"]["sample_rate"]
+            
+                # Get used channels for the session
+                used_channels = [''.join(channel.split("-")[1:]) for channel in data["recordings"] if channel.startswith("amp")]
 
-        # Populate ephys.ProbeInsertion
-        insertion_number = 0  # just for this session
-        ephys.ProbeInsertion.insert1(
-            {"insertion_number": insertion_number, "probe": probe_id} | key, skip_duplicates=True
-        )
+                used_channels = [int(channel[1:]) if channel.startswith("B") else int(channel[1:]) + 16 for channel in used_channels]  # this had to be hard-coded for now.
 
+                # Populate probe.ElectrodeConfig and probe.ElectrodeConfig.Electrode
+                econfig = ephys.generate_electrode_config(
+                    probe_type=probe_info["type"],
+                    electrode_keys=[
+                        {"probe_type": probe_info["type"], "electrode": c}
+                        for c in used_channels
+                    ],
+                )
+            
+            # Concatenate timestamps
+            start_time = ''.join(dir_.stem.split("_")[-2:])
+            start_time = datetime.strptime(
+            start_time, "%y%m%d%H%M%S")
+            timestamps = start_time + data["timestamps"] * timedelta(seconds=1)
+            timestamp_concat = np.concatenate((timestamp_concat, timestamps), axis=0)
+            
+            # Concatenate LFP traces
+            lfp_amp = np.array([data["recordings"][d] for d in data["recordings"] if d.startswith("amp")])
+            lfp_channels = [ch for ch in data["recordings"] if ch.startswith("amp")]
+            lfp_mean = np.mean(lfp_amp, axis=0)
+            lfp_mean_concat = np.concatenate((lfp_mean_concat, lfp_mean), axis=0)
+            if lfp_amp_concat.size == 0:
+                lfp_amp_concat = lfp_amp
+            else: 
+                lfp_amp_concat = np.hstack((lfp_amp_concat, lfp_amp))
+            break
+        
         # Populate ephys.EphysRecording
         ephys.EphysRecording.insert1(
-            {
+            key | econfig | {
                 "insertion_number": insertion_number,
-                "acq_software": acq_software,
-                "sampling_rate": data["header"]["sample_rate"],
-                "recording_datetime": recording_datetime,
-                "recording_duration": data["timestamps"][-1],
-            }
-            | key
-            | econfig,
+                "acq_software": "Intan",
+                "sampling_rate": lfp_sampling_rate,
+                "recording_datetime": (induction.OrganoidExperiment() & key).fetch1("experiment_datetime"),
+                "recording_duration": (timestamp_concat[-1] - timestamp_concat[0]).total_seconds(),
+            },
             allow_direct_insert=True,
         )
         
         # Populate ephys.LFP
-        ephys_recording_key = (ephys.EphysRecording & key).fetch1("KEY")
-
         ephys.LFP.insert1(
-        ephys_recording_key | 
-            {
-            "lfp_sampling_rate": data["header"]["sample_rate"],
-            "lfp_time_stamps": data["timestamps"],
-            "lfp_mean": np.mean(np.array([data["recordings"][d] for d in data["recordings"] if d.startswith("amp")]), axis=0)
-            }, 
-            allow_direct_insert=True
+            key | 
+                {
+                "insertion_number": insertion_number,
+                "lfp_sampling_rate": lfp_sampling_rate,
+                "lfp_time_stamps": timestamp_concat,
+                "lfp_mean": lfp_mean_concat, 
+                },
+                allow_direct_insert=True
         )
         
         # Populate ephys.LFP.Electrode
@@ -144,40 +130,31 @@ class EphysIngestion(dj.Imported):
         
         lfp_channel_ind = [electrode for electrode in data["recordings"] if electrode.startswith("amp")]
 
-        for recorded_site in lfp_channel_ind:
+        for recorded_site in lfp_channels:
             ephys.LFP.Electrode.insert1(
-                ephys_recording_key |
-                ephys_recording_key |
+                key |
                 {"lfp": data["recordings"][recorded_site]},
             allow_direct_insert=True
             )
 
 
-def insert_clustering_parameters() -> None:
-    """This is for SpyKingCircus"""
-    clustering_method = "SpyKingCircus"
 
-    ephys.ClusteringMethod.insert1(
-        {
-            "clustering_method": clustering_method,
-            "clustering_method_desc": f"{clustering_method} clustering method",
-        },
-        skip_duplicates=True,
-    )
 
-    # Populate ephys.ClusterQualityLabel
-    ephys.ClusterQualityLabel.insert1(
-        {
-            "cluster_quality_label": "n.a.",
-            "cluster_quality_description": "quality label not available",
-        },  # quality information does not exist
-        skip_duplicates=True,
-    )
+def get_probe_info(session_key: dict[str, Any]) -> dict[str, Any]:
+    """Find probe.yaml in a session folder
 
-    # Populate ephys.ClusteringParamSet
-    ephys.ClusteringParamSet.insert_new_params(
-        paramset_idx=0,
-        clustering_method=clustering_method,
-        paramset_desc=f"Default {clustering_method} parameter set",
-        params={},  # currently, no clustering parameters available
-    )
+    Args:
+        session_key (dict[str, Any]): session key
+
+    Returns:
+        dict[str, Any]: probe meta information
+    """
+    import yaml
+
+    experiment_dir = find_full_path(get_ephys_root_data_dir(), get_session_dir(session_key))
+    
+    probe_meta_file = next(experiment_dir.glob("probe*"))
+
+    with open(probe_meta_file, "r") as f:
+        return yaml.safe_load(f)
+    
