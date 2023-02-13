@@ -66,12 +66,14 @@ class EphysIngestion(dj.Imported):
             [], dtype=np.float64
         )  # initialize
 
+        ds_factor = 10  # downsampling factor
+        
         for dir_ in data_dirs:
             data = intan.load_rhs(dir_)
 
             if "base" in str(dir_):  # Get meta information from the baseline session
                 lfp_channels = [ch for ch in data["recordings"] if ch.startswith("amp")]
-                lfp_sampling_rate = data["header"]["sample_rate"]
+                lfp_sampling_rate = data["header"]["sample_rate"] / ds_factor
 
                 # Get used channels for the session
                 used_channels = [
@@ -99,13 +101,13 @@ class EphysIngestion(dj.Imported):
             # Concatenate timestamps
             start_time = "".join(dir_.stem.split("_")[-2:])
             start_time = datetime.strptime(start_time, "%y%m%d%H%M%S")
-            timestamps = start_time + data["timestamps"] * timedelta(seconds=1)
+            timestamps = start_time + downsample_arr(data["timestamps"], ds_factor=ds_factor) * timedelta(seconds=1)
             timestamp_concat = np.concatenate((timestamp_concat, timestamps), axis=0)
 
             # Concatenate LFP traces
             lfp_amp = np.array(
                 [
-                    data["recordings"][d]
+                    downsample_arr(data["recordings"][d], ds_factor=ds_factor) 
                     for d in data["recordings"]
                     if d.startswith("amp")
                 ]
@@ -161,7 +163,7 @@ class EphysIngestion(dj.Imported):
 
         for recorded_site in lfp_channels:
             ephys.LFP.Electrode.insert1(
-                {**key, "lfp": data["recordings"][recorded_site]},
+                {**key, "lfp": downsample_arr(data["recordings"][recorded_site], ds_factor=ds_factor)},
                 allow_direct_insert=True,
             )
 
