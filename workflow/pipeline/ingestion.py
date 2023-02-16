@@ -93,7 +93,9 @@ class EphysIngestion(dj.Imported):
             # Concatenate timestamps
             start_time = "".join(file.stem.split("_")[-2:])
             start_time = datetime.strptime(start_time, "%y%m%d%H%M%S")
-            timestamps = start_time + (data["t"] - data["t"][0])[::DS_FACTOR] * timedelta(seconds=1)
+            timestamps = start_time + (data["t"] - data["t"][0])[
+                ::DS_FACTOR
+            ] * timedelta(seconds=1)
             timestamp_concat = np.concatenate((timestamp_concat, timestamps), axis=0)
 
             # Concatenate LFP traces
@@ -145,7 +147,7 @@ class EphysIngestion(dj.Imported):
         probe_electrodes = {q["electrode"]: q for q in electrode_query}
 
         # Populate ephys.LFP.Electrode
-        for ch, lfp_trace in zip(lfp_channels, lfp_amp):
+        for ch, lfp_trace in zip(lfp_channels, lfp_amp_concat):
             ephys.LFP.Electrode.insert1(
                 {
                     **key,
@@ -155,3 +157,10 @@ class EphysIngestion(dj.Imported):
                 },
                 allow_direct_insert=True,
             )
+
+        # Save concatenated LFP in "continuous.dat" for cluster cutting in the same session folder.
+        continuous_file = session_dir / "continuous.dat"
+        memmap_arr = np.memmap(
+            continuous_file, dtype=np.float64, mode="w+", shape=lfp_amp_concat.shape
+        )
+        memmap_arr[:] = lfp_amp_concat[:]
