@@ -6,7 +6,7 @@ from element_interface.intanloader import load_file
 
 from workflow import db_prefix
 from workflow.pipeline import ephys, induction, probe
-from workflow.utils.helpers import downsample_1d_arr, get_probe_info
+from workflow.utils.helpers import get_probe_info
 from workflow.utils.paths import get_session_dir
 
 logger = dj.logger
@@ -58,7 +58,7 @@ class EphysIngestion(dj.Imported):
 
         # Get the session data path
         session_dir = get_session_dir(key)
-        data_files = sorted(list(session_dir.glob("[!probe]*")))
+        data_files = sorted(list(session_dir.glob("*.rhs")))
 
         # Load data
         timestamp_concat = lfp_mean_concat = lfp_amp_concat = np.array(
@@ -93,18 +93,11 @@ class EphysIngestion(dj.Imported):
             # Concatenate timestamps
             start_time = "".join(file.stem.split("_")[-2:])
             start_time = datetime.strptime(start_time, "%y%m%d%H%M%S")
-            timestamps = start_time + downsample_1d_arr(
-                data["t"] - data["t"][0], ds_factor=DS_FACTOR
-            ) * timedelta(seconds=1)
+            timestamps = start_time + (data["t"] - data["t"][0])[::DS_FACTOR] * timedelta(seconds=1)
             timestamp_concat = np.concatenate((timestamp_concat, timestamps), axis=0)
 
             # Concatenate LFP traces
-            lfp_amp = np.array(
-                [
-                    downsample_1d_arr(d, ds_factor=DS_FACTOR)
-                    for d in data["amplifier_data"]
-                ]
-            )
+            lfp_amp = data["amplifier_data"][:, ::DS_FACTOR]
 
             del data
 

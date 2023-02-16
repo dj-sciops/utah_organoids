@@ -40,40 +40,10 @@ def array_generator(arr: np.array, chunk_size: int = 10):
     start_ind = end_ind = 0
 
     while end_ind < arr.shape[0]:
+        
         end_ind += chunk_size
-        new_arr = arr[start_ind:end_ind]
 
-        yield new_arr
+        yield arr[start_ind:end_ind]
 
         start_ind += chunk_size
 
-
-def downsample_1d_arr(
-    arr: np.array, ds_factor: int = 10, selected_ind: int = 0
-) -> np.array:
-    """Function for downsampling an 1d array
-
-    Args:
-        arr (np.array): 1d numpy array
-        ds_factor (int, optional): Downsampling factor. Defaults to 10. If 10, 20kHz will be downsampled to 2kHz.
-        selected_ind (int, optional): Select which index to keep. Defaults to 0 (first index).
-
-    Returns:
-        np.array: Final downsampled array.
-    """
-    if arr.shape[0] < ds_factor:
-        raise NotImplementedError("Array is smaller than the downsampling factor")
-
-    if arr.ndim != 1:
-        raise NotImplementedError("Only 1d array is accepted.")
-
-    assert selected_ind < ds_factor, "selected_ind should be < ds_factor"
-
-    downsampled_arr = []
-
-    for new_arr in array_generator(arr, chunk_size=ds_factor):
-        if new_arr.shape[0] <= selected_ind:
-            selected_ind = -1
-        downsampled_arr.append(new_arr[selected_ind])
-
-    return np.array(downsampled_arr)
