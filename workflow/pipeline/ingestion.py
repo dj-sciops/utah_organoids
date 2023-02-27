@@ -1,13 +1,15 @@
 from datetime import datetime, timedelta
+from pathlib import Path
 
 import datajoint as dj
 import numpy as np
-from element_interface.intanloader import load_file
+import yaml
+from intanrhsreader import load_file
 
 from workflow import db_prefix
 from workflow.pipeline import ephys, induction, probe
 from workflow.utils.helpers import get_probe_info
-from workflow.utils.paths import get_session_dir
+from workflow.utils.paths import get_ephys_root_data_dir, get_session_directory
 
 logger = dj.logger
 schema = dj.schema(db_prefix + "ingestion")
@@ -22,42 +24,10 @@ class EphysIngestion(dj.Imported):
     """
 
     def make(self, key):
-        # Fetch probe meta information from the session directory
-        probe_info = get_probe_info(key)
-
-        # Populate the probe schema
-        # Fill in dummy parameters including probe config
-        electrode_layouts = probe.build_electrode_layouts(**probe_info["config"])
-
-        probe.ProbeType.insert1(
-            dict(probe_type=probe_info["type"]), skip_duplicates=True
-        )
-
-        probe.ProbeType.Electrode.insert(electrode_layouts, skip_duplicates=True)
-
-        probe.Probe.insert1(
-            dict(
-                probe=probe_info["serial_number"],
-                probe_type=probe_info["type"],
-                probe_comment=probe_info["comment"],
-            ),
-            skip_duplicates=True,
-        )
-
-        # Populate ephys.ProbeInsertion
-        # Fill in dummy probe config
-        insertion_number = 0
-        ephys.ProbeInsertion.insert1(
-            {
-                **key,
-                "insertion_number": insertion_number,
-                "probe": probe_info["serial_number"],
-            },
-            skip_duplicates=True,
-        )
-
         # Get the session data path
-        session_dir = get_session_dir(key)
+        session_dir = get_session_directory(
+            key
+        )  #! fetch the ephys raw table, restricted by the start and end of the ephys session
         data_files = sorted(list(session_dir.glob("*.rhs")))
 
         # Load data
@@ -79,7 +49,7 @@ class EphysIngestion(dj.Imported):
                 ]
 
                 # Populate probe.ElectrodeConfig and probe.ElectrodeConfig.Electrode
-                econfig = ephys.generate_electrode_config(
+                econfig = probe.generate_electrode_config(
                     probe_type=probe_info["type"],
                     electrode_keys=[
                         {
@@ -157,3 +127,47 @@ class EphysIngestion(dj.Imported):
                 },
                 allow_direct_insert=True,
             )
+
+
+def ingest_probe() -> None:
+    """Fetch probe meta information from probe.yaml file in the ephys root directory to populate probe schema."""
+
+    probe_info = get_probe_info()
+
+    for probe_config_id, probe_config in probe_info.items():
+        probe.ProbeType.insert1(
+            dict(probe_type=probe_config["config"]["probe_type"]), skip_duplicates=True
+        )
+
+        electrode_layouts = probe.build_electrode_layouts(**probe_config["config"])
+
+        probe.ProbeType.Electrode.insert(electrode_layouts, skip_duplicates=True)
+
+        probe.Probe.insert1(
+            dict(
+                probe=probe_config["serial_number"],
+                probe_type=probe_config["config"]["probe_type"],
+                probe_comment=probe_config["comment"],
+            ),
+            skip_duplicates=True,
+        )
+
+        probe.ElectrodeConfig.insert1(
+            {
+                "probe_config_id": probe_config_id,
+                "probe_type": probe_config["config"]["probe_type"],
+                "channel_to_electrode_map": probe_config["channel_to_electrode_map"],
+            }
+        )
+
+        probe.ElectrodeConfig.Electrode.insert(
+            [
+                {
+                    "probe_config_id": probe_config_id,
+                    "probe_type": probe_config["config"]["probe_type"],
+                    "electrode": e,
+                    "channel_id": ch,
+                }
+                for ch, e in probe_config["channel_to_electrode_map"].items()
+            ]
+        )
