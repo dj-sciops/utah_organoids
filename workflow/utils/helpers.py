@@ -6,7 +6,6 @@ import numpy as np
 import yaml
 from element_interface.intanloader import load_file
 from element_interface.utils import find_full_path
-
 from workflow.pipeline import probe
 from workflow.utils.paths import get_ephys_root_data_dir, get_session_directory
 
@@ -22,6 +21,50 @@ def get_probe_info() -> list[dict]:
     else:
         with open(probe_meta_file, "r") as f:
             return yaml.safe_load(f)
+
+
+def ingest_probe() -> None:
+    """Fetch probe meta information from probe.yaml file in the ephys root directory to populate probe schema."""
+
+    probe_info = get_probe_info()
+
+    for probe_config_id, probe_config in probe_info.items():
+        probe.ProbeType.insert1(
+            dict(probe_type=probe_config["config"]["probe_type"]), skip_duplicates=True
+        )
+
+        electrode_layouts = probe.build_electrode_layouts(**probe_config["config"])
+
+        probe.ProbeType.Electrode.insert(electrode_layouts, skip_duplicates=True)
+
+        probe.Probe.insert1(
+            dict(
+                probe=probe_config["serial_number"],
+                probe_type=probe_config["config"]["probe_type"],
+                probe_comment=probe_config["comment"],
+            ),
+            skip_duplicates=True,
+        )
+
+        probe.ElectrodeConfig.insert1(
+            {
+                "probe_config_id": probe_config_id,
+                "probe_type": probe_config["config"]["probe_type"],
+                "channel_to_electrode_map": probe_config["channel_to_electrode_map"],
+            }
+        )
+
+        probe.ElectrodeConfig.Electrode.insert(
+            [
+                {
+                    "probe_config_id": probe_config_id,
+                    "probe_type": probe_config["config"]["probe_type"],
+                    "electrode": e,
+                    "channel_id": ch,
+                }
+                for ch, e in probe_config["channel_to_electrode_map"].items()
+            ]
+        )
 
 
 def array_generator(arr: np.array, chunk_size: int = 10):
