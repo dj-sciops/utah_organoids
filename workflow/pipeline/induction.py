@@ -244,7 +244,8 @@ class OrganoidExperiment(dj.Manual):
     -> OrganoidCulture
     ---
     -> Experiment
-    experiment_datetime: datetime
-    experiment_dir:      varchar(256) # Path to the data directory
+    experiment_datetime: datetime    # Experiment start time
+    ---
+    experiment_dir:      varchar(256) # Path to the subject data directory
     experiment_plan:     varchar(64) # ephys, tracing
     """

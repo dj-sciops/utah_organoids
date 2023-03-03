@@ -5,7 +5,7 @@ from workflow.utils.paths import (get_ephys_root_data_dir,
                                   get_processed_root_data_dir,
                                   get_session_directory)
 
-from .lineage import Induction as Subject
+from .induction import OrganoidExperiment as Subject
 
 __all__ = ["ephys", "probe"]
 
