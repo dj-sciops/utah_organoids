@@ -242,7 +242,6 @@ class OrganoidCultureSubstrate(dj.Manual):
 class OrganoidExperiment(dj.Manual):
     definition = """
     -> OrganoidCulture
-    ---
     -> Experiment
     experiment_datetime: datetime    # Experiment start time
     ---
