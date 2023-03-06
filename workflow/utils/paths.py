@@ -20,7 +20,7 @@ def get_processed_root_data_dir() -> Path:
     return Path(data_dir) if data_dir else None
 
 
-def get_session_directory(experiment_key: dict) -> Path:
+def get_subject_directory(experiment_key: dict) -> Path:
     return Path(
         get_ephys_root_data_dir()
         / (induction.OrganoidExperiment & experiment_key).fetch1("experiment_dir")
