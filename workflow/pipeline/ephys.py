@@ -1,61 +1,16 @@
+from element_array_ephys import ephys_organoids as ephys
 from element_array_ephys import probe
-from element_array_ephys import ephys_no_curation as ephys, ephys_report
-from element_event import trial, event
-from .induction import OrganoidExperiment
-from . import reference
-
 from workflow import db_prefix
-from workflow.pipeline import reference
 from workflow.utils.paths import (
     get_ephys_root_data_dir,
     get_processed_root_data_dir,
-    get_session_dir,
+    get_session_directory,
 )
 
-__all__ = ["ephys", "ephys_report", "probe", "trial", "event", "Session"]
+from .induction import OrganoidExperiment as Subject
 
-# Activate "event" and "trial" schema ---------------------------------
-Session = OrganoidExperiment
+__all__ = ["ephys", "probe"]
 
-trial.activate(db_prefix + "trial", db_prefix + "event", linking_module=__name__)
-
-# ------------- Activate "ephys" schema -------------
-SkullReference = reference.SkullReference
 
 if not ephys.schema.is_activated():
     ephys.activate(db_prefix + "ephys", db_prefix + "probe", linking_module=__name__)
-
-
-# add a default kilosort2 paramset
-
-default_params = {
-    "fs": 30000,
-    "fshigh": 150,
-    "minfr_goodchannels": 0.1,
-    "Th": [10, 4],
-    "lam": 10,
-    "AUCsplit": 0.9,
-    "minFR": 0.02,
-    "momentum": [20, 400],
-    "sigmaMask": 30,
-    "ThPre": 8,
-    "spkTh": -6,
-    "reorder": 1,
-    "nskip": 25,
-    "GPU": 1,
-    "Nfilt": 1024,
-    "nfilt_factor": 4,
-    "ntbuff": 64,
-    "whiteningRange": 32,
-    "nSkipCov": 25,
-    "scaleproc": 200,
-    "nPCs": 3,
-    "useRAM": 0,
-}
-
-ephys.ClusteringParamSet.insert_new_params(
-    clustering_method="kilosort2.5",
-    paramset_desc="Default parameter set for Kilosort2.5",
-    params=default_params,
-    paramset_idx=0,
-)

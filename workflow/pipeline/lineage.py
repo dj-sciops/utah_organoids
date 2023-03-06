@@ -19,9 +19,9 @@ class Induction(dj.Manual):
     passage_id: int
     """
 
-
-class InductionSequence(dj.Part):
+@schema
+class InductionSequence(dj.Manual):
     definition = """
-    induction_id: varchar(8)
+    -> Induction
     sequence: varchar(8)
     """

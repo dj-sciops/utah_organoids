@@ -1,4 +1,7 @@
-from . import induction, lineage, reference, analysis, behavior
-from .ephys import ephys, ephys_report, probe, trial, event, Session
+import os
 
-# from .status import get_session_status
+from . import induction, lineage
+from .ephys import ephys, probe
+
+os.environ["DJ_SUPPORT_FILEPATH_MANAGEMENT"] = "TRUE"
+os.environ["EXTERN_STORE_PROTOCOL"] = "file"

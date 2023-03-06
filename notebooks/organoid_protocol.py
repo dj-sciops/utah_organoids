@@ -13,11 +13,12 @@
 #     name: python3
 # ---
 
-import os 
-if os.path.basename(os.getcwd()) == "notebooks": os.chdir("..")
+import os
+
+if os.path.basename(os.getcwd()) == "notebooks":
+    os.chdir("..")
 import datajoint as dj
-from workflow import lineage, induction
+
+from workflow import induction, lineage
 
 dj.Diagram(lineage) + dj.Diagram(induction)
-
-
