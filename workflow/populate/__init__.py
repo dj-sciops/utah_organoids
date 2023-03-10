@@ -1,1 +1,1 @@
-from .worker import WorkerLog, ErrorLog
+from .worker import ErrorLog, WorkerLog

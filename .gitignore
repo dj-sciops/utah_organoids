@@ -118,7 +118,7 @@ Diagram.ipynb
 run.env
 
 # vscode
-.vscode/settings.json
+.vscode/*
 
 # ssh
 *.ssh

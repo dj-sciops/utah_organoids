@@ -1,12 +1,8 @@
 import sys
+
 from datajoint_utilities.dj_worker import parse_args
 
-from workflow.populate.worker import (
-    standard_worker,
-    spike_sorting_worker,
-    logger,
-)
-
+from workflow.populate.worker import logger, spike_sorting_worker, standard_worker
 
 # -------- Run process(s) --------
 configured_workers = {
@@ -26,9 +22,7 @@ def run(**kwargs):
         worker.run()
     except Exception:
         logger.exception(
-            "Worker '{}' encountered an exception:".format(
-                kwargs["worker_name"]
-            )
+            "Worker '{}' encountered an exception:".format(kwargs["worker_name"])
         )
 
 
