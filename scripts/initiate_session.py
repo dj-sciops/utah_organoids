@@ -60,6 +60,6 @@ def upload_session_data(session_dir_relpath):
                 (f.relative_to(LOCAL_OUTBOX).as_posix(), f.stat().st_size)
             )
 
-    if local_files.sort() == remote_files.sort():
+    if set(local_files) == set(remote_files):
         return True
         # Delete the local files.
