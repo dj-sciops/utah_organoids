@@ -22,7 +22,8 @@ def upload_session_data(session_dir_relpath):
         session_dir_relpath (str): Relative session path
 
     Example:
-        If the data is located at "/Users/tolgadincer/DJRepos/utah_organoids/inbox/O6/.."
+        If the data is located at "/Users/tolgadincer/DJRepos/utah_organoids/O6/..",
+        where LOCAL_OUTBOX="/Users/tolgadincer/DJRepos/utah_organoids/", then run:
         >>> upload_session_data('O6')
     """
     session_dir_relpath = pathlib.Path(session_dir_relpath).as_posix()
