@@ -11,3 +11,4 @@ element-array-ephys-support @ git+ssh://git@github.com/dj-sciops/element-array-e
 intanrhsreader @ git+https://github.com/datajoint/intanrhsreader.git
 plotly
 graphviz
+djsciops
