@@ -61,4 +61,4 @@ def upload_session_data(session_dir_relpath):
 
     if set(local_files) == set(remote_files):
         return True
-        # Delete the local files.
+        # TODO: Delete the local files.
