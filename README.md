@@ -32,7 +32,10 @@ DataJoint workflow for the Organoids project at the University of Utah
     dj.config.save_global()
     ```
 1. Configure `config.yaml` file
-    1. Run `djsciops config` to locate `config.yaml` file
+    1. Run the following to locate `config.yaml` file
+        ```
+        djsciops config
+        ```
     2. Update the following values
         1. `account_id`
         4. `client_id`
