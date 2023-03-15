@@ -40,3 +40,11 @@ DataJoint workflow for the Organoids project at the University of Utah
         6. `bucket`
         7. `role`
         8. `local_outbox`
+
+## Data upload
+
+1. Run data upload for a single session
+    ```python
+    from workflow import upload_session_data
+    upload_session_data('<Relative path of data>')
+    ```
