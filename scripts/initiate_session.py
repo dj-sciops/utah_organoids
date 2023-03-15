@@ -6,7 +6,7 @@ import djsciops.authentication as dj_auth
 """INSTRUCTIONS TO RUN THIS CODE
 1. Install djsciops package: “pip install djsciops”
 2. Run “djsciops config” on the terminal to get the path of config.yaml.
-3. Make sure account_id, client_id, issuer, bucket, and role have the correct values.
+3. Make sure that config.yaml have the correct values for account_id, client_id, issuer, bucket, and role.
 4. Make sure there is a local_outbox in the config.yaml.
 """
 
