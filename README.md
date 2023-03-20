@@ -47,7 +47,17 @@ DataJoint workflow for the Organoids project at the University of Utah
 
 ## Data upload
 
-1. Run data upload for a single session
+1. On Windows, open the command prompt application.
+    ```
+    Anaconda Prompt (miniconda3)
+    ```
+
+1. Activate conda environment.
+    ```bash
+    conda activate djutah
+    ```
+
+1. Run data upload for a single session.
     ```python
     from workflow import upload_session_data
     upload_session_data('<Relative path of data>')
