@@ -47,7 +47,7 @@ DataJoint workflow for the Organoids project at the University of Utah
 
 ## Data upload
 
-1. On Windows, open the command prompt application.
+1. On Windows, open the command prompt application by searching for the following:
     ```
     Anaconda Prompt (miniconda3)
     ```
