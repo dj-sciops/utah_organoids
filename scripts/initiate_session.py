@@ -68,5 +68,14 @@ def upload_session_data(session_dir_relpath):
             )
 
     if set(local_files) == set(remote_files):
+        # create and upload an empty textfile named "upload_completed.txt" to signal the completion of this uploading round
+        upload_completed_fp = local_session_dir / "upload_completed.txt"
+        upload_completed_fp.touch()
+        dj_axon.upload_files(
+            source=upload_completed_fp.as_posix(),
+            destination=dj_session_dir,
+            session=s3_session,
+            s3_bucket=s3_bucket,
+        )
         return True
         # TODO: Delete the local files.

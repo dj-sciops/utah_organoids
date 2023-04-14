@@ -7,16 +7,16 @@ from datajoint_utilities.dj_notification.notifier.slack_notifier import (
     SlackWebhookNotifier,
 )
 
-from workflow import db_prefix
+from workflow import DB_PREFIX
 from workflow.pipeline import ephys
 
 __all__ = ["logger"]
 logger = dj.logger
 
-org_name, workflow_name, _ = db_prefix.split("_")
+org_name, workflow_name, _ = DB_PREFIX.split("_")
 org_vm = dj.create_virtual_module("org_vm", f"{org_name}_admin_workflow")
 
-workflow_key = (org_vm.Workflow & {"wf_db_prefix": db_prefix}).fetch1("KEY")
+workflow_key = (org_vm.Workflow & {"wf_DB_PREFIX": DB_PREFIX}).fetch1("KEY")
 
 if hasattr(org_vm, "WorkflowNotification") and (
     org_vm.WorkflowNotification & workflow_key

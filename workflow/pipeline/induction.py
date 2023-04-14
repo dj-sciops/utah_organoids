@@ -5,9 +5,9 @@ from . import lineage
 if "custom" not in dj.config:
     dj.config["custom"] = {}
 
-db_prefix = dj.config["custom"].get("database.prefix", "")
+DB_PREFIX = dj.config["custom"].get("database.prefix", "")
 
-schema = dj.schema(db_prefix + "induction")
+schema = dj.schema(DB_PREFIX + "induction")
 
 
 @schema
