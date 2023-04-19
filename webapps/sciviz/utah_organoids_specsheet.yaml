@@ -128,7 +128,7 @@ SciViz: # top level tab
                 - utah_organoids_lineage.LineageSequence
               map:
                 - type: table
-                  input: induction_id
+                  input: Induction ID
                   destination: utah_organoids_lineage.Lineage
     Induction:
       route: /inductionviewer
@@ -646,7 +646,7 @@ SciViz: # top level tab
                 - utah_organoids_induction.OrganoidCulture
               map:
                 - type: table
-                  input: induction_id
+                  input: Induction ID
                   destination: utah_organoids_lineage.Lineage
             Organoid Embedding:
               route: /organoidembeddingform
