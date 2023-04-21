@@ -1,6 +1,5 @@
 import datajoint as dj
 
-schema = dj.schema()
 if "custom" not in dj.config:
     dj.config["custom"] = {}
 
@@ -10,7 +9,7 @@ schema = dj.schema(DB_PREFIX + "lineage")
 
 
 @schema
-class Induction(dj.Manual):
+class Lineage(dj.Manual):
     definition = """
     induction_id: varchar(8)     # de-identified code
     ---
@@ -20,8 +19,8 @@ class Induction(dj.Manual):
     """
 
 @schema
-class InductionSequence(dj.Manual):
+class LineageSequence(dj.Manual):
     definition = """
-    -> Induction
+    -> Lineage
     sequence: varchar(8)
     """

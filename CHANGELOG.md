@@ -3,8 +3,10 @@
 Observes [Semantic Versioning](https://semver.org/spec/v2.0.0.html) standard and
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) convention.
 
-## [0.1.0] - Unreleased
+## 0.1.1 - Unreleased
 
-First pass
++ Fix - SciViz mapping input
 
-[0.1.0]: https://github.com/dj-sciops/utah-organoids/releases/tag/0.1.0
+## 0.1.0 - Unreleased
+
++ First pass

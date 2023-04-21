@@ -2,7 +2,6 @@ import datajoint as dj
 
 from . import lineage
 
-schema = dj.schema()
 if "custom" not in dj.config:
     dj.config["custom"] = {}
 
@@ -21,7 +20,7 @@ class User(dj.Manual):
 @schema
 class InductionCulture(dj.Manual):
     definition = """
-    -> lineage.Induction
+    -> lineage.Lineage
     dish_id: int
     """
 
@@ -73,7 +72,7 @@ class InductionCultureSubstrate(dj.Manual):
 
 
 @schema
-class InductionImage(dj.Manual):
+class InductionCultureImage(dj.Manual):
     definition = """
     -> InductionCulture
     induction_image_date: date
@@ -83,11 +82,11 @@ class InductionImage(dj.Manual):
 
 
 @schema
-class InductionDNA(dj.Manual):
+class InductionCultureDNA(dj.Manual):
     definition = """
     -> InductionCulture
     ---
-    g_dna: bool # Was genomic DNA collected?
+    genomic_dna: bool # Was genomic DNA collected?
     """
 
 
@@ -151,7 +150,7 @@ class RosetteCultureSubstrate(dj.Manual):
 
 
 @schema
-class RosetteImage(dj.Manual):
+class RosetteCultureImage(dj.Manual):
     definition = """
     -> RosetteCulture
     rosette_image_date: date
@@ -171,16 +170,18 @@ class Experiment(dj.Manual):
 class RosetteExperiment(dj.Manual):
     definition = """
     -> RosetteCulture
+    experiment_datetime: datetime    # Experiment start time
     ---
     -> [nullable] Experiment
-    rosette_plan: varchar(64) # mrna lysate, oct, protein lysate, or matrigel embedding
+    experiment_plan: varchar(64) # mrna lysate, oct, protein lysate, or matrigel embedding
+    experiment_directory='':      varchar(256) # Path to the subject data directory
     """
 
 
 @schema
 class OrganoidCulture(dj.Manual):
     definition = """ # Organoids embedded in matrigel 10cm dish for up to 5 months
-    -> lineage.Induction
+    -> lineage.Lineage
     matrigel_id: int
     ---
     organoid_embed_date: date
@@ -245,6 +246,6 @@ class OrganoidExperiment(dj.Manual):
     -> Experiment
     experiment_datetime: datetime    # Experiment start time
     ---
-    experiment_dir:      varchar(256) # Path to the subject data directory
+    experiment_directory:      varchar(256) # Path to the subject data directory
     experiment_plan:     varchar(64) # ephys, tracing
     """

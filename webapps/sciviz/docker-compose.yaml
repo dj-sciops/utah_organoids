@@ -1,0 +1,57 @@
+# docker-compose up
+#
+# Access using fakeservices.datajoint.io
+version: '2.4'
+services:
+  pharus:
+    cpus: 0.50
+    mem_limit: 512m
+    image: datajoint/pharus:0.8.4
+    environment:
+      PHARUS_SPEC_PATH: /main/specs/utah_organoids_specsheet.yaml
+      PHARUS_MODE: DEV  # DEV | PROD
+    volumes:
+      - ./utah_organoids_specsheet.yaml:/main/specs/utah_organoids_specsheet.yaml
+    command:
+      - sh
+      - -c
+      - |
+        pharus
+    networks:
+      - main
+  sci-viz:
+    cpus: 2.0
+    mem_limit: 8g
+    image: datajoint/sci-viz:2.2.1
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_DJSCIVIZ_BACKEND_PREFIX=/api
+      - DJSCIVIZ_SPEC_PATH=/home/node/specs/utah_organoids_specsheet.yaml
+    volumes:
+      - ./utah_organoids_specsheet.yaml:/home/node/specs/utah_organoids_specsheet.yaml
+    user: "root"
+    working_dir: "/app"
+    command:
+      - sh 
+      - -lc
+      - |
+        sh /home/node/sci-viz-hotreload-prod.sh
+    networks:
+      - main
+  fakeservices.datajoint.io:
+    image: datajoint/nginx:v0.2.4
+    environment:
+      - ADD_pharus_TYPE=REST
+      - ADD_pharus_ENDPOINT=pharus:5000
+      - ADD_pharus_PREFIX=/api
+      - ADD_sciviz_TYPE=REST
+      - ADD_sciviz_ENDPOINT=sci-viz:3000
+      - ADD_sciviz_PREFIX=/
+      - HTTPS_PASSTHRU=TRUE
+    ports:
+      - "443:443"
+      - "80:80"
+    networks:
+      - main
+networks:
+  main:
