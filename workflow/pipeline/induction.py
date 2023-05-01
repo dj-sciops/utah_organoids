@@ -56,7 +56,7 @@ class InductionCultureMedia(dj.Manual):
     -> InductionCultureCondition
     media_name: varchar(32)
     ---
-    media_amount: int        # Percentage of the media used in the culture, 1-100
+    percent_media_changed: int        # Percentage of the media used in the culture, 1-100
     manufacturer='': varchar(32)
     catalog_number='': varchar(32)
     media_note='': varchar(256)
