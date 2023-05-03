@@ -680,15 +680,15 @@ SciViz: # top level tab
                 - type: table
                   input: Rosette Culture Condition
                   destination: utah_organoids_induction.RosetteCultureCondition
-            Rosette Image:
-              route: /rosetteimageform
+            Rosette Culture Image:
+              route: /rosettecultureimageform
               x: 0
               y: 7
               height: 1
               width: 1
               type: form
               tables:
-                - utah_organoids_induction.RosetteImage
+                - utah_organoids_induction.RosetteCultureImage
               map:
                 - type: table
                   input: Rosette Culture
