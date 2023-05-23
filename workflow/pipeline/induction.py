@@ -100,9 +100,17 @@ class InductionCultureDNA(dj.Manual):
 
 @schema
 class PostInductionCulture(dj.Manual):
-    definition = """
+    definition = """ # Plate contains 6 wells
     -> InductionCulture
-    well_id: int
+    post_induction_plate_id: varchar(4)
+    """
+
+
+@schema
+class PostInductionCultureWell(dj.Manual):
+    definition = """ # Plate contains 6 wells
+    -> PostInductionCulture
+    post_induction_well_id: int
     """
 
 
