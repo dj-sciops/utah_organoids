@@ -162,17 +162,24 @@ class PostInductionCultureSubstrate(dj.Manual):
 
 @schema
 class RosetteCulture(dj.Manual):
-    definition = """
+    definition = """ Plate contains 96 wells (12 columns, 8 rows)
     -> PostInductionCulture
-    plate_id: varchar(4)
-    well_id: varchar(4)
+    rosette_plate_id: varchar(4)
     ---
     -> User
     single_rosette_date: date   # date for picking rosette
     induction_date: date
     amplification_date: date    # egf fgf treatment
 
-    unique index (induction_id, dish_id, plate_id, well_id)
+    unique index (induction_plate_id, post_induction_plate_id, rosette_plate_id)
+    """
+
+
+@schema
+class RosetteCultureWell(dj.Manual):
+    definition = """ Plate contains 96 wells (12 columns, 8 rows)
+    -> RosetteCulture
+    rosette_well_id: varchar(4)
     """
 
 
