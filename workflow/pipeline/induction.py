@@ -162,7 +162,7 @@ class PostInductionCultureSubstrate(dj.Manual):
 
 @schema
 class RosetteCulture(dj.Manual):
-    definition = """ Plate contains 96 wells (12 columns, 8 rows)
+    definition = """ # Plate contains 96 wells (12 columns, 8 rows)
     -> PostInductionCulture
     rosette_plate_id: varchar(4)
     ---
@@ -177,7 +177,7 @@ class RosetteCulture(dj.Manual):
 
 @schema
 class RosetteCultureWell(dj.Manual):
-    definition = """ Plate contains 96 wells (12 columns, 8 rows)
+    definition = """ # Plate contains 96 wells (12 columns, 8 rows)
     -> RosetteCulture
     rosette_well_id: varchar(4)
     """

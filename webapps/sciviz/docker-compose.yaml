@@ -1,4 +1,4 @@
-# docker compose up
+# docker compose -f webapps/sciviz/docker-compose.yaml up
 #
 # Access using fakeservices.datajoint.io
 version: '2.4'
