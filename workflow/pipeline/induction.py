@@ -189,7 +189,7 @@ class RosetteCultureCondition(dj.Manual):
     -> RosetteCulture
     rosette_condition_date: date
     ---
-    rosette_relative_date: varchar(4)
+    rosette_relative_day: int # relative to date for picking rosette
     rosette_condition_note='': varchar(256)
     """
 
@@ -198,7 +198,7 @@ class RosetteCultureCondition(dj.Manual):
 class RosetteCultureSupplement(dj.Manual):
     definition = """
     -> RosetteCultureCondition
-    supplement: varchar(32)
+    supplement: enum('EGF+FGF', 'EGF', 'FGF')
     ---
     concentration: int 
     units: enum('micromolar', 'ng/mL')
@@ -259,7 +259,7 @@ class RosetteExperiment(dj.Manual):
 class OrganoidCulture(dj.Manual):
     definition = """ # Organoids embedded in matrigel 10cm dish for up to 5 months
     -> lineage.Lineage
-    matrigel_id: int
+    organoid_plate_id: int
     ---
     organoid_embed_date: date
     """
@@ -269,7 +269,7 @@ class OrganoidCulture(dj.Manual):
 class OrganoidEmbedding(dj.Manual):
     definition = """ # Each organoid is in a matrigel droplet, and multiple organoids are embedded in dish
     -> OrganoidCulture
-    -> RosetteCulture
+    -> RosetteCultureWell
     """
 
 
@@ -279,7 +279,7 @@ class OrganoidCultureCondition(dj.Manual):
     -> OrganoidCulture
     organoid_condition_date: date
     ---
-    organoid_relative_date: varchar(4)
+    organoid_relative_day=null: int # relative to date for organoid embedding
     organoid_condition_note='': varchar(256)
     """
 
