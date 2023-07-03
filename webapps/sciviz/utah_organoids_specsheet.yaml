@@ -1051,7 +1051,7 @@ SciViz: # top level tab
                   input: Rosette Culture
                   destination: utah_organoids_induction.RosetteCulture
                 - type: table
-                  input: experiment_id
+                  input: experiment id
                   destination: utah_organoids_induction.Experiment
             Organoid Experiment:
               route: /organoidexperimentform
@@ -1067,5 +1067,5 @@ SciViz: # top level tab
                   input: Organoid Culture
                   destination: utah_organoids_induction.OrganoidCulture
                 - type: table
-                  input: experiment_id
+                  input: experiment id
                   destination: utah_organoids_induction.Experiment
