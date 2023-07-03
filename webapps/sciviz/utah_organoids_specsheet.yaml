@@ -703,7 +703,7 @@ SciViz: # top level tab
               route: /rosetteculturewellform
               x: 0
               y: 2
-              height: 2
+              height: 1
               width: 1
               type: form
               tables:
@@ -715,7 +715,7 @@ SciViz: # top level tab
             Rosette Culture Condition:
               route: /rosettecultureconditionform
               x: 0
-              y: 4
+              y: 3
               height: 1
               width: 1
               type: form
@@ -728,7 +728,7 @@ SciViz: # top level tab
             Rosette Culture Supplement:
               route: /rosetteculturesupplementform
               x: 0
-              y: 5
+              y: 4
               height: 1
               width: 1
               type: form
@@ -741,7 +741,7 @@ SciViz: # top level tab
             Rosette Culture Media:
               route: /rosetteculturemediaform
               x: 0
-              y: 6
+              y: 5
               height: 2
               width: 1
               type: form
@@ -754,7 +754,7 @@ SciViz: # top level tab
             Rosette Culture Substrate:
               route: /rosetteculturesubstrateform
               x: 0
-              y: 8
+              y: 7
               height: 1
               width: 1
               type: form
@@ -767,7 +767,7 @@ SciViz: # top level tab
             Rosette Culture Image:
               route: /rosettecultureimageform
               x: 0
-              y: 9
+              y: 8
               height: 1
               width: 1
               type: form
