@@ -21,7 +21,7 @@ class User(dj.Manual):
 class InductionCulture(dj.Manual):
     definition = """ # Plate contains 6 wells
     -> lineage.Lineage
-    induction_plate_id: varchar(4)
+    induction_plate_id: varchar(16)
     """
 
 
@@ -102,7 +102,7 @@ class InductionCultureDNA(dj.Manual):
 class PostInductionCulture(dj.Manual):
     definition = """ # Plate contains 6 wells
     -> InductionCulture
-    post_induction_plate_id: varchar(4)
+    post_induction_plate_id: varchar(16)
     """
 
 
@@ -164,7 +164,7 @@ class PostInductionCultureSubstrate(dj.Manual):
 class RosetteCulture(dj.Manual):
     definition = """ # Plate contains 96 wells (12 columns, 8 rows)
     -> PostInductionCulture
-    rosette_plate_id: varchar(4)
+    rosette_plate_id: varchar(16)
     ---
     -> User
     single_rosette_date: date   # date for picking rosette
