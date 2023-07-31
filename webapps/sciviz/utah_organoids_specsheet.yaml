@@ -11,7 +11,7 @@ SciViz: # top level tab
         grid5:
           type: fixed
           columns: 1
-          row_height: 680
+          row_height: 520
           components:
             comp:
               x: 0
@@ -21,16 +21,16 @@ SciViz: # top level tab
               type: markdown
               text: |
                 # Welcome to the data viewer for the Utah Organoids data pipeline
-                As of May 1, 2023, this pipeline and data viewer are in the testing phase.
+                As of August 1, 2023, this pipeline and data viewer are in the testing phase.
     User:
-      route: /userviewer
+      route: /user
       grids:
         grid5:
           type: fixed
           columns: 1
-          row_height: 300
+          row_height: 520
           components:
-            User:
+            User Table:
               route: /userviewer
               link: /userdetails
               x: 0
@@ -45,32 +45,24 @@ SciViz: # top level tab
                 def dj_query(utah_organoids_induction):
                     table = utah_organoids_induction.User
                     return dict(query=(table), fetch_args=[])
-    User Form:
-      route: /userform
-      grids:
-        grid5:
-          type: fixed
-          columns: 1
-          row_height: 300
-          components:
-            User:
+            User Form:
               route: /userform
               x: 0
-              y: 0
+              y: 1
               height: 1
               width: 1
               type: form
               tables:
                 - utah_organoids_induction.User
     Lineage:
-      route: /lineageviewer
+      route: /lineage
       grids:
         grid5:
           type: fixed
           columns: 1
-          row_height: 300
+          row_height: 520
           components:
-            Lineage:
+            Lineage Table:
               route: /lineageviewer
               link: /lineagedetails
               x: 0
@@ -85,11 +77,20 @@ SciViz: # top level tab
                 def dj_query(utah_organoids_lineage):
                     table = utah_organoids_lineage.Lineage
                     return dict(query=(table), fetch_args=[])
-            Lineage Sequence:
+            Lineage Form:
+              route: /lineageform
+              x: 0
+              y: 1
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - utah_organoids_lineage.Lineage
+            Lineage Sequence Table:
               route: /lineagesequenceviewer
               link: /lineagesequencedetails
               x: 0
-              y: 1
+              y: 2
               height: 1
               width: 1
               type: antd-table
@@ -100,27 +101,10 @@ SciViz: # top level tab
                 def dj_query(utah_organoids_lineage):
                     table = utah_organoids_lineage.LineageSequence
                     return dict(query=(table), fetch_args=[])
-    Lineage Form:
-      route: /lineageform
-      grids:
-        grid5:
-          type: fixed
-          columns: 1
-          row_height: 300
-          components:
-            Lineage:
-              route: /lineageform
-              x: 0
-              y: 0
-              height: 1
-              width: 1
-              type: form
-              tables:
-                - utah_organoids_lineage.Lineage
-            Lineage Sequence:
+            Lineage Sequence Form:
               route: /lineagesequenceform
               x: 0
-              y: 1
+              y: 3
               height: 1
               width: 1
               type: form
@@ -131,14 +115,14 @@ SciViz: # top level tab
                   input: Induction ID
                   destination: utah_organoids_lineage.Lineage
     Induction:
-      route: /inductionviewer
+      route: /induction
       grids:
         grid5:
           type: fixed
           columns: 1
-          row_height: 300
+          row_height: 520
           components:
-            Induction Culture:
+            Induction Culture Table:
               route: /inductioncultureviewer
               link: /inductionculturedetails
               x: 0
@@ -153,11 +137,24 @@ SciViz: # top level tab
                 def dj_query(utah_organoids_induction):
                     table = utah_organoids_induction.InductionCulture
                     return dict(query=(table), fetch_args=[])
-            Induction Culture Well:
+            Induction Culture Form:
+              route: /inductioncultureform
+              x: 0
+              y: 1
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - utah_organoids_induction.InductionCulture
+              map:
+                - type: table
+                  input: Induction ID
+                  destination: utah_organoids_lineage.Lineage
+            Induction Culture Well Table:
               route: /inductionculturewellviewer
               link: /inductionculturewelldetails
               x: 0
-              y: 1
+              y: 2
               height: 1
               width: 1
               type: antd-table
@@ -168,39 +165,22 @@ SciViz: # top level tab
                 def dj_query(utah_organoids_induction):
                     table = utah_organoids_induction.InductionCultureWell
                     return dict(query=(table), fetch_args=[])
-            Induction Culture Condition:
-              route: /inductioncultureconditionviewer
-              link: /inductioncultureconditiondetails
-              x: 0
-              y: 2
-              height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.InductionCultureCondition
-                    return dict(query=(table), fetch_args=[])
-            Induction Culture Supplement:
-              route: /inductionculturesupplementviewer
-              link: /inductionculturesupplementdetails
+            Induction Culture Well Form:
+              route: /inductionculturewellform
               x: 0
               y: 3
               height: 1
               width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.InductionCultureSupplement
-                    return dict(query=(table), fetch_args=[])
-            Induction Culture Media:
-              route: /inductionculturemediaviewer
-              link: /inductionculturemediadetails
+              type: form
+              tables:
+                - utah_organoids_induction.InductionCultureWell
+              map:
+                - type: table
+                  input: Induction Culture
+                  destination: utah_organoids_induction.InductionCulture
+            Induction Culture Condition Table:
+              route: /inductioncultureconditionviewer
+              link: /inductioncultureconditiondetails
               x: 0
               y: 4
               height: 1
@@ -211,92 +191,13 @@ SciViz: # top level tab
                     return dict(**kwargs)
               dj_query: >
                 def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.InductionCultureMedia
+                    table = utah_organoids_induction.InductionCultureCondition
                     return dict(query=(table), fetch_args=[])
-            Induction Culture Substrate:
-              route: /inductionculturesubstrateviewer
-              link: /inductionculturesubstratedetails
+            Induction Culture Condition Form:
+              route: /inductioncultureconditionform
               x: 0
               y: 5
               height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.InductionCultureSubstrate
-                    return dict(query=(table), fetch_args=[])
-            Induction Culture Image:
-              route: /inductioncultureimageviewer
-              link: /inductioncultureimagedetails
-              x: 0
-              y: 6
-              height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.InductionCultureImage
-                    return dict(query=(table), fetch_args=[])
-            Induction Culture DNA:
-              route: /inductionculturednaviewer
-              link: /inductionculturednadetails
-              x: 0
-              y: 7
-              height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.InductionCultureDNA
-                    return dict(query=(table), fetch_args=[])
-    Induction form:
-      route: /inductionform
-      grids:
-        grid5:
-          type: fixed
-          columns: 1
-          row_height: 300
-          components:
-            Induction Culture:
-              route: /inductioncultureform
-              x: 0
-              y: 0
-              height: 1
-              width: 1
-              type: form
-              tables:
-                - utah_organoids_induction.InductionCulture
-              map:
-                - type: table
-                  input: Induction ID
-                  destination: utah_organoids_lineage.Lineage
-            Induction Culture Well:
-              route: /inductionculturewellform
-              x: 0
-              y: 1
-              height: 1
-              width: 1
-              type: form
-              tables:
-                - utah_organoids_induction.InductionCultureWell
-              map:
-                - type: table
-                  input: Induction Culture
-                  destination: utah_organoids_induction.InductionCulture
-            Induction Culture Condition:
-              route: /inductioncultureconditionform
-              x: 0
-              y: 2
-              height: 2
               width: 1
               type: form
               tables:
@@ -308,10 +209,25 @@ SciViz: # top level tab
               booleans:
                 - media_change
                 - discontinued
-            Induction Culture Supplement:
+            Induction Culture Supplement Table:
+              route: /inductionculturesupplementviewer
+              link: /inductionculturesupplementdetails
+              x: 0
+              y: 6
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.InductionCultureSupplement
+                    return dict(query=(table), fetch_args=[])
+            Induction Culture Supplement Form:
               route: /inductionculturesupplementform
               x: 0
-              y: 4
+              y: 7
               height: 1
               width: 1
               type: form
@@ -321,11 +237,26 @@ SciViz: # top level tab
                 - type: table
                   input: Induction Culture Condition
                   destination: utah_organoids_induction.InductionCultureCondition
-            Induction Culture Media:
+            Induction Culture Media Table:
+              route: /inductionculturemediaviewer
+              link: /inductionculturemediadetails
+              x: 0
+              y: 8
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.InductionCultureMedia
+                    return dict(query=(table), fetch_args=[])
+            Induction Culture Media Form:
               route: /inductionculturemediaform
               x: 0
-              y: 5
-              height: 2
+              y: 9
+              height: 1
               width: 1
               type: form
               tables:
@@ -334,10 +265,25 @@ SciViz: # top level tab
                 - type: table
                   input: Induction Culture Condition
                   destination: utah_organoids_induction.InductionCultureCondition
-            Induction Culture Substrate:
+            Induction Culture Substrate Table:
+              route: /inductionculturesubstrateviewer
+              link: /inductionculturesubstratedetails
+              x: 0
+              y: 10
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.InductionCultureSubstrate
+                    return dict(query=(table), fetch_args=[])
+            Induction Culture Substrate Form:
               route: /inductionculturesubstrateform
               x: 0
-              y: 7
+              y: 11
               height: 1
               width: 1
               type: form
@@ -347,10 +293,25 @@ SciViz: # top level tab
                 - type: table
                   input: Induction Culture Condition
                   destination: utah_organoids_induction.InductionCultureCondition
-            Induction Culture Image:
+            Induction Culture Image Table:
+              route: /inductioncultureimageviewer
+              link: /inductioncultureimagedetails
+              x: 0
+              y: 12
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.InductionCultureImage
+                    return dict(query=(table), fetch_args=[])
+            Induction Culture Image Form:
               route: /inductioncultureimageform
               x: 0
-              y: 8
+              y: 13
               height: 1
               width: 1
               type: form
@@ -360,10 +321,25 @@ SciViz: # top level tab
                 - type: table
                   input: Induction Culture
                   destination: utah_organoids_induction.InductionCulture
-            Induction Culture DNA:
+            Induction Culture DNA Table:
+              route: /inductionculturednaviewer
+              link: /inductionculturednadetails
+              x: 0
+              y: 14
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.InductionCultureDNA
+                    return dict(query=(table), fetch_args=[])
+            Induction Culture DNA Form:
               route: /inductionculturednaform
               x: 0
-              y: 9
+              y: 15
               height: 1
               width: 1
               type: form
@@ -374,16 +350,17 @@ SciViz: # top level tab
                   input: Induction Culture
                   destination: utah_organoids_induction.InductionCulture
               booleans:
-                - genomic_dna 
+                - genomic_dna
+
     Post Induction:
-      route: /postinductionviewer
+      route: /postinduction
       grids:
         grid5:
           type: fixed
           columns: 1
-          row_height: 300
+          row_height: 520
           components:
-            Post Induction Culture:
+            Post Induction Culture Table:
               route: /postinductioncultureviewer
               link: /postinductionculturedetails
               x: 0
@@ -398,11 +375,24 @@ SciViz: # top level tab
                 def dj_query(utah_organoids_induction):
                     table = utah_organoids_induction.PostInductionCulture
                     return dict(query=(table), fetch_args=[])
-            Post Induction Culture Well:
+            Post Induction Culture Form:
+              route: /postinductioncultureform
+              x: 0
+              y: 1
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - utah_organoids_induction.PostInductionCulture
+              map:
+                - type: table
+                  input: Induction Culture
+                  destination: utah_organoids_induction.InductionCulture
+            Post Induction Culture Well Table:
               route: /postinductionculturewellviewer
               link: /postinductionculturewelldetails
               x: 0
-              y: 1
+              y: 2
               height: 1
               width: 1
               type: antd-table
@@ -413,39 +403,22 @@ SciViz: # top level tab
                 def dj_query(utah_organoids_induction):
                     table = utah_organoids_induction.PostInductionCultureWell
                     return dict(query=(table), fetch_args=[])
-            Post Induction Culture Condition:
-              route: /postinductioncultureconditionviewer
-              link: /postinductioncultureconditiondetails
-              x: 0
-              y: 2
-              height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.PostInductionCultureCondition
-                    return dict(query=(table), fetch_args=[])
-            Post Induction Culture Supplement:
-              route: /postinductionculturesupplementviewer
-              link: /postinductionculturesupplementdetails
+            Post Induction Culture Well Form:
+              route: /postinductionculturewellform
               x: 0
               y: 3
               height: 1
               width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.PostInductionCultureSupplement
-                    return dict(query=(table), fetch_args=[])
-            Post Induction Culture Media:
-              route: /postinductionculturemediaviewer
-              link: /postinductionculturemediadetails
+              type: form
+              tables:
+                - utah_organoids_induction.PostInductionCultureWell
+              map:
+                - type: table
+                  input: Post Induction Culture
+                  destination: utah_organoids_induction.PostInductionCulture
+            Post Induction Culture Condition Table:
+              route: /postinductioncultureconditionviewer
+              link: /postinductioncultureconditiondetails
               x: 0
               y: 4
               height: 1
@@ -456,62 +429,13 @@ SciViz: # top level tab
                     return dict(**kwargs)
               dj_query: >
                 def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.PostInductionCultureMedia
+                    table = utah_organoids_induction.PostInductionCultureCondition
                     return dict(query=(table), fetch_args=[])
-            Post Induction Culture Substrate:
-              route: /postinductionculturesubstrateviewer
-              link: /postinductionculturesubstratedetails
+            Post Induction Culture Condition Form:
+              route: /postinductioncultureconditionform
               x: 0
               y: 5
               height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.PostInductionCultureSubstrate
-                    return dict(query=(table), fetch_args=[])
-    Post Induction form:
-      route: /postinductionform
-      grids:
-        grid5:
-          type: fixed
-          columns: 1
-          row_height: 300
-          components:
-            Post Induction Culture:
-              route: /postinductioncultureform
-              x: 0
-              y: 0
-              height: 1
-              width: 1
-              type: form
-              tables:
-                - utah_organoids_induction.PostInductionCulture
-              map:
-                - type: table
-                  input: Induction Culture
-                  destination: utah_organoids_induction.InductionCulture
-            Post Induction Culture Well:
-              route: /postinductionculturewellform
-              x: 0
-              y: 1
-              height: 1
-              width: 1
-              type: form
-              tables:
-                - utah_organoids_induction.PostInductionCultureWell
-              map:
-                - type: table
-                  input: Post Induction Culture
-                  destination: utah_organoids_induction.PostInductionCulture
-            Post Induction Culture Condition:
-              route: /postinductioncultureconditionform
-              x: 0
-              y: 2
-              height: 2
               width: 1
               type: form
               tables:
@@ -523,10 +447,25 @@ SciViz: # top level tab
               booleans:
                 - media_change
                 - discontinued
-            Post Induction Culture Supplement:
+            Post Induction Culture Supplement Table:
+              route: /postinductionculturesupplementviewer
+              link: /postinductionculturesupplementdetails
+              x: 0
+              y: 6
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.PostInductionCultureSupplement
+                    return dict(query=(table), fetch_args=[])
+            Post Induction Culture Supplement Form:
               route: /postinductionculturesupplementform
               x: 0
-              y: 4
+              y: 7
               height: 1
               width: 1
               type: form
@@ -536,11 +475,26 @@ SciViz: # top level tab
                 - type: table
                   input: Post Induction Culture Condition
                   destination: utah_organoids_induction.PostInductionCultureCondition
-            Post Induction Culture Media:
+            Post Induction Culture Media Table:
+              route: /postinductionculturemediaviewer
+              link: /postinductionculturemediadetails
+              x: 0
+              y: 8
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.PostInductionCultureMedia
+                    return dict(query=(table), fetch_args=[])
+            Post Induction Culture Media Form:
               route: /postinductionculturemediaform
               x: 0
-              y: 5
-              height: 2
+              y: 9
+              height: 1
               width: 1
               type: form
               tables:
@@ -549,10 +503,25 @@ SciViz: # top level tab
                 - type: table
                   input: Post Induction Culture Condition
                   destination: utah_organoids_induction.PostInductionCultureCondition
-            Post Induction Culture Substrate:
+            Post Induction Culture Substrate Table:
+              route: /postinductionculturesubstrateviewer
+              link: /postinductionculturesubstratedetails
+              x: 0
+              y: 10
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.PostInductionCultureSubstrate
+                    return dict(query=(table), fetch_args=[])
+            Post Induction Culture Substrate Form:
               route: /postinductionculturesubstrateform
               x: 0
-              y: 7
+              y: 11
               height: 1
               width: 1
               type: form
@@ -563,15 +532,15 @@ SciViz: # top level tab
                   input: Post Induction Culture Condition
                   destination: utah_organoids_induction.PostInductionCultureCondition
     Isolated Rosette:
-      route: /rosetteviewer
+      route: /rosette
       grids:
         grid5:
           type: fixed
           columns: 1
-          row_height: 300
+          row_height: 520
           components:
-            Rosette Culture:
-              route: /rosetteculturetable
+            Isolated Rosette Culture Table:
+              route: /rosettecultureviewer
               link: /rosetteculturedetails
               x: 0
               y: 0
@@ -585,109 +554,11 @@ SciViz: # top level tab
                 def dj_query(utah_organoids_induction):
                     table = utah_organoids_induction.RosetteCulture
                     return dict(query=(table), fetch_args=[])
-            Rosette Culture Well:
-              route: /rosetteculturewelltable
-              link: /rosetteculturewelldetails
+            Isolated Rosette Culture Form:
+              route: /rosettecultureform
               x: 0
               y: 1
               height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.RosetteCultureWell
-                    return dict(query=(table), fetch_args=[])
-            Rosette Culture Condition:
-              route: /rosettecultureconditiontable
-              link: /rosettecultureconditiondetails
-              x: 0
-              y: 2
-              height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.RosetteCultureCondition
-                    return dict(query=(table), fetch_args=[])
-            Rosette Culture Supplement:
-              route: /rosetteculturesupplementtable
-              link: /rosetteculturesupplementdetails
-              x: 0
-              y: 3
-              height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.RosetteCultureSupplement
-                    return dict(query=(table), fetch_args=[])
-            Rosette Culture Media:
-              route: /rosetteculturemediatable
-              link: /rosetteculturemediadetails
-              x: 0
-              y: 4
-              height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.RosetteCultureMedia
-                    return dict(query=(table), fetch_args=[])
-            Rosette Culture Substrate:
-              route: /rosetteculturesubstratetable
-              link: /rosetteculturesubstratedetails
-              x: 0
-              y: 5
-              height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.RosetteCultureSubstrate
-                    return dict(query=(table), fetch_args=[])
-            Rosette Culture Image:
-              route: /rosettecultureimagetable
-              link: /rosettecultureimagedetails
-              x: 0
-              y: 6
-              height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.RosetteCultureImage
-                    return dict(query=(table), fetch_args=[])
-    Isolated Rosette Form:
-      route: /rosetteform
-      grids:
-        grid5:
-          type: fixed
-          columns: 1
-          row_height: 300
-          components:
-            Rosette Culture:
-              route: /rosettecultureform
-              x: 0
-              y: 0
-              height: 2
               width: 1
               type: form
               tables:
@@ -699,10 +570,25 @@ SciViz: # top level tab
                 - type: table
                   input: User
                   destination: utah_organoids_induction.User
-            Rosette Culture Well:
-              route: /rosetteculturewellform
+            Isolated Rosette Culture Well Table:
+              route: /rosetteculturewellviewer
+              link: /rosetteculturewelldetails
               x: 0
               y: 2
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.RosetteCultureWell
+                    return dict(query=(table), fetch_args=[])
+            Isolated Rosette Culture Well Form:
+              route: /rosetteculturewellform
+              x: 0
+              y: 3
               height: 1
               width: 1
               type: form
@@ -712,10 +598,25 @@ SciViz: # top level tab
                 - type: table
                   input: Rosette Culture
                   destination: utah_organoids_induction.RosetteCulture
-            Rosette Culture Condition:
+            Isolated Rosette Culture Condition Table:
+              route: /rosettecultureconditionviewer
+              link: /rosettecultureconditiondetails
+              x: 0
+              y: 4
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.RosetteCultureCondition
+                    return dict(query=(table), fetch_args=[])
+            Isolated Rosette Culture Condition Form:
               route: /rosettecultureconditionform
               x: 0
-              y: 3
+              y: 5
               height: 1
               width: 1
               type: form
@@ -725,10 +626,25 @@ SciViz: # top level tab
                 - type: table
                   input: Rosette Culture
                   destination: utah_organoids_induction.RosetteCulture
-            Rosette Culture Supplement:
+            Isolated Rosette Culture Supplement Table:
+              route: /rosetteculturesupplementviewer
+              link: /rosetteculturesupplementdetails
+              x: 0
+              y: 6
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.RosetteCultureSupplement
+                    return dict(query=(table), fetch_args=[])
+            Isolated Rosette Culture Supplement Form:
               route: /rosetteculturesupplementform
               x: 0
-              y: 4
+              y: 7
               height: 1
               width: 1
               type: form
@@ -738,11 +654,26 @@ SciViz: # top level tab
                 - type: table
                   input: Rosette Culture Condition
                   destination: utah_organoids_induction.RosetteCultureCondition
-            Rosette Culture Media:
+            Isolated Rosette Culture Media Table:
+              route: /rosetteculturemediaviewer
+              link: /rosetteculturemediadetails
+              x: 0
+              y: 8
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.RosetteCultureMedia
+                    return dict(query=(table), fetch_args=[])
+            Isolated Rosette Culture Media Form:
               route: /rosetteculturemediaform
               x: 0
-              y: 5
-              height: 2
+              y: 9
+              height: 1
               width: 1
               type: form
               tables:
@@ -751,10 +682,25 @@ SciViz: # top level tab
                 - type: table
                   input: Rosette Culture Condition
                   destination: utah_organoids_induction.RosetteCultureCondition
-            Rosette Culture Substrate:
+            Isolated Rosette Culture Substrate Table:
+              route: /rosetteculturesubstrateviewer
+              link: /rosetteculturesubstratedetails
+              x: 0
+              y: 10
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.RosetteCultureSubstrate
+                    return dict(query=(table), fetch_args=[])
+            Isolated Rosette Culture Substrate Form:
               route: /rosetteculturesubstrateform
               x: 0
-              y: 7
+              y: 11
               height: 1
               width: 1
               type: form
@@ -764,10 +710,25 @@ SciViz: # top level tab
                 - type: table
                   input: Rosette Culture Condition
                   destination: utah_organoids_induction.RosetteCultureCondition
-            Rosette Culture Image:
+            Isolated Rosette Culture Image Table:
+              route: /rosettecultureimageviewer
+              link: /rosettecultureimagedetails
+              x: 0
+              y: 12
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.RosetteCultureImage
+                    return dict(query=(table), fetch_args=[])
+            Isolated Rosette Culture Image Form:
               route: /rosettecultureimageform
               x: 0
-              y: 8
+              y: 13
               height: 1
               width: 1
               type: form
@@ -776,16 +737,16 @@ SciViz: # top level tab
               map:
                 - type: table
                   input: Rosette Culture
-                  destination: utah_organoids_induction.RosetteCulture  
+                  destination: utah_organoids_induction.RosetteCulture
     Organoid:
-      route: /organoidviewer
+      route: /organoid
       grids:
         grid5:
           type: fixed
           columns: 1
-          row_height: 300
+          row_height: 520
           components:
-            Organoid Culture:
+            Organoid Culture Table:
               route: /organoidcultureviewer
               link: /organoidculturedetails
               x: 0
@@ -800,24 +761,22 @@ SciViz: # top level tab
                 def dj_query(utah_organoids_induction):
                     table = utah_organoids_induction.OrganoidCulture
                     return dict(query=(table), fetch_args=[])
-            Organoid Embedding:
-              route: /organoidembeddingviewer
-              link: /organoidembeddingdetails
+            Organoid Culture Form:
+              route: /organoidcultureform
               x: 0
               y: 1
               height: 1
               width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.OrganoidEmbedding
-                    return dict(query=(table), fetch_args=[])
-            Organoid Culture Condition:
-              route: /organoidcultureconditionviewer
-              link: /organoidcultureconditiondetails
+              type: form
+              tables:
+                - utah_organoids_induction.OrganoidCulture
+              map:
+                - type: table
+                  input: Induction ID
+                  destination: utah_organoids_lineage.Lineage
+            Organoid Embedding Table:
+              route: /organoidembeddingviewer
+              link: /organoidembeddingdetails
               x: 0
               y: 2
               height: 1
@@ -828,78 +787,12 @@ SciViz: # top level tab
                     return dict(**kwargs)
               dj_query: >
                 def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.OrganoidCultureCondition
+                    table = utah_organoids_induction.OrganoidEmbedding
                     return dict(query=(table), fetch_args=[])
-            Organoid Culture Supplement:
-              route: /organoidculturesupplementviewer
-              link: /organoidculturesupplementdetails
-              x: 0
-              y: 3
-              height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.OrganoidCultureSupplement
-                    return dict(query=(table), fetch_args=[])
-            Organoid Culture Media:
-              route: /organoidculturemediaviewer
-              link: /organoidculturemediadetails
-              x: 0
-              y: 4
-              height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.OrganoidCultureMedia
-                    return dict(query=(table), fetch_args=[])
-            Organoid Culture Substrate:
-              route: /organoidculturesubstrateviewer
-              link: /organoidculturesubstratedetails
-              x: 0
-              y: 5
-              height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.OrganoidCultureSubstrate
-                    return dict(query=(table), fetch_args=[])
-    Organoid Form:
-      route: /organoidform
-      grids:
-        grid5:
-          type: fixed
-          columns: 1
-          row_height: 300
-          components:
-            Organoid Culture:
-              route: /organoidcultureform
-              x: 0
-              y: 0
-              height: 1
-              width: 1
-              type: form
-              tables:
-                - utah_organoids_induction.OrganoidCulture
-              map:
-                - type: table
-                  input: Induction ID
-                  destination: utah_organoids_lineage.Lineage
-            Organoid Embedding:
+            Organoid Embedding Form:
               route: /organoidembeddingform
               x: 0
-              y: 1
+              y: 3
               height: 1
               width: 1
               type: form
@@ -912,10 +805,25 @@ SciViz: # top level tab
                 - type: table
                   input: Rosette Culture Well
                   destination: utah_organoids_induction.RosetteCultureWell
-            Organoid Culture Condition:
+            Organoid Culture Condition Table:
+              route: /organoidcultureconditionviewer
+              link: /organoidcultureconditiondetails
+              x: 0
+              y: 4
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.OrganoidCultureCondition
+                    return dict(query=(table), fetch_args=[])
+            Organoid Culture Condition Form:
               route: /organoidcultureconditionform
               x: 0
-              y: 2
+              y: 5
               height: 1
               width: 1
               type: form
@@ -925,10 +833,25 @@ SciViz: # top level tab
                 - type: table
                   input: Organoid Culture
                   destination: utah_organoids_induction.OrganoidCulture
-            Organoid Culture Supplement:
+            Organoid Culture Supplement Table:
+              route: /organoidculturesupplementviewer
+              link: /organoidculturesupplementdetails
+              x: 0
+              y: 6
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.OrganoidCultureSupplement
+                    return dict(query=(table), fetch_args=[])
+            Organoid Culture Supplement Form:
               route: /organoidculturesupplementform
               x: 0
-              y: 3
+              y: 7
               height: 1
               width: 1
               type: form
@@ -938,11 +861,26 @@ SciViz: # top level tab
                 - type: table
                   input: Organoid Culture Condition
                   destination: utah_organoids_induction.OrganoidCultureCondition
-            Organoid Culture Media:
+            Organoid Culture Media Table:
+              route: /organoidculturemediaviewer
+              link: /organoidculturemediadetails
+              x: 0
+              y: 8
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.OrganoidCultureMedia
+                    return dict(query=(table), fetch_args=[])
+            Organoid Culture Media Form:
               route: /organoidculturemediaform
               x: 0
-              y: 4
-              height: 2
+              y: 9
+              height: 1
               width: 1
               type: form
               tables:
@@ -951,10 +889,25 @@ SciViz: # top level tab
                 - type: table
                   input: Organoid Culture Condition
                   destination: utah_organoids_induction.OrganoidCultureCondition
-            Organoid Culture Substrate:
+            Organoid Culture Substrate Table:
+              route: /organoidculturesubstrateviewer
+              link: /organoidculturesubstratedetails
+              x: 0
+              y: 10
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.OrganoidCultureSubstrate
+                    return dict(query=(table), fetch_args=[])
+            Organoid Culture Substrate Form:
               route: /organoidculturesubstrateform
               x: 0
-              y: 6
+              y: 11
               height: 1
               width: 1
               type: form
@@ -968,12 +921,12 @@ SciViz: # top level tab
                   input: Substrate
                   destination: substrate
     Experiment:
-      route: /experimentviewer
+      route: /experiment
       grids:
         grid5:
           type: fixed
           columns: 1
-          row_height: 300
+          row_height: 520
           components:
             Experiment Table:
               route: /experimentviewer
@@ -990,24 +943,18 @@ SciViz: # top level tab
                 def dj_query(utah_organoids_induction):
                     table = utah_organoids_induction.Experiment
                     return dict(query=(table), fetch_args=[])
-            Rosette Experiment Table:
-              route: /rosetteexperimentviewer
-              link: /rosetteexperimentdetails
+            Experiment Form:
+              route: /experimentform
               x: 0
               y: 1
               height: 1
               width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.RosetteExperiment
-                    return dict(query=(table), fetch_args=[])
-            Organoid Experiment Table:
-              route: /organoidexperimentviewer
-              link: /organoidexperimentdetails
+              type: form
+              tables:
+                - utah_organoids_induction.Experiment
+            Isolated Rosette Experiment Table:
+              route: /rosetteexperimentviewer
+              link: /rosetteexperimentdetails
               x: 0
               y: 2
               height: 1
@@ -1018,29 +965,12 @@ SciViz: # top level tab
                     return dict(**kwargs)
               dj_query: >
                 def dj_query(utah_organoids_induction):
-                    table = utah_organoids_induction.OrganoidExperiment
+                    table = utah_organoids_induction.RosetteExperiment
                     return dict(query=(table), fetch_args=[])
-    Experiment Form:
-      route: /experimentform
-      grids:
-        grid5:
-          type: fixed
-          columns: 1
-          row_height: 300
-          components:
-            Experiment:
-              route: /experimentform
-              x: 0
-              y: 0
-              height: 1
-              width: 1
-              type: form
-              tables:
-                - utah_organoids_induction.Experiment
-            Rosette Experiment:
+            Isolated Rosette Experiment Form:
               route: /rosetteexperimentform
               x: 0
-              y: 1
+              y: 3
               height: 1
               width: 1
               type: form
@@ -1053,10 +983,25 @@ SciViz: # top level tab
                 - type: table
                   input: experiment id
                   destination: utah_organoids_induction.Experiment
-            Organoid Experiment:
+            Organoid Experiment Table:
+              route: /organoidexperimentviewer
+              link: /organoidexperimentdetails
+              x: 0
+              y: 4
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_induction):
+                    table = utah_organoids_induction.OrganoidExperiment
+                    return dict(query=(table), fetch_args=[])
+            Organoid Experiment Form:
               route: /organoidexperimentform
               x: 0
-              y: 2
+              y: 5
               height: 1
               width: 1
               type: form
