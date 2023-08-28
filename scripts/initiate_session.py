@@ -78,4 +78,3 @@ def upload_session_data(session_dir_relpath):
             s3_bucket=s3_bucket,
         )
         return True
-        # TODO: Delete the local files.
