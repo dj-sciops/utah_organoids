@@ -1,7 +1,9 @@
 name: docker_images
 on:
   push:
-  pull_request:
+    tags:
+      - '*.*.*'
+  # pull_request:
   workflow_dispatch:
 jobs:
   get_meta:
