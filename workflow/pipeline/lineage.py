@@ -17,7 +17,7 @@ class Lineage(dj.Manual):
     line: varchar(8)
     passage: int unsigned
     frozen_date: date
-    storage_position: enum('1','2','3','4','5')
+    storage_position: enum('1','2','3','4','5','6')
     stand: int unsigned
     rack: int unsigned
     box_position: int unsigned
