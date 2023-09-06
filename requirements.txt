@@ -4,7 +4,7 @@ element-lab==0.1.2
 element-animal>=0.1.3
 element-session>=0.1.2
 element-array-ephys @ git+https://github.com/dj-sciops/utah_organoids_element-array-ephys.git
-ecephys-spike-sorting @ git+https://github.com/datajoint-company/ecephys_spike_sorting.git
+ecephys-spike-sorting @ git+https://github.com/datajoint/ecephys_spike_sorting.git
 intanrhsreader @ git+https://github.com/datajoint/intanrhsreader.git
 plotly
 graphviz

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import datajoint as dj
 
-from workflow.pipeline import induction
+from workflow.pipeline import culture
 
 
 def get_raw_root_data_dir() -> Path:
@@ -20,6 +20,6 @@ def get_ephys_root_data_dir() -> Path:
 
 
 def get_subject_directory(experiment_key: dict) -> Path:
-    return (
-        get_ephys_root_data_dir() / induction.OrganoidExperiment & experiment_key
-    ).fetch1("experiment_dir")
+    return (get_ephys_root_data_dir() / culture.Experiment & experiment_key).fetch1(
+        "experiment_dir"
+    )
