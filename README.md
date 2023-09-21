@@ -32,7 +32,7 @@ DataJoint workflow for the Organoids project at the University of Utah.
     import getpass
     dj.config["custom"]={}
     dj.config["custom"]["database.prefix"]="utah_organoids"
-    dj.config["database.host"]="rds.datajoint.io"
+    dj.config["database.host"]="db.datajoint.com"
     dj.config["database.user"]="arifneuro"
     dj.config["database.password"]=getpass.getpass()
     dj.config.save_global()

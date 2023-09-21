@@ -1,4 +1,5 @@
 ipykernel
+datajoint
 datajoint-utilities @ git+https://github.com/ttngu207/datajoint-utilities.git@with_max_idled_cycle
 element-lab==0.1.2
 element-animal>=0.1.3
