@@ -1,6 +1,6 @@
 import os
 import datajoint as dj
-from scripts.initiate_session import upload_session_data
+# from scripts.initiate_session import upload_session_data
 
 os.environ["DJ_SUPPORT_FILEPATH_MANAGEMENT"] = "TRUE"
 

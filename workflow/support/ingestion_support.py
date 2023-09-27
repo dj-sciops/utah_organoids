@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 import numpy as np
 
 from workflow import REL_PATH_INBOX, SUPPORT_DB_PREFIX
-from workflow.pipeline import induction, ephys
-from workflow.support import FileManifest, utils
+from workflow.pipeline import ephys
+from workflow.support import FileManifest
 
 logger = dj.logger  # type: ignore
 
