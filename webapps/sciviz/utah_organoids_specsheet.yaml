@@ -431,3 +431,31 @@ SciViz: # top level tab
                 - type: table
                   input: Organoid Culture
                   destination: utah_organoids_culture.OrganoidCulture
+            Experiment Directory Table:
+              route: /experimentdirectoryviewer
+              link: /experimentdirectorydetails
+              x: 0
+              y: 2
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_culture):
+                    table = utah_organoids_culture.ExperimentDirectory
+                    return dict(query=(table), fetch_args=[])
+            Experiment Directory Form:
+              route: /experimentdirectoryform
+              x: 0
+              y: 3
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - utah_organoids_culture.ExperimentDirectory
+              map:
+                - type: table
+                  input: Experiment
+                  destination: utah_organoids_culture.Experiment

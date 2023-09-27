@@ -71,10 +71,10 @@ class PostInductionCultureCondition(dj.Manual):
     -> [nullable] User
     density=null: int unsigned               # units of percentage
     quality='': varchar(32) # e.g. cell detach, cell death, color change, morphology change
-    supplement=null: enum('EGF+FGF 10 ng/mL', 'EGF', 'FGF') # Supplement, concentration, and units
-    media=null: enum('N2B27')
+    supplement=null: enum('', 'EGF+FGF 10 ng/mL', 'EGF', 'FGF') # Supplement, concentration, and units
+    media=null: enum('', 'N2B27')
     media_percent_changed=null: int unsigned  # Percent of the media changed, 1-100
-    substrate=null: enum('matrigel')
+    substrate=null: enum('', 'matrigel')
     post_induction_condition_image_directory='': varchar(256) # Images stored with "id_datetime" naming convention.
     post_induction_condition_note='': varchar(256)
     discontinued=null: bool
@@ -103,10 +103,10 @@ class IsolatedRosetteCultureCondition(dj.Manual):
     ---
     -> [nullable] User
     quality='': varchar(32) # e.g. cell detach, cell death, color change, morphology change
-    supplement=null: enum('EGF+FGF 10 ng/mL', 'EGF', 'FGF') # Supplement, concentration, and units
-    media=null: enum('N2B27')
+    supplement=null: enum('', 'EGF+FGF 10 ng/mL', 'EGF', 'FGF') # Supplement, concentration, and units
+    media=null: enum('', 'N2B27')
     media_percent_changed=null: int unsigned  # Percent of the media changed, 1-100
-    substrate=null: enum('matrigel')
+    substrate=null: enum('', 'matrigel')
     isolated_rosette_condition_image_directory='': varchar(256) # Images stored with "id_datetime" naming convention.
     isolated_rosette_condition_note='': varchar(256)
     """
@@ -134,7 +134,7 @@ class OrganoidCultureCondition(dj.Manual):
     supplement='': varchar(32)
     media='': varchar(32)
     media_percent_changed=null: int unsigned # Percent of the media changed, 1-100
-    substrate=null: enum('matrigel')
+    substrate=null: enum('', 'matrigel')
     organoid_condition_image_directory='': varchar(256) # Images stored with "id_datetime" naming convention.
     organoid_condition_note='': varchar(256)
     """
@@ -150,5 +150,13 @@ class Experiment(dj.Manual):
     -> [nullable] IsolatedRosetteCulture
     -> [nullable] OrganoidCulture
     experiment_plan: varchar(64)          # e.g. mrna lysate, oct, protein lysate, or matrigel embedding, ephys, tracing
-    experiment_directory='': varchar(256) # Path to the subject data directory
+    """
+
+
+@schema
+class ExperimentDirectory(dj.Manual):
+    definition = """
+    -> Experiment
+    ---
+    experiment_directory: varchar(256)   # Path to the subject data directory for long term recordings
     """

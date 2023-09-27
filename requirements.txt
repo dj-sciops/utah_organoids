@@ -1,13 +1,12 @@
-ipykernel
-datajoint
 datajoint-utilities @ git+https://github.com/ttngu207/datajoint-utilities.git@with_max_idled_cycle
-element-lab==0.1.2
-element-animal>=0.1.3
-element-session>=0.1.2
-element-array-ephys @ git+https://github.com/dj-sciops/utah_organoids_element-array-ephys.git
-ecephys-spike-sorting @ git+https://github.com/datajoint/ecephys_spike_sorting.git
-intanrhsreader @ git+https://github.com/datajoint/intanrhsreader.git
-plotly
-graphviz
 djsciops
+ecephys-spike-sorting @ git+https://github.com/datajoint/ecephys_spike_sorting.git
+element-animal>=0.1.3
+element-array-ephys @ git+https://github.com/dj-sciops/utah_organoids_element-array-ephys.git
+element-lab==0.1.2
+element-session>=0.1.2
+graphviz
+intanrhdreader @ git+https://github.com/datajoint/intanrhdreader.git
+ipykernel
 ipython
+plotly

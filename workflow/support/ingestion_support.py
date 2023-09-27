@@ -5,8 +5,8 @@ from datetime import datetime, timedelta
 import numpy as np
 
 from workflow import REL_PATH_INBOX, SUPPORT_DB_PREFIX
-from workflow.pipeline import induction, ephys
-from workflow.support import FileManifest, utils
+from workflow.pipeline import ephys
+from workflow.support import FileManifest
 
 logger = dj.logger  # type: ignore
 
@@ -34,7 +34,7 @@ class FileProcessing(dj.Imported):
             subject_key = {}      
             parent_dir = remote_fullpath.parent
             if remote_fullpath.suffix == ".rhs": 
-                filename_prefix, start_time = re.search(r"(.*)_(\d{6}_\d{6})", file).groups()
+                filename_prefix, start_time = re.search(r"(.*)_(\d{6}_\d{6})", remote_fullpath).groups()
                 start_time = np.datetime64(
                     datetime.strptime(start_time, "%y%m%d_%H%M%S")
                 )  # start time based on the file name

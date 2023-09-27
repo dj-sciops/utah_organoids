@@ -1,7 +1,7 @@
 from pathlib import Path
-
 import datajoint as dj
 
+from element_interface.utils import find_full_path
 from workflow.pipeline import culture
 
 
@@ -20,6 +20,7 @@ def get_ephys_root_data_dir() -> Path:
 
 
 def get_subject_directory(experiment_key: dict) -> Path:
-    return (get_ephys_root_data_dir() / culture.Experiment & experiment_key).fetch1(
-        "experiment_dir"
+    return find_full_path(
+        get_ephys_root_data_dir(),
+        (culture.Experiment & experiment_key).fetch1("experiment_directory"),
     )
