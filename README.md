@@ -6,37 +6,31 @@ DataJoint workflow for the Organoids project at the University of Utah.
 
 <img src=./images/culture_diagram.png width="50%">
 
+## SciViz website
+https://organoids.datajoint.com/
+
 ## Initial Configuration Instructions
 
 1. Install [git](https://git-scm.com/download/win)
 1. Install [conda](https://docs.conda.io/en/latest/miniconda.html)
-1. Create conda environment
-    ```bash
-    conda create --name djutah python=3.8
-    ```
-1. Activate conda environment
-    ```bash
-    conda activate djutah
-    ```
 1. Clone `utah_organoids` repository
     ```bash
-    git clone https://github.com/dj-sciops/utah_organoids.git
+    git clone https://github.com/dj-sciops/utah_organoids.git && cd utah_organoids
     ```
-1. Within `utah_organoids` directory install the package
+1. Create conda virtual environment
+    ```bash
+    conda env create -f env.yml --force && conda activate utah_organoids
+    ```
+1. Install dependencies
     ```bash
     pip install -e .
     ```
-1. Configure database connection
-    ```python
-    import datajoint as dj
-    import getpass
-    dj.config["custom"]={}
-    dj.config["custom"]["database.prefix"]="utah_organoids"
-    dj.config["database.host"]="db.datajoint.com"
-    dj.config["database.user"]="arifneuro"
-    dj.config["database.password"]=getpass.getpass()
-    dj.config.save_global()
+1. Run the following to create `dj_local_config.json` file. When prompted, enter your username and password.
+    ```bash
+    ./create_dj_config.sh
     ```
+## Data Upload Instructions
+
 1. Configure `config.yaml` file
     1. Run the following to locate `config.yaml` file
         ```
@@ -50,7 +44,6 @@ DataJoint workflow for the Organoids project at the University of Utah.
         7. `role`
         8. `local_outbox`
 
-## Data Upload Instructions
 
 1. On Windows, open the command prompt application by searching for the following:
     ```
@@ -59,7 +52,7 @@ DataJoint workflow for the Organoids project at the University of Utah.
 
 1. Activate the conda environment by typing the following in the command prompt:
     ```bash
-    conda activate djutah
+    conda activate utah_organoids
     ```
 
 1. Open a python interpreter by typing the following in the command prompt:
