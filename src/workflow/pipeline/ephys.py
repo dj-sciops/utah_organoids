@@ -8,7 +8,7 @@ from workflow.pipeline import culture
 from workflow.utils.paths import (
     get_ephys_root_data_dir,
     get_processed_root_data_dir,
-    get_subject_directory,
+    get_organoid_directory,
 )
 
 __all__ = ["ephys", "probe"]

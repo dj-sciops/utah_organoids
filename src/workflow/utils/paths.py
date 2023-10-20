@@ -20,10 +20,12 @@ def get_ephys_root_data_dir() -> Path:
     return get_raw_root_data_dir()
 
 
-def get_subject_directory(experiment_key: dict) -> Path:
+def get_organoid_directory(experiment_key: dict) -> Path:
+    from workflow.pipeline import culture
+
     return find_full_path(
         get_ephys_root_data_dir(),
-        (culture.Experiment & experiment_key).fetch1("experiment_directory"),
+        (culture.Organoid & experiment_key).fetch1("experiment_directory"),
     )
 
 
