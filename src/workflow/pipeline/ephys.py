@@ -15,7 +15,4 @@ __all__ = ["ephys", "probe"]
 
 
 if not ephys.schema.is_activated():
-    Subject = culture.Experiment
-    EPHYS_STORE = "ephys-store"
-    FILE_STORE = "data-root"
     ephys.activate(DB_PREFIX + "ephys", DB_PREFIX + "probe", linking_module=__name__)
