@@ -139,15 +139,13 @@ class OrganoidCulture(dj.Manual):
 
 
 @schema
-class Experiment(dj.Manual):
+class Organoid(dj.Manual):
     definition = """
-    organoid_id: varchar(4)               # e.g. O17
-    experiment_datetime: datetime         # Experiment start date and time
+    organoid_id                    : varchar(4) # e.g. O17
     ---
-    -> [nullable] User
-    -> [nullable] IsolatedRosetteCulture
     -> [nullable] OrganoidCulture
-    experiment_plan: varchar(64)          # e.g. mrna lysate, oct, protein lysate, or matrigel embedding, ephys, tracing
+    experiment_type=null          : varchar(64) # e.g. mrna lysate, oct, protein lysate, or matrigel embedding, ephys, tracing
+    experiment_directory=null     : varchar(64) # data directory for long term recordings relative to the root directory. 
     """
 
 
