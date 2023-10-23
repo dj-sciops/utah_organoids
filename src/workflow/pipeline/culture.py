@@ -123,22 +123,19 @@ class OrganoidCulture(dj.Manual):
     isolated_rosette_culture_wells=null : varchar(8) # Wells from the 96-well plate used to embed organoids
     """
 
-
-@schema
-class OrganoidCultureCondition(dj.Manual):
-    definition = """
-    -> OrganoidCulture
-    organoid_condition_datetime: datetime
-    ---
-    -> [nullable] User
-    quality='': varchar(32) # e.g. cell detach, cell death, color change, morphology change
-    supplement='': varchar(32)
-    media='': varchar(32)
-    media_percent_changed=null: int unsigned # Percent of the media changed, 1-100
-    substrate=null: enum('', 'matrigel')
-    organoid_condition_image_directory='': varchar(256) # Images stored with "id_datetime" naming convention.
-    organoid_condition_note='': varchar(256)
-    """
+    class Condition(dj.Part):
+        definition = """
+        -> master
+        organoid_condition_datetime             : datetime
+        ---
+        quality=''                              : varchar(32) # e.g. cell detach, cell death, color change, morphology change
+        supplement=''                           : varchar(32)
+        media=''                                : varchar(32)
+        media_percent_changed=null              : int unsigned # Percent of the media changed, 1-100
+        substrate=null                          : enum('', 'matrigel')
+        organoid_condition_image_directory=''   : varchar(256) # Images stored with "id_datetime" naming convention.
+        organoid_condition_note=''              : varchar(256)
+        """
 
 
 @schema
