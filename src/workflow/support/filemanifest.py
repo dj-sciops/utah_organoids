@@ -1,10 +1,11 @@
 import os
+
 import datajoint as dj
 
 from workflow import ORG_NAME, WORKFLOW_NAME
 from workflow.utils.paths import get_raw_root_data_dir
 
-__all__ = ['FileManifest']
+__all__ = ["FileManifest"]
 
 # ------------- Configure the "support-pipeline" -------------
 org_vm = dj.create_virtual_module("org_vm", f"{ORG_NAME}_admin_workflow")

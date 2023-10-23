@@ -3,8 +3,8 @@ import pathlib
 import datajoint as dj
 from datajoint_utilities.dj_worker import DataJointWorker, ErrorLog, WorkerLog
 
-from workflow import DB_PREFIX, WORKER_MAX_IDLED_CYCLE, SUPPORT_DB_PREFIX
-from workflow.pipeline import ephys, analysis
+from workflow import DB_PREFIX, SUPPORT_DB_PREFIX, WORKER_MAX_IDLED_CYCLE
+from workflow.pipeline import analysis, ephys
 from workflow.support import ingestion_support
 
 logger = dj.logger

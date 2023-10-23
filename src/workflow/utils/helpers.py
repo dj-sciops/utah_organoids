@@ -2,6 +2,7 @@ from pathlib import Path
 
 import numpy as np
 import yaml
+
 from workflow import REL_PATH_INBOX
 from workflow.utils.paths import get_repo_dir
 

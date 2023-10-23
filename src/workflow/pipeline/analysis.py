@@ -1,8 +1,10 @@
 import datajoint as dj
-from .ephys import ephys
-from workflow import DB_PREFIX
-from scipy import signal
 import numpy as np
+from scipy import signal
+
+from workflow import DB_PREFIX
+
+from .ephys import ephys
 
 schema = dj.schema(DB_PREFIX + "analysis")
 

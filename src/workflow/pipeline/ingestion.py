@@ -1,16 +1,17 @@
-from pathlib import Path
-from datetime import datetime
-import numpy as np
 import re
-import datajoint as dj
-import yaml
+from datetime import datetime
+from pathlib import Path
 from typing import Any
+from uuid import UUID
+
+import datajoint as dj
+import numpy as np
+import yaml
 
 from workflow import REL_PATH_INBOX
 from workflow.pipeline import culture, ephys, probe
-from workflow.utils.paths import get_raw_root_data_dir, get_repo_dir
-from uuid import UUID
 from workflow.utils.helpers import get_channel_to_electrode_map
+from workflow.utils.paths import get_raw_root_data_dir, get_repo_dir
 
 
 def ingest_orgnoid():
