@@ -1,4 +1,3 @@
-import os
-
-from . import lineage, culture, analysis
+from . import lineage, culture
 from .ephys import ephys, probe
+from . import analysis
