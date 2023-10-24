@@ -8,19 +8,20 @@
     - organoid_id: O09
       probe: Q983 # serial number
       port_id: A
-      unused_electrodes: 0 # number of unused electrodes from the top
+      used_electrodes: # if all electrodes are used, no need to record
     - organoid_id: O10
       probe: T590
       port_id: B
-      unused_electrodes: 16
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     - organoid_id: O11
       probe: T591
       port_id: C
-      unused_electrodes: 12
+      used_electrodes:
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     - organoid_id: O12
       probe: T593
       port_id: D
-      unused_electrodes: 18
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 - organoid_culture_id: O09-12
   start_time: "2023-05-18 18:15:00"
@@ -32,19 +33,20 @@
     - organoid_id: O09
       probe: Q983 # serial number
       port_id: A
-      unused_electrodes: 0 # number of unused electrodes from the top
+      used_electrodes: # if all electrodes are used, no need to record
     - organoid_id: O10
       probe: T590
       port_id: B
-      unused_electrodes: 16
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     - organoid_id: O11
       probe: T591
       port_id: C
-      unused_electrodes: 12
+      used_electrodes:
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     - organoid_id: O12
       probe: T593
       port_id: D
-      unused_electrodes: 18
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 - organoid_culture_id: O09-12
   start_time: "2023-05-19 09:30:00"
@@ -56,19 +58,20 @@
     - organoid_id: O09
       probe: Q983 # serial number
       port_id: A
-      unused_electrodes: 0 # number of unused electrodes from the top
+      used_electrodes: # if all electrodes are used, no need to record
     - organoid_id: O10
       probe: T590
       port_id: B
-      unused_electrodes: 16
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     - organoid_id: O11
       probe: T591
       port_id: C
-      unused_electrodes: 12
+      used_electrodes:
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     - organoid_id: O12
       probe: T593
       port_id: D
-      unused_electrodes: 18
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 - organoid_culture_id: O09-12
   start_time: "2023-05-19 15:45:00"
@@ -80,19 +83,20 @@
     - organoid_id: O09
       probe: Q983 # serial number
       port_id: A
-      unused_electrodes: 0
+      used_electrodes: # if all electrodes are used, no need to record
     - organoid_id: O10
       probe: T590
       port_id: B
-      unused_electrodes: 16
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     - organoid_id: O11
       probe: T591
       port_id: C
-      unused_electrodes: 12
+      used_electrodes:
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     - organoid_id: O12
       probe: T593
       port_id: D
-      unused_electrodes: 18
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 - organoid_culture_id: O13-16
   start_time: "2023-06-08 19:05:00"
@@ -104,19 +108,19 @@
     - organoid_id: O13
       probe: Q983
       port_id: A
-      unused_electrodes: 7
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
     - organoid_id: O14
       probe: T590
       port_id: B
-      unused_electrodes: 9
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     - organoid_id: O15
       probe: T591
       port_id: C
-      unused_electrodes: 21
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     - organoid_id: O16
       probe: T593
       port_id: D
-      unused_electrodes: 21
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 - organoid_culture_id: O13-16
   start_time: "2023-06-08 23:35:00"
@@ -128,19 +132,19 @@
     - organoid_id: O13
       probe: Q983
       port_id: A
-      unused_electrodes: 7
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
     - organoid_id: O14
       probe: T590
       port_id: B
-      unused_electrodes: 9
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     - organoid_id: O15
       probe: T591
       port_id: C
-      unused_electrodes: 21
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     - organoid_id: O16
       probe: T593
       port_id: D
-      unused_electrodes: 21
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 - organoid_culture_id: O13-16
   start_time: "2023-06-09 10:20:00"
@@ -152,19 +156,19 @@
     - organoid_id: O13
       probe: Q983
       port_id: A
-      unused_electrodes: 7
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
     - organoid_id: O14
       probe: T590
       port_id: B
-      unused_electrodes: 9
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     - organoid_id: O15
       probe: T591
       port_id: C
-      unused_electrodes: 21
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     - organoid_id: O16
       probe: T593
       port_id: D
-      unused_electrodes: 21
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 - organoid_culture_id: O13-16
   start_time: "2023-06-09 15:40:00"
@@ -176,19 +180,19 @@
     - organoid_id: O13
       probe: Q983
       port_id: A
-      unused_electrodes: 7
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
     - organoid_id: O14
       probe: T590
       port_id: B
-      unused_electrodes: 9
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     - organoid_id: O15
       probe: T591
       port_id: C
-      unused_electrodes: 21
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     - organoid_id: O16
       probe: T593
       port_id: D
-      unused_electrodes: 21
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 - organoid_culture_id: O17-20
   start_time: "2023-07-12 13:10:00"
@@ -200,19 +204,19 @@
     - organoid_id: O17
       probe: Q983
       port_id: A
-      unused_electrodes: 10
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
     - organoid_id: O18
       probe: T590
       port_id: B
-      unused_electrodes: 13
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
     - organoid_id: O19
       probe: T591
       port_id: C
-      unused_electrodes: 12
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     - organoid_id: O20
       probe: T595
       port_id: D
-      unused_electrodes: 15
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
 - organoid_culture_id: O17-20
   start_time: "2023-07-12 16:10:00"
@@ -224,19 +228,19 @@
     - organoid_id: O17
       probe: Q983
       port_id: A
-      unused_electrodes: 10
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
     - organoid_id: O18
       probe: T590
       port_id: B
-      unused_electrodes: 13
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
     - organoid_id: O19
       probe: T591
       port_id: C
-      unused_electrodes: 12
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     - organoid_id: O20
       probe: T595
       port_id: D
-      unused_electrodes: 15
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
 - organoid_culture_id: O17-20
   start_time: "2023-07-13 12:35:00"
@@ -248,19 +252,19 @@
     - organoid_id: O17
       probe: Q983
       port_id: A
-      unused_electrodes: 10
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
     - organoid_id: O18
       probe: T590
       port_id: B
-      unused_electrodes: 13
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
     - organoid_id: O19
       probe: T591
       port_id: C
-      unused_electrodes: 12
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     - organoid_id: O20
       probe: T595
       port_id: D
-      unused_electrodes: 15
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
 - organoid_culture_id: O17-20
   start_time: "2023-07-13 18:15:00"
@@ -272,16 +276,16 @@
     - organoid_id: O17
       probe: Q983
       port_id: A
-      unused_electrodes: 10
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
     - organoid_id: O18
       probe: T590
       port_id: B
-      unused_electrodes: 13
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
     - organoid_id: O19
       probe: T591
       port_id: C
-      unused_electrodes: 12
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     - organoid_id: O20
       probe: T595
       port_id: D
-      unused_electrodes: 15
+      used_electrodes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
