@@ -7,9 +7,9 @@ from uuid import UUID
 import datajoint as dj
 import numpy as np
 import yaml
+from element_interface.utils import dict_to_uuid
 
 from workflow import REL_PATH_INBOX
-from workflow.pipeline import culture, ephys, probe
 from workflow.utils.paths import get_raw_root_data_dir, get_repo_dir
 
 # fmt: off
@@ -45,10 +45,11 @@ def get_channel_to_electrode_map(port_id: str | None = None) -> dict[str, int]:
     }
 
 
-def ingest_orgnoid():
-    """Insert entries into the culture.OrganoidCulture and culture.Organoid table."""
+def ingest_experiment():
+    """Insert entries into the culture.Experiment."""
+    from workflow.pipeline import culture
 
-    # Read from organoid.yaml
+    # Read from experiment.yaml
     try:
         from workflow.support import FileManifest
 
@@ -60,27 +61,15 @@ def ingest_orgnoid():
     except:
         organoid_yml = Path(get_repo_dir()) / "data/organoids.yml"
     with open(organoid_yml, "r") as f:
-        organoid_info: list[dict] = yaml.safe_load(f)["organoid_culture"]
-    culture.OrganoidCulture.insert(
+        organoid_info: list[dict] = yaml.safe_load(f)
+    culture.Experiment.insert(
         organoid_info, skip_duplicates=True, ignore_extra_fields=True
-    )
-
-    culture.Organoid.insert(
-        [
-            {
-                "organoid_culture_id": organoid_culture["organoid_culture_id"],
-                "organoid_id": organoid["organoid_id"],
-                "experiment_type": organoid["experiment_type"],
-                "experiment_directory": organoid["experiment_directory"],
-            }
-            for organoid_culture in organoid_info
-            for organoid in organoid_culture.get("organoid")
-        ],
-        skip_duplicates=True,
     )
 
 
 def ingest_probe() -> None:
+    from workflow.pipeline import probe
+
     """Fetch probe meta information from probe.yml file in the ephys root directory to populate probe schema."""
 
     # Read from probe.yaml
@@ -106,28 +95,42 @@ def ingest_probe() -> None:
                 **probe_info["config"]
             )
 
-            electrode_config_hash: dict[str, UUID] = ephys.generate_electrode_config(
-                probe_type=probe_type,
-                electrode_keys=[
-                    {"probe_type": e["probe_type"], "electrode": e["electrode"]}
-                    for e in electrode_layouts
-                ],
-            )
-
             probe.ProbeType.insert1({"probe_type": probe_type})
 
             probe.ProbeType.Electrode.insert(electrode_layouts)
 
+            electrode_keys = [
+                {"probe_type": e["probe_type"], "electrode": e["electrode"]}
+                for e in electrode_layouts
+            ]
+            electrode_config_hash = dict_to_uuid(
+                {k["electrode"]: k for k in electrode_keys}
+            )
+            electrode_list = sorted([k["electrode"] for k in electrode_keys])
+            electrode_gaps = (
+                [-1]
+                + np.where(np.diff(electrode_list) > 1)[0].tolist()
+                + [len(electrode_list) - 1]
+            )
+            electrode_config_name = "; ".join(
+                [
+                    f"{electrode_list[start + 1]}-{electrode_list[end]}"
+                    for start, end in zip(electrode_gaps[:-1], electrode_gaps[1:])
+                ]
+            )
+
+            electrode_config_key = {"electrode_config_hash": electrode_config_hash}
+
             probe.ElectrodeConfig.insert1(
-                electrode_config_hash
+                electrode_config_key
                 | {
                     "probe_type": probe_type,
-                    "electrode_config_name": "",
+                    "electrode_config_name": electrode_config_name,
                 }
             )
             probe.ElectrodeConfig.Electrode.insert(
                 [
-                    electrode_config_hash
+                    electrode_config_key
                     | {
                         "probe_type": probe_type,
                         "electrode": e,
@@ -148,11 +151,13 @@ def ingest_probe() -> None:
 
 
 def ingest_ephys_files(organoid_key: dict[str, Any] = {}) -> None:
+    from workflow.pipeline import culture, ephys
+
     prev_dir = None
 
     file_list = []
 
-    for organoid in (culture.Organoid & organoid_key).fetch(
+    for organoid in (culture.Experiment & organoid_key).fetch(
         as_dict=True, order_by="organoid_id"
     ):
         organoid_dir = get_raw_root_data_dir() / organoid["experiment_directory"]
@@ -181,7 +186,7 @@ def ingest_ephys_files(organoid_key: dict[str, Any] = {}) -> None:
             file_list.append(
                 {
                     "file_path": (Path(organoid_dir.name) / file).as_posix(),
-                    "organoid_culture_id": organoid["organoid_culture_id"],
+                    "organoid_id": organoid["organoid_id"],
                     "acq_software": {".rhd": "Intan", ".rhs": "Intan"}[
                         Path(file).suffix
                     ],
@@ -201,6 +206,9 @@ def ingest_ephys_files(organoid_key: dict[str, Any] = {}) -> None:
 
 
 def ingest_ephys_session() -> None:
+    """Insert entries into the ephys.EphysSession and ephys.EphysSessionProbe."""
+    from workflow.pipeline import ephys
+
     # Read from ephys_session.yml
     try:
         from workflow.support import FileManifest
@@ -221,11 +229,10 @@ def ingest_ephys_session() -> None:
         session_list, skip_duplicates=True, ignore_extra_fields=True
     )
 
-    ephys.EphysSession.OrganoidRecording.insert(
+    ephys.EphysSessionProbe.insert(
         [
-            session_info | organoid_recording
+            session_info.pop("session_probe") | session_info
             for session_info in session_list
-            for organoid_recording in session_info.pop("organoid_recording")
         ],
         skip_duplicates=True,
         ignore_extra_fields=True,
