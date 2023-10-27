@@ -7,9 +7,13 @@ DataJoint workflow for the Organoids project at the University of Utah.
 <img src=./images/culture_diagram.png width="50%">
 
 ## SciViz website
+Data viewer for the Organoids DataJoint pipeline. Please use the entry forms provided on the website to manually input relevant data entries.
+
 https://organoids.datajoint.com/
 
 ## Initial Configuration Instructions
+
+Get started with the Utah Organoids project by following these steps:
 
 1. Install [git](https://git-scm.com/download/win)
 1. Install [conda](https://docs.conda.io/en/latest/miniconda.html)
@@ -29,7 +33,8 @@ https://organoids.datajoint.com/
     ```bash
     ./create_dj_config.sh
     ```
-## Data Upload Instructions
+## Uploading Raw Data
+Please follow these steps to upload your raw data files:
 
 1. Configure `config.yaml` file
     1. Run the following to locate `config.yaml` file
