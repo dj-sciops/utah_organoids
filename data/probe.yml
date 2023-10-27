@@ -2,115 +2,128 @@
   maker: NeuroNexus
   comment:
   config:
-    probe_type: A1x32-5mm-25-177
+    probe_type: A1x32-6mm-100-177-H32_21mm
     site_count_per_shank: 32
     col_spacing:
-    row_spacing: 25
+    row_spacing: 100 # μm
     row_offset:
     col_count_per_shank: 1
     shank_count: 1
     shank_spacing:
+    thickness: 15 # μm
+    tip_distance: 50 # distance of the first site from the tip in μm
 
 - serial_number: 12D76
   maker: NeuroNexus
   comment:
   config:
-    probe_type: A1x32-5mm-25-177
+    probe_type: A1x32-6mm-100-177-H32_21mm
     site_count_per_shank: 32
     col_spacing:
-    row_spacing: 25
+    row_spacing: 100
     row_offset:
     col_count_per_shank: 1
     shank_count: 1
     shank_spacing:
+    thickness: 15
+    tip_distance: 50 # μm
 
 - serial_number: 12D51
   maker: NeuroNexus
   comment:
   config:
-    probe_type: A1x32-5mm-25-177
+    probe_type: A1x32-6mm-100-177-H32_21mm
     site_count_per_shank: 32
     col_spacing:
-    row_spacing: 25
+    row_spacing: 100
     row_offset:
     col_count_per_shank: 1
     shank_count: 1
     shank_spacing:
+    thickness: 15
+    tip_distance: 50 # μm
 
 - serial_number: 12D4D
   maker: NeuroNexus
   comment:
   config:
-    probe_type: A1x32-5mm-25-177
+    probe_type: A1x32-6mm-100-177-H32_21mm
     site_count_per_shank: 32
     col_spacing:
-    row_spacing: 25
+    row_spacing: 100
     row_offset:
     col_count_per_shank: 1
     shank_count: 1
     shank_spacing:
+    thickness: 15
+    tip_distance: 50 # μm
 
 - serial_number: Q983
   maker: NeuroNexus
   comment:
   config:
-    probe_type: A1x32-5mm-25-177
+    probe_type: A1x32-6mm-100-177-H32_21mm
     site_count_per_shank: 32
     col_spacing:
-    row_spacing: 25
+    row_spacing: 100
     row_offset:
     col_count_per_shank: 1
     shank_count: 1
     shank_spacing:
+    tip_distance: 50 # μm
 
 - serial_number: T590
   maker: NeuroNexus
   comment:
   config:
-    probe_type: A1x32-5mm-25-177
+    probe_type: A1x32-6mm-100-177-H32_21mm
     site_count_per_shank: 32
     col_spacing:
-    row_spacing: 25
+    row_spacing: 100
     row_offset:
     col_count_per_shank: 1
     shank_count: 1
     shank_spacing:
+    tip_distance: 50 # μm
 
 - serial_number: T591
   maker: NeuroNexus
   comment:
   config:
-    probe_type: A1x32-5mm-25-177
+    probe_type: A1x32-6mm-100-177-H32_21mm
     site_count_per_shank: 32
     col_spacing:
-    row_spacing: 25
+    row_spacing: 100
     row_offset:
     col_count_per_shank: 1
     shank_count: 1
     shank_spacing:
+    tip_distance: 50 # μm
 
 - serial_number: T593
   maker: NeuroNexus
   comment:
   config:
-    probe_type: A1x32-5mm-25-177
+    probe_type: A1x32-6mm-100-177-H32_21mm
     site_count_per_shank: 32
     col_spacing:
-    row_spacing: 25
+    row_spacing: 100
     row_offset:
     col_count_per_shank: 1
     shank_count: 1
     shank_spacing:
+    tip_distance: 50 # μm
 
 - serial_number: T595
   maker: NeuroNexus
   comment:
   config:
-    probe_type: A1x32-5mm-25-177
+    probe_type: A1x32-6mm-100-177-H32_21mm
     site_count_per_shank: 32
     col_spacing:
-    row_spacing: 25
+    row_spacing: 100
     row_offset:
     col_count_per_shank: 1
     shank_count: 1
     shank_spacing:
+    tip_distance: 50 # μm

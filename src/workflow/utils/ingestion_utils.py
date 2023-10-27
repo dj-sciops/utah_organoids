@@ -95,7 +95,7 @@ def ingest_probe() -> None:
                 **probe_info["config"]
             )
 
-            probe.ProbeType.insert1({"probe_type": probe_type})
+            probe.ProbeType.insert1(probe_info["config"], ignore_extra_fields=True)
 
             probe.ProbeType.Electrode.insert(electrode_layouts)
 
