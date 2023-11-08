@@ -1,5 +1,30 @@
 # Changelog
 
+## `v0.4.0`
+
+
+### Features
+
+* :sparkles: add insert_session.ipynb for session insertion ([8ff24aa](https://github.com/dj-sciops/utah_organoids/commit/8ff24aa7499a59c44a854eea0e7d77f4d4fc15e2))
+* :sparkles: update Experiment & ExperimentDirectory ([eb2afe4](https://github.com/dj-sciops/utah_organoids/commit/eb2afe4505498a9e1eb9a9b1a4e6b8dc8339e1ab))
+
+
+### Bug Fixes
+
+* :bug: fix Drug dependency error ([edae3a3](https://github.com/dj-sciops/utah_organoids/commit/edae3a30ebf789a061534588842e44669ace2250))
+
+
+### Reverts
+
+* :rewind: recover ExperimentDirectory ([55309dc](https://github.com/dj-sciops/utah_organoids/commit/55309dcad30ea6a3d0d846527e597cafe577e450))
+
+
+### Build Systems
+
+* :construction_worker: update github workflow ([515b02c](https://github.com/dj-sciops/utah_organoids/commit/515b02cd13295fc6164a9d1844743a77ebe8d901))
+* :pushpin: python 3.9 ([81b96e4](https://github.com/dj-sciops/utah_organoids/commit/81b96e448bf9ccb83d691946ba584555581787a8))
+
+
 ## `v0.3.0`
 
 
