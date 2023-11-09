@@ -6,6 +6,14 @@ DataJoint workflow for the Organoids project at the University of Utah.
 
 <img src=./images/culture_diagram.png width="50%">
 
+## Organoids DataJoint Diagram Experiment
+
+<img src=./images/datajoint_diagram_experiment.svg>
+
+## Organoids DataJoint Diagram Ephys Session
+
+<img src=./images/datajoint_diagram_ephys_session.svg>
+
 ## SciViz website
 Data viewer for the Organoids DataJoint pipeline. Please use the entry forms provided on the website to manually input relevant data entries.
 
