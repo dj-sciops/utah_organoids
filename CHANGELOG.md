@@ -1,13 +1,5 @@
 # Changelog
 
-## 0.4.1
-
-+ Update - README
-+ Update - images with the new version of the pipeline
-+ Update - Rename `insert_session.ipynb` to `insert_ephys_session.ipynb`
-+ Update - Delete `lfp_ingestion.ipynb` to remove `populate()` and redundancy
-
-
 ## `v0.4.0`
 
 
