@@ -29,7 +29,6 @@ ORG_NAME, WORKFLOW_NAME, *_ = DB_PREFIX.split("_")
 SUPPORT_DB_PREFIX = f"{ORG_NAME}_support_{WORKFLOW_NAME}_"
 REL_PATH_INBOX = f"{ORG_NAME}_{WORKFLOW_NAME}/inbox"
 REL_PATH_OUTBOX = f"{ORG_NAME}_{WORKFLOW_NAME}/outbox"
-
 WORKER_MAX_IDLED_CYCLE = int(
     os.getenv(
         "WORKER_MAX_IDLED_CYCLE", dj.config["custom"].get("worker_max_idled_cycle", 3)
