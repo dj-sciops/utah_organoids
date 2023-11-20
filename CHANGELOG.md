@@ -1,5 +1,18 @@
 # Changelog
 
+## `v0.4.2`
+
+
+### Bug Fixes
+
+* :bug: fix bugs in ingestion scripts ([2eb63af](https://github.com/dj-sciops/utah_organoids/commit/2eb63afcbffbc823017124dc4f0ce2f4bedb31d3))
+
+
+### Build Systems
+
+* :heavy_plus_sign: add spikeinterface & probeinterface dependency ([30a49c7](https://github.com/dj-sciops/utah_organoids/commit/30a49c7dfc51e2f4e4babd07a22c46b0003e05ad))
+
+
 ## `v0.4.1`
 
 
