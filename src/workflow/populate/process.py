@@ -20,9 +20,7 @@ def run(**kwargs):
     try:
         worker.run()
     except Exception:
-        logger.exception(
-            f"Worker '{kwargs["worker_name"]}' encountered an exception."
-        )
+        logger.exception(f'Worker "{kwargs["worker_name"]}" encountered an exception.')
 
 
 def cli():
