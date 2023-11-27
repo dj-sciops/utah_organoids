@@ -1,4 +1,4 @@
-# docker compose --env-file=../../.env  -f docker-compose-standard_worker.yaml -p wt-array-ephys_standard build
+# docker compose --env-file=../../.env  -f docker-compose-standard_worker.yaml -p utah_organoids build
 version: '2.4'
 services:
   standard_worker:
@@ -12,6 +12,8 @@ services:
         - WORKER_BASE_HASH
         - REPO_OWNER
         - REPO_NAME
+        - REPO_BRANCH=${REPO_BRANCH:-main}
+        - CONTAINER_USER
     image: registry.vathes.com/sciops/standard_${REPO_NAME}:py${PY_VER}-debian-${WORKFLOW_VERSION}
     environment:
       - CONTAINER_USER
@@ -21,14 +23,27 @@ services:
       - DATABASE_PREFIX
       - AWS_ACCESS_KEY
       - AWS_ACCESS_SECRET
-      - EPHYS_ROOT_DATA_DIR=/home/${CONTAINER_USER}/inbox
-      - EPHYS_PROCESSED_DATA_DIR=/home/${CONTAINER_USER}/outbox
+      - AWSACCESSKEYID=${AWS_ACCESS_KEY}
+      - AWSSECRETACCESSKEY=${AWS_ACCESS_SECRET}
+      - RAW_ROOT_DATA_DIR=/home/${CONTAINER_USER}/s3/inbox
+      - PROCESSED_ROOT_DATA_DIR=/home/${CONTAINER_USER}/efs/outbox
+      - WORKER_MAX_IDLED_CYCLE
+      - BUCKET_NAME
+      - REPO_NAME
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - /dev/fuse
+    security_opt:
+      - apparmor:unconfined
     volumes:
-      - ${ROOT_DATA_DIR}:/home/${CONTAINER_USER}/inbox
-      - ${PROCESSED_DATA_DIR}:/home/${CONTAINER_USER}/outbox
+      - ${OUTBOX_MOUNTPOINT}:/home/${CONTAINER_USER}/efs/outbox
     scale: ${WORKER_COUNT:-1}
     command:
       - /bin/bash
       - -c
       - |
+        mkdir -p /home/${CONTAINER_USER}/s3/inbox
+        s3fs ${BUCKET_NAME}:/${REPO_NAME}/inbox /home/${CONTAINER_USER}/s3/inbox \
+          -o createbucket,multipart_size=530,endpoint=us-east-2,default_acl=private,url=http://s3-accelerate.amazonaws.com 
         run_workflow standard_worker
