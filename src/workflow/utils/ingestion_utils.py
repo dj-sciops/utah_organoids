@@ -244,7 +244,7 @@ def ingest_ephys_session() -> None:
 
 
 def create_sessions(
-    experiment_key: dict[str, Any], duration_in_minutes: int = 30
+    experiment_key: dict[str, Any], session_type=str, duration_in_minutes: int = 30
 ) -> list[dict]:
     """Creates a list of session dictionaries for a given experiment.
 
@@ -258,7 +258,7 @@ def create_sessions(
     Example:
         >>> from workflow.pipeline import culture
         >>> key = (culture.Experiment & "organoid_id='O13'").fetch("KEY")[0]
-        >>> session_list = create_sessions(key, duration_in_minutes=30)
+        >>> session_list = create_sessions(key, session_type="spike_sorting", duration_in_minutes=30)
         >>> ephys.EphysSession.insert(session_list, ignore_extra_fields=True)
         >>> ephys.EphysSessionProbe.insert(
             [session_info.pop("session_probe") | session_info for session_info in session_list],
@@ -267,11 +267,16 @@ def create_sessions(
     """
     from workflow.pipeline import culture
 
+    assert session_type in [
+        "spike_sorting",
+        "lfp",
+    ], "session_type must be either'spike_sorting' or 'lfp'."
+
     exp_key = (culture.Experiment & experiment_key).proj("experiment_end_time").fetch1()
 
     # Load ephys_experiment.yml
-    experiment_yml = Path(get_repo_dir()) / "data/ephys_experiment.yml"
-    with open(experiment_yml, "r") as f:
+    session_yml = Path(get_repo_dir()) / "data/ephys_session.yml"
+    with open(session_yml, "r") as f:
         experiment_list: list[dict] = yaml.safe_load(f)
 
     try:
@@ -299,10 +304,11 @@ def create_sessions(
             exp_key["experiment_end_time"],
         )
 
+        exp_info["experiment_start_time"] = exp_info["start_time"]
         session_info = exp_info.copy()
         session_info["start_time"] = session_start
         session_info["end_time"] = session_end
-        session_info["session_type"] = "spike_sorting"
+        session_info["session_type"] = session_type
         session_info["duration"] = (session_end - session_start).total_seconds() / 60
 
         session_list.append(session_info)
