@@ -265,6 +265,8 @@ def create_sessions(
             ignore_extra_fields=True,
         )
     """
+    import datetime
+
     from workflow.pipeline import culture
 
     assert session_type in [
