@@ -1,11 +1,11 @@
-# docker compose --env-file=../../.env -f docker-compose-spike_sorting_local_worker.yaml -p utah_organoids_spike_sorting_worker build 
+# docker compose --env-file=../../.env -f docker-compose-test.yaml -p utah_organoids_spike_sorting_worker build 
 version: '2.4'
 services:
   spike_sorting_local_worker:
     build:
       # only necessary if rebuilding image
       context: ../../
-      dockerfile: ./dist/debian/spike_sorting_local_worker.Dockerfile
+      dockerfile: ./dist/debian/Dockerfile
       args:
         - PY_VER
         - DEPLOY_KEY
@@ -13,7 +13,8 @@ services:
         - REPO_NAME
         - REPO_BRANCH=${REPO_BRANCH:-main}
         - WORKER_BASE_HASH
-    image: registry.vathes.com/sciops/spike_sorting_local_${REPO_NAME}:${MATLAB_VERSION}-${MATLAB_IMAGE_TYPE}-pykilosort
+        - SORTER_IMAGE
+    image: registry.vathes.com/sciops/spike_sorting_local_${REPO_NAME}:${SORTER_IMAGE}
     runtime: nvidia
     environment:
       - CONTAINER_USER
@@ -31,6 +32,7 @@ services:
       - WORKER_MAX_IDLED_CYCLE
       - BUCKET_NAME
       - REPO_NAME
+      - SORTER_IMAGE
     cap_add:
       - SYS_ADMIN
     devices:
