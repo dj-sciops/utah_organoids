@@ -1,5 +1,19 @@
 # Changelog
 
+## `v0.5.1`
+
+
+### Bug Fixes
+
+* :ambulance: update path store variables ([98b53ee](https://github.com/dj-sciops/utah_organoids/commit/98b53ee3014b394dfa4e8c9ddbf16b89e65a547a))
+
+
+### Build Systems
+
+* :construction_worker: update docker for spike sorting ([3919dff](https://github.com/dj-sciops/utah_organoids/commit/3919dff9135d049075b837738ac6dd83cd8dba89))
+* :construction_worker: update spike sorting docker ([ac2b63a](https://github.com/dj-sciops/utah_organoids/commit/ac2b63a10d084ca2620fb73367832c4c25ee0ac0))
+
+
 ## `v0.5.0`
 
 
