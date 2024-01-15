@@ -1,5 +1,13 @@
 # Changelog
 
+## `v0.5.2`
+
++ Fix - AWS access for functional users by loading `.env` variables in `plot_spectogram.ipynb`
++ Update - EphysSession duration changed from 30 min to 15 min time window
++ Update - Reorganization of importing dependencies in notebooks
++ Update - blackformatting
++ Update - remove two empty folders in `workflow`
+
 ## `v0.5.1`
 
 
