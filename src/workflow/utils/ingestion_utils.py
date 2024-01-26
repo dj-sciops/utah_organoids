@@ -319,30 +319,47 @@ def create_sessions(
     return session_list
 
 
-if __name__ == "__main__":
+def auto_insert_sessions(
+    experiment_key: dict,
+    session_info: dict,
+    session_type: str,
+    duration_in_minutes: int,
+):
+    """Insert sessions created from create_sessions
+
+    Args:
+        experiment_key (dict)
+        session_info (dict)
+        session_type (str): 'lft', 'spike_sorting', 'both'
+        duration_in_minutes (int): session duration (min)
+
+    Examples:
+        >>> experiment_key = dict(
+            organoid_id="O13",
+            experiment_start_time="2023-06-08 19:05:00",
+            )
+
+        >>> session_info = dict(
+            organoid_id="O13",
+            experiment_start_time="2023-06-08 19:05:00",
+            insertion_number=0,
+            start_time="2023-06-08 19:10:00",
+            end_time="2023-06-09 19:15:00",
+            session_type="lfp",  # "lfp" or "spike_sorting"
+            probe="Q983",  # probe serial number
+            port_id="A",  # Port ID ("A", "B", etc.)
+            used_electrodes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],  # electrodes used for the session
+            )
+        >>> auto_insert_sessions(experiment_key, session_info, session_type="lfp", duration_in_minutes=15)
+    """
+
     from workflow.pipeline import ephys
 
-    experiment_key = dict(
-        organoid_id="O13",
-        experiment_start_time="2023-06-08 19:05:00",
-    )
-
-    # fmt: off
-    session_info = dict(
-        organoid_id="O13",
-        experiment_start_time="2023-06-08 19:05:00",
-        insertion_number=0,
-        start_time="2023-06-08 19:10:00",
-        end_time="2023-06-09 19:15:00",
-        session_type="lfp",  # "lfp" or "spike_sorting"
-        probe="Q983",  # probe serial number
-        port_id="A",  # Port ID ("A", "B", etc.)
-        used_electrodes=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],  # electrodes used for the session
-    )
-    # fmt: on
     # Insert the session
     session_list = create_sessions(
-        experiment_key, session_type="both", duration_in_minutes=15
+        experiment_key,
+        session_type=session_type,
+        duration_in_minutes=duration_in_minutes,
     )
     ephys.EphysSession.insert(
         session_list, ignore_extra_fields=True, skip_duplicates=True
