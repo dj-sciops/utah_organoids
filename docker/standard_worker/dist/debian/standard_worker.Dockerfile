@@ -5,7 +5,7 @@ FROM datajoint/djbase:py${PY_VER}-debian-${WORKER_BASE_HASH}
 ARG DEPLOY_KEY
 COPY --chown=anaconda $DEPLOY_KEY $HOME/.ssh/id_ed25519
 RUN chmod u=r,g-rwx,o-rwx $HOME/.ssh/id_ed25519 && \
-    printf "ssh\ngit\ns3fs" >> /tmp/apt_requirements.txt && \
+    printf "ssh\ngit" >> /tmp/apt_requirements.txt && \
     /entrypoint.sh echo "installed"
 
 ARG REPO_OWNER
