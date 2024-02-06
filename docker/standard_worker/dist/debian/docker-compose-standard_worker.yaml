@@ -38,7 +38,7 @@ services:
       - apparmor:unconfined
     volumes:
       - ${OUTBOX_MOUNTPOINT}:/home/${CONTAINER_USER}/efs/outbox
-      - ${S3_ROOT_MOUNTPOINT}:/home/${CONTAINER_USER}/s3      
+      - ${S3_ROOT_MOUNTPOINT}:/home/${CONTAINER_USER}/s3
     scale: ${WORKER_COUNT:-1}
     command:
       - /bin/bash
