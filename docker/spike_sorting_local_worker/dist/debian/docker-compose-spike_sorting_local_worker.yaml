@@ -48,13 +48,10 @@ services:
               capabilities: [ gpu ]
     volumes:
       - ${OUTBOX_MOUNTPOINT}:/home/${CONTAINER_USER}/efs/outbox
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ${S3_ROOT_MOUNTPOINT}:/home/${CONTAINER_USER}/s3
     scale: ${WORKER_COUNT:-1}
     command:
       - /bin/bash
       - -c
       - |
-        mkdir -p /home/${CONTAINER_USER}/s3/inbox
-        s3fs ${BUCKET_NAME}:/${REPO_NAME}/inbox /home/${CONTAINER_USER}/s3/inbox \
-          -o createbucket,multipart_size=530,endpoint=us-east-2,default_acl=private,url=http://s3-accelerate.amazonaws.com 
         run_workflow spike_sorting_local_worker
