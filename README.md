@@ -30,7 +30,6 @@ docker compose -f webapps/sciviz/docker-compose.yaml up
 docker compose -f webapps/sciviz/docker-compose.yaml down
 ```
 
-
 ## DataJoint Codebook for Organoids (JupyterHub)
 
 Online coding environment:
