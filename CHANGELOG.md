@@ -5,7 +5,10 @@
 
 ### Features
 
-* :sparkles: add new experimental protocol in culture schema
+* :feat(culture): Add `StemCell` table to accommodate an alternative experimental protocol 
+* :update(README): Add instructions for local testing of SciViz
+* :fix(webapps): Add platform and update version of `pharus` and `fakeservices.datajoint.io` in `docker-compose.yaml`
+* :feat(webapps): Add route, table and form for new table `StemCell` in `utah_organoids_specsheet.yaml`
 
 
 ## `v0.6.1`
