@@ -25,7 +25,7 @@ Data viewer for the Utah Organoids DataJoint pipeline. Please use the entry form
 1. After making the code changes locally, run the following command to start the application:
 
 ```
-docker compose -f webapps/sciviz/docker-compose.yaml up
+docker compose -f webapps/sciviz/docker-compose.yaml up -d
 ```
 
 1. Access the application using the following URL: <https://localhost/login> and log in with your DataJoint Works credentials.
