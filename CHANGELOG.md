@@ -1,5 +1,72 @@
 # Changelog
 
+## `v0.7.0`
+
+
+### Features
+
+* **specs:** add StemCell route, table, and form ([567e643](https://github.com/dj-sciops/utah_organoids/commit/567e643df63d311f7d34d73d093dc04a64fe9e0b))
+
+
+### Bug Fixes
+
+* fix error by adding  ([d8d24b4](https://github.com/dj-sciops/utah_organoids/commit/d8d24b49c2ee7cd27584aa4d85b4380638cc95cc))
+* update versions of fakeservices.datajoint.io and pharus ([ba89edd](https://github.com/dj-sciops/utah_organoids/commit/ba89eddfe1f22c87ed19c61a8a0713f0c6a8e722))
+
+
+## `v0.7.0`
+
+
+### Features
+
+* :feat(culture): Add `StemCell` table to accommodate an alternative experimental protocol 
+* :update(README): Add section for local testing of SciViz, and section for resources and notebook
+* :fix(webapps): Add platform and update version of `pharus` and `fakeservices.datajoint.io` in `docker-compose.yaml`
+* :feat(webapps): Add route, table and form for new table `StemCell` in `utah_organoids_specsheet.yaml`
+
+
+## `v0.6.1`
+
+
+### Bug Fixes
+
+* :bug: bug fix in spike_sorting.ipynb ([24ce9b3](https://github.com/dj-sciops/utah_organoids/commit/24ce9b367ea43c89edb35e355bcb8968aa892e65))
+
+
+### Styles
+
+* format fix ([81dad78](https://github.com/dj-sciops/utah_organoids/commit/81dad7846a360c408475c17d4389cd4f4a8c724c))
+
+
+## `v0.6.0`
+
+
+### Features
+
+* :sparkles: add auto_insert_sessions to ingestion_utils.py ([e2d2a2c](https://github.com/dj-sciops/utah_organoids/commit/e2d2a2c0ff117f49e36a6e2708d709d3af817ef7))
+* :sparkles: add get_workflow_operation_overview ([d088afc](https://github.com/dj-sciops/utah_organoids/commit/d088afc7db85b891b47442f887fb3866eee0f683))
+
+
+### Code Refactoring
+
+* :sparkles: move example usage of create_session to ingestion_utils.py ([b7e4875](https://github.com/dj-sciops/utah_organoids/commit/b7e4875d8b48a6c070d16e26768b09d4c852c371))
+
+
+
+## `v0.5.1`
+
+
+### Bug Fixes
+
+* :ambulance: update path store variables ([98b53ee](https://github.com/dj-sciops/utah_organoids/commit/98b53ee3014b394dfa4e8c9ddbf16b89e65a547a))
+
+
+### Build Systems
+
+* :construction_worker: update docker for spike sorting ([3919dff](https://github.com/dj-sciops/utah_organoids/commit/3919dff9135d049075b837738ac6dd83cd8dba89))
+* :construction_worker: update spike sorting docker ([ac2b63a](https://github.com/dj-sciops/utah_organoids/commit/ac2b63a10d084ca2620fb73367832c4c25ee0ac0))
+
+
 ## `v0.5.0`
 
 

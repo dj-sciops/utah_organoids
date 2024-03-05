@@ -3,7 +3,7 @@ import os
 import datajoint as dj
 
 from workflow import ORG_NAME, WORKFLOW_NAME
-from workflow.utils.paths import get_processed_root_data_dir
+from workflow.utils.paths import get_raw_root_data_dir
 
 __all__ = ["FileManifest"]
 
@@ -18,7 +18,7 @@ stores["data-root"] = dict(
     location=f"{ORG_NAME}_{WORKFLOW_NAME}",
     access_key=os.getenv("AWS_ACCESS_KEY", None),
     secret_key=os.getenv("AWS_ACCESS_SECRET", None),
-    stage=get_processed_root_data_dir().parent,
+    stage=get_raw_root_data_dir().parent.as_posix,
 )
 
 dj.config["stores"] = stores

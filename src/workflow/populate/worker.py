@@ -46,3 +46,6 @@ spike_sorting_worker = DataJointWorker(
 )
 
 spike_sorting_worker(ephys_sorter.SIClustering, max_calls=6)
+standard_worker(ephys.EphysSessionInfo, max_calls=200)
+standard_worker(ephys.LFP, max_calls=10)
+standard_worker(analysis.LFPSpectrogram, max_calls=10)

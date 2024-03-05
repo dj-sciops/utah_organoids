@@ -23,7 +23,8 @@ WORKDIR $HOME
 ARG DEPLOY_KEY
 COPY --chown=anaconda $DEPLOY_KEY $HOME/.ssh/id_ed25519
 RUN chmod u=r,g-rwx,o-rwx $HOME/.ssh/id_ed25519 && \
-   ssh-keyscan github.com >> $HOME/.ssh/known_hosts
+   printf "ssh\ngit" >> /tmp/apt_requirements.txt && \
+   /entrypoint.sh echo "installed"
 
 ENV SSL_CERT_DIR=/etc/ssl/certs
 ARG REPO_OWNER
