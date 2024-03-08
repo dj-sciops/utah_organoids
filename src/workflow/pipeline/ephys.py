@@ -37,3 +37,43 @@ if not ephys.schema.is_activated():
 ephys.Clustering.key_source = (
     ephys.Clustering.key_source - ephys_sorter.PreProcessing.key_source
 ).proj() + ephys_sorter.PostProcessing.proj()
+
+
+# Insert into ClusteringParamSet
+# si.sorters.get_default_sorter_params('kilosort2_5') # api for getting default sorting parameters
+params = {}
+params["SI_SORTING_PARAMS"] = {
+    "general": {"ms_before": 2, "ms_after": 2, "radius_um": 100},
+    "waveforms": {
+        "max_spikes_per_unit": 200,
+        "overwrite": True,
+        "sparse": True,
+        "method": "ptp",
+        "threshold": 1,
+    },
+    "filtering": {"freq_min": 150, "dtype": "float32"},
+    "detection": {"peak_sign": "neg", "detect_threshold": 5},
+    "selection": {"n_peaks_per_channel": 5000, "min_n_peaks": 20000},
+    "localization": {},
+    "clustering": {},
+    "matching": {},
+    "apply_preprocessing": True,
+    "shared_memory": True,
+    "job_kwargs": {"n_jobs": -1},
+}
+
+params["SI_PREPROCESSING_METHOD"] = "organoid"
+params["SI_WAVEFORM_EXTRACTION_PARAMS"] = {
+    "ms_before": 1.0,
+    "ms_after": 2.0,
+    "max_spikes_per_unit": 500,
+}
+params["SI_QUALITY_METRICS_PARAMS"] = {"n_components": 5, "mode": "by_channel_local"}
+params["SI_JOB_KWARGS"] = {"n_jobs": -1, "chunk_size": 30000}
+
+ephys.ClusteringParamSet.insert_new_params(
+    clustering_method="spykingcircus2",
+    paramset_desc="Default parameter set for spyking circus2",
+    params=params,
+    paramset_idx=0,
+)
