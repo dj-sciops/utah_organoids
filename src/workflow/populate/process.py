@@ -2,11 +2,12 @@ import sys
 
 from datajoint_utilities.dj_worker import parse_args
 
-from workflow.populate.worker import logger, standard_worker
+from workflow.populate.worker import logger, spike_sorting_worker, standard_worker
 
 # -------- Run process(s) --------
 configured_workers = {
     "standard_worker": standard_worker,
+    "spike_sorting_worker": spike_sorting_worker,
 }
 
 
