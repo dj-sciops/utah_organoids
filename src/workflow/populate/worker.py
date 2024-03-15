@@ -27,9 +27,9 @@ standard_worker = DataJointWorker(
 )
 
 standard_worker(ingestion_support.FileProcessing)
-standard_worker(ephys.EphysSessionInfo, max_calls=5)
-standard_worker(ephys.LFP, max_calls=5)
-standard_worker(analysis.LFPSpectrogram, max_calls=5)
+standard_worker(ephys.EphysSessionInfo, max_calls=200)
+standard_worker(ephys.LFP, max_calls=10)
+standard_worker(analysis.LFPSpectrogram, max_calls=10)
 
 standard_worker(ephys_sorter.PreProcessing, max_calls=5)
 standard_worker(ephys_sorter.PostProcessing, max_calls=5)
@@ -46,6 +46,6 @@ spike_sorting_worker = DataJointWorker(
 )
 
 spike_sorting_worker(ephys_sorter.SIClustering, max_calls=6)
-standard_worker(ephys.EphysSessionInfo, max_calls=200)
-standard_worker(ephys.LFP, max_calls=10)
-standard_worker(analysis.LFPSpectrogram, max_calls=10)
+standard_worker(ephys.CuratedClustering, max_calls=5)
+standard_worker(ephys.WaveformSet, max_calls=5)
+standard_worker(ephys.QualityMetrics, max_calls=5)
