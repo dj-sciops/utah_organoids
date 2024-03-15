@@ -35,7 +35,7 @@ def get_organoid_directory(organoid_key: dict[str, Any]) -> Path:
 
     return find_full_path(
         get_ephys_root_data_dir(),
-        (culture.Experiment & organoid_key).fetch1("experiment_directory"),
+        (culture.ExperimentDirectory & organoid_key).fetch1("experiment_directory"),
     )
 
 

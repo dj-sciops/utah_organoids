@@ -1,5 +1,9 @@
 # docker compose --env-file=../../.env -f docker-compose-spike_sorting_local_worker.yaml -p utah_organoids_spike_sorting build 
 
+# docker compose --env-file=../../.env -f docker-compose-spike_sorting_local_worker.yaml -p utah_organoids_spike_sorting up -d 
+
+# docker compose --env-file=../../.env -f docker-compose-spike_sorting_local_worker.yaml -p utah_organoids_spike_sorting down --volumes
+
 version: '2.4'
 services:
   spike_sorting_local_worker:

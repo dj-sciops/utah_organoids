@@ -1,3 +1,2 @@
-from . import lineage, culture
-from .ephys import ephys, probe
-from . import analysis
+from . import analysis, culture, lineage
+from .ephys import ephys, ephys_preprocessing, ephys_sorter, probe
