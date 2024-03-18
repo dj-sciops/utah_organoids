@@ -1,5 +1,18 @@
 # Changelog
 
+## `v0.8.1`
+
+
+### Bug Fixes
+
+* :bug: change spykingcircus default params ([2fdd1b8](https://github.com/dj-sciops/utah_organoids/commit/2fdd1b8909b3219246a573fef7e71d8087953107))
+
+
+### Build Systems
+
+* :heavy_plus_sign: add hdbscan as dependency ([45afee0](https://github.com/dj-sciops/utah_organoids/commit/45afee0808d690b0c3f9dc12120846ea169cb6bf))
+
+
 ## `v0.8.0`
 
 
