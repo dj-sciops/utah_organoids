@@ -2,6 +2,10 @@ ARG PY_VER
 ARG WORKER_BASE_HASH
 FROM datajoint/djbase:py${PY_VER}-debian-${WORKER_BASE_HASH}
 
+USER root
+RUN apt-get update && apt-get install g++ -y
+
+USER anaconda:anaconda
 ARG DEPLOY_KEY
 COPY --chown=anaconda $DEPLOY_KEY $HOME/.ssh/id_ed25519
 RUN chmod u=r,g-rwx,o-rwx $HOME/.ssh/id_ed25519 && \
