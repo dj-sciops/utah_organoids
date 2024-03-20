@@ -32,14 +32,15 @@ dependencies = [
     "element-lab==0.1.2",
     "element-session>=0.1.2",
     "graphviz",
+    "hdbscan",
     "intanrhdreader @ git+https://github.com/datajoint/intanrhdreader.git",
     "ipykernel",
     "ipython",
     "ipywidgets",
+    "nbformat>=4.2.0",
     "plotly",
     "spikeinterface[full]==0.100.1",
     "probeinterface",
-    "hdbscan ",
 ]
 
 [project.optional-dependencies]
