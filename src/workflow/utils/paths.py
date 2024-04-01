@@ -40,7 +40,7 @@ def get_organoid_directory(organoid_key: dict[str, Any]) -> Path:
 
 
 def get_repo_dir() -> Path:
-    """Get get root directory path"""
+    """Get root directory path"""
     result = subprocess.run(
         ["git", "rev-parse", "--show-toplevel"], stdout=subprocess.PIPE
     )
