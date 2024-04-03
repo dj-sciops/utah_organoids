@@ -17,7 +17,7 @@ __all__ = [
 
 # -------- Define worker(s) --------
 autoclear_error_patterns = []
-worker_schema_name = (f"{SUPPORT_DB_PREFIX}workerlog",)
+worker_schema_name = SUPPORT_DB_PREFIX + "workerlog"
 
 # standard process for non-GPU jobs
 standard_worker = DataJointWorker(
