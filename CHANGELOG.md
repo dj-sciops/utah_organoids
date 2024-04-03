@@ -1,5 +1,13 @@
 # Changelog
 
+## `v0.10.0`
+
+
+### Features
+
+* **worker:** add  to standard_worker ([d1d53e2](https://github.com/dj-sciops/utah_organoids/commit/d1d53e28c99a88cdfc13f22be94d2637e8ec0ad1))
+
+
 ## `v0.9.3`
 
 
