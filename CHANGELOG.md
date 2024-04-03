@@ -1,5 +1,13 @@
 # Changelog
 
+## `v0.9.3`
+
+
+### Bug Fixes
+
+* **worker:** minor bugfix ([cfac0e0](https://github.com/dj-sciops/utah_organoids/commit/cfac0e08422de2d8ad20aea33a7e9453eb75ccba))
+
+
 ## `v0.9.2`
 
 
