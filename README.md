@@ -90,6 +90,22 @@ Get started with the Utah Organoids project by following these steps:
     + By inserting the credentials in the `dj_local_conf.json` file
     + By creating a `.env` file containing these credentials as environment variables
 
+## Troubleshooting
+- If you encounter the following error during the (5) step in the `Initial Configuration Instructions` on MacOS with an M2 processor:
+
+```ERROR: Could not build wheels for datajoint, which is required to install pyproject.toml-based projects```
+
+- Please follow these steps:
+1. Install datajoint using the following command:
+```
+pip install datajoint
+``` 
+1. Retry the step (5) by executing:
+```
+pip install -e .[pipeline]
+```
+If you continue to experience any issues, feel free to reach out to us for assistance.
+
 ## Uploading Raw Data
 
 Please follow these steps to upload your raw data files:
