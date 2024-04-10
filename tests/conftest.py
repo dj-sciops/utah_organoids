@@ -5,7 +5,6 @@ Read more about `conftest.py` under:
     - https://docs.pytest.org/en/stable/writing_plugins.html
 """
 
-
 from pathlib import Path
 
 import datajoint as dj
