@@ -106,6 +106,13 @@ def download_directory(relative_dir: str, dir_type: str = "outbox"):
     """
     import djsciops.axon as dj_axon
 
+    if (
+            not relative_dir
+            and dj.utils.user_choice(f"Are you sure you want to download the entire '{dir_type}' directory?") != "yes"
+    ):
+        print("Canceled download.")
+        return
+
     s3_session, s3_bucket = _get_axon_s3_session()
 
     if dir_type == "inbox":
