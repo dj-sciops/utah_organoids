@@ -54,3 +54,8 @@ standard_worker(ephys.CuratedClustering, max_calls=5)
 standard_worker(ephys.WaveformSet, max_calls=5)
 standard_worker(ephys.QualityMetrics, max_calls=5)
 standard_worker(ingestion_support.PostEphys, max_calls=5)
+
+
+def get_workflow_operation_overview():
+    from datajoint_utilities.dj_worker.utils import get_workflow_operation_overview
+    return get_workflow_operation_overview(worker_schema_name=worker_schema_name, db_prefixes=[DB_PREFIX, SUPPORT_DB_PREFIX])
