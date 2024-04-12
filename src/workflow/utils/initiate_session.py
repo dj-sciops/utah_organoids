@@ -121,7 +121,8 @@ def download_directory(relative_dir: str, dir_type: str = "outbox"):
     elif dir_type == "outbox":
         local_dir = get_processed_root_data_dir() / relative_dir
     else:
-        raise ValueError(f"Invalid dir_type: {dir_type}")
+        logger.info(f"Unknown dir_type: {dir_type} - defaulting to 'processed' directory. ")
+        local_dir = get_processed_root_data_dir() / dir_type / relative_dir
 
     source = Path(DB_PREFIX[:-1]) / dir_type / relative_dir
 
