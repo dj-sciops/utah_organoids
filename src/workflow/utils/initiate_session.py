@@ -16,6 +16,7 @@ s3_session, s3_bucket = None, None
 4. Make sure there is a local_outbox in the config.yaml.
 """
 
+
 def _get_axon_s3_session():
     import djsciops.authentication as dj_auth
     import djsciops.settings as dj_settings
@@ -142,6 +143,8 @@ def download_spike_sorted_results(clustering_key):
     """
     ephys = dj.create_virtual_module("ephys", DB_PREFIX + "ephys")
 
-    output_relpath = (ephys.ClusteringTask & clustering_key).fetch1("clustering_output_dir")
+    output_relpath = (ephys.ClusteringTask & clustering_key).fetch1(
+        "clustering_output_dir"
+    )
 
     return download_directory(output_relpath)

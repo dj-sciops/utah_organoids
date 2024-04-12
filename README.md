@@ -51,42 +51,36 @@ Online coding environment:
 + Notebook focusing on **logical operators in DataJoint tables** [here](https://github.com/datajoint-company/db-programming-with-datajoint/blob/master/notebooks/SQL%20Syntax%20for%20DataJoint%20Querying.ipynb)
 
 + Additional resources: DataJoint documentation references
+  + Documentation on **DataJoint Table Tiers**: Access it [here](https://datajoint.com/docs/core/datajoint-python/0.13/reproduce/table-tiers/)
+  + Documentation on **DataJoint Common Commands**: Access it [here](https://datajoint.com/docs/core/datajoint-python/0.13/query-lang/common-commands/)
+  + Documentation on **DataJoint Operators**: Access it [here] (https://datajoint.com/docs/core/datajoint-python/0.13/query-lang/operators/)
   + Documentation regarding the **`update` operation**: Access it [here](https://datajoint.com/docs/core/datajoint-python/0.14/manipulation/update/)
   + Documenation on **DataJoint-to-SQL Transpilation**: Access it [here](https://datajoint.com/docs/core/datajoint-python/0.14/internal/transpilation/)
-  + Documentation on **DataJoint Common Commands**: Access it [here](https://datajoint.com/docs/core/datajoint-python/0.13/query-lang/common-commands/)
   + Documentation on **Quality Assurance and Code Reviews**: Access it [here](https://datajoint.com/docs/elements/management/quality-assurance/)
 
-## Initial Configuration Instructions
+## Initial Installation & Configuration Instructions
 
 Get started with the Utah Organoids project by following these steps:
 
 1. Install [git](https://git-scm.com/download/win)
-1. Install [conda](https://docs.conda.io/en/latest/miniconda.html)
-1. Clone `utah_organoids` repository
-
+2. Install [conda](https://docs.conda.io/en/latest/miniconda.html)
+3. Clone `utah_organoids` repository
     ```bash
     git clone https://github.com/dj-sciops/utah_organoids.git && cd utah_organoids
     ```
-
-1. Create conda virtual environment
-
+4. Create conda virtual environment
     ```bash
     conda env create -f conda_env.yml --force && conda activate utah_organoids
     ```
-
-1. Install dependencies
-
+5. Install dependencies
     ```bash
-    pip install -e .
+    pip install -e . # on MacOS, quotes are needed: pip install -e '.[pipeline]'
     ```
-
-1. To create the `dj_local_conf.json` file, execute the command below. Input your username and password when prompted:
-
+6. To create the `dj_local_conf.json` file, execute the command below. Input your username and password when prompted:
     ```bash
     chmod +x ./create_dj_config.sh && ./create_dj_config.sh
     ```
-
-1. Insert the AWS functional user credentials to fetch data from the s3 bucket to the notebook:
+7. Insert the AWS functional user credentials to fetch data from the s3 bucket to the notebook:
     + By inserting the credentials in the `dj_local_conf.json` file
     + By creating a `.env` file containing these credentials as environment variables
 
@@ -97,13 +91,13 @@ Get started with the Utah Organoids project by following these steps:
 
 - Please follow these steps:
 1. Install datajoint using the following command:
-```
-pip install datajoint
-``` 
-1. Retry the step (5) by executing:
-```
-pip install -e .[pipeline]
-```
+    ```bash
+    pip install datajoint
+    ``` 
+2. Retry the step (5) by executing:
+    ```bash
+    pip install -e .[pipeline] # on MacOS, quotes are needed: pip install -e '.[pipeline]'
+    ```
 If you continue to experience any issues, feel free to reach out to us for assistance.
 
 ## Uploading Raw Data
@@ -126,31 +120,22 @@ Please follow these steps to upload your raw data files:
         8. `local_outbox`
 
 1. On Windows, open the command prompt application by searching for the following:
-
     ```
     Anaconda Prompt (miniconda3)
     ```
-
-1. Activate the conda environment by typing the following in the command prompt:
-
+2. Activate the conda environment by typing the following in the command prompt:
     ```bash
     conda activate utah_organoids
     ```
-
-1. Open a python interpreter by typing the following in the command prompt:
-
+3. Open a python interpreter by typing the following in the command prompt:
     ```bash
     ipython
     ```
-
-1. Change directories to where the raw data is stored
-
+4. Change directories to where the raw data is stored
     ```python
     cd "D:\"
     ```
-
-1. Run data upload for a single subject and a single recording session.
-
+5. Run data upload for a single subject and a single recording session.
     ```python
     from workflow.utils.initiate_session import upload_session_data
     upload_session_data('<Relative path of data>')
