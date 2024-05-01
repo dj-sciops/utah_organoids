@@ -25,7 +25,7 @@ class InductionCulture(dj.Manual):
     induction_culture_plate: int unsigned
     ---
     induction_culture_wells: varchar(8)    # Ranges of wells occupied (e.g. 1-3)
-    culture_plate_type='': enum('rosette array plate', 'traditional plate')
+    culture_plate_type='': enum('','rosette array plate', 'traditional plate')
     induction_culture_note='': varchar(256)
     """
 
@@ -156,7 +156,7 @@ class OrganoidCultureCondition(dj.Manual):
     supplement='': varchar(32)
     media='': varchar(32)
     media_percent_changed=null: int unsigned # Percent of the media changed, 1-100
-    substrate='': enum('matrigel')
+    substrate='': enum('', 'matrigel')
     organoid_condition_image_directory='': varchar(256) # Images stored with "id_datetime" naming convention.
     organoid_condition_note='': varchar(256)
     """
