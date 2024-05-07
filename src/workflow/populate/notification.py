@@ -13,7 +13,7 @@ from workflow.pipeline import ephys
 __all__ = ["logger"]
 logger = dj.logger
 
-org_name, workflow_name, _ = DB_PREFIX.split("_")
+org_name, workflow_name, *_ = DB_PREFIX.split("_")
 org_vm = dj.create_virtual_module("org_vm", f"{org_name}_admin_workflow")
 
 workflow_key = (org_vm.Workflow & {"wf_DB_PREFIX": DB_PREFIX}).fetch1("KEY")

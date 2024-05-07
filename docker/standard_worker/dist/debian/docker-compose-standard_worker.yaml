@@ -1,5 +1,5 @@
 # docker compose --env-file=../../.env  -f docker-compose-standard_worker.yaml -p utah_organoids build
-version: '2.4'
+version: "2.4"
 services:
   standard_worker:
     build:
