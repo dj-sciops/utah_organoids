@@ -102,7 +102,7 @@ try:
         clustering_method="spykingcircus2",
         paramset_desc="Default parameter set for spyking circus2 using SpikeInterface v0.101.*",
         params=params,
-        paramset_idx=0,
+        paramset_idx=1,
     )
 except Exception as e:
     logger.warning(f"Cannot create new paramset - {str(e)}")
