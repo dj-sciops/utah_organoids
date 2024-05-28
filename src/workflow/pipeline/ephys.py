@@ -2,7 +2,7 @@ import os
 from typing import Any
 
 import datajoint as dj
-from element_array_ephys import ephys_organoids as ephys
+from element_array_ephys import ephys_no_curation as ephys
 from element_array_ephys import ephys_report, probe
 from element_array_ephys.spike_sorting import si_spike_sorting as ephys_sorter
 
@@ -37,6 +37,9 @@ if not ephys.schema.is_activated():
     ephys.activate(DB_PREFIX + "ephys", DB_PREFIX + "probe", linking_module=__name__)
     ephys_sorter.activate(DB_PREFIX + "ephys_sorter", ephys_module=ephys)
 
+
+# Add "spykingcircus2" to ClusteringMethod
+ephys.ClusteringMethod.insert1({"clustering_method": "spykingcircus2", "clustering_method_desc": ""}, skip_duplicates=True)
 
 # Insert into ClusteringParamSet
 # si.sorters.get_default_sorter_params('kilosort2_5') # api for getting default sorting parameters
