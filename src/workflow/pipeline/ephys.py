@@ -16,6 +16,8 @@ from workflow.utils.paths import (
 
 __all__ = ["probe", "ephys", "ephys_report", "ephys_sorter"]
 
+logger = dj.logger
+
 # Set s3 stores configuration
 datajoint_blob = dict(
     protocol="s3",
@@ -92,9 +94,13 @@ params["SI_POSTPROCESSING_PARAMS"] = {
     "export_report": True,
 }
 
-ephys.ClusteringParamSet.insert_new_params(
-    clustering_method="spykingcircus2",
-    paramset_desc="Default parameter set for spyking circus2 using SpikeInterface v0.101.*",
-    params=params,
-    paramset_idx=0,
-)
+try:
+    ephys.ClusteringParamSet.insert_new_params(
+        clustering_method="spykingcircus2",
+        paramset_desc="Default parameter set for spyking circus2 using SpikeInterface v0.101.*",
+        params=params,
+        paramset_idx=0,
+    )
+except Exception as e:
+    logger.warning(f"Cannot create new paramset - {str(e)}")
+
