@@ -47,14 +47,7 @@ params = {}
 params["SI_PREPROCESSING_METHOD"] = "organoid_preprocessing"
 params["SI_SORTING_PARAMS"] = {
     "general": {"ms_before": 2, "ms_after": 2, "radius_um": 100},
-    "waveforms": {
-        "max_spikes_per_unit": 200,
-        "overwrite": True,
-        "sparse": True,
-        "method": "energy",
-        "threshold": 0.25,
-    },
-    "filtering": {"freq_min": 150, "dtype": "float32"},
+    "filtering": {"freq_min": 150},
     "detection": {"peak_sign": "neg", "detect_threshold": 4},
     "selection": {
         "method": "smart_sampling_amplitudes",
@@ -65,7 +58,6 @@ params["SI_SORTING_PARAMS"] = {
     "clustering": {"legacy": False},
     "matching": {"method": "circus-omp-svd", "method_kwargs": {}},
     "apply_preprocessing": True,
-    "shared_memory": True,
     "cache_preprocessing": {
         "mode": "memory",
         "memory_limit": 0.5,
@@ -102,7 +94,7 @@ try:
         clustering_method="spykingcircus2",
         paramset_desc="Default parameter set for spyking circus2 using SpikeInterface v0.101.*",
         params=params,
-        paramset_idx=0,
+        paramset_idx=1,
     )
 except Exception as e:
     logger.warning(f"Cannot create new paramset - {str(e)}")
