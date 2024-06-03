@@ -257,7 +257,7 @@ class data:
                         # extract value data
                         value_data = task_query.fetch(value)
 
-                        if type(value_data) == np.ndarray:
+                        if isinstance(value_data, np.ndarray):
                             value_data = np.vstack(value_data)
                         
                         # put into dictionary
