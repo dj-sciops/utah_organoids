@@ -12,13 +12,6 @@ RUN apt update && \
     chown -R jovyan:users /usr/local/bin/kernel-launchers
 CMD /usr/local/bin/bootstrap-kernel.sh
 
-# Additional packages
-RUN apt install g++ -y
-
-# To build locally from MacOS
-RUN apt install pkg-config libhdf5-dev
-RUN pip install --no-binary=h5py h5py
-
 USER jovyan
 ARG DEPLOY_KEY
 COPY --chown=jovyan $DEPLOY_KEY $HOME/.ssh/id_ed25519
