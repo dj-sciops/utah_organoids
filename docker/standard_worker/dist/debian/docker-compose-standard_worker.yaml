@@ -1,4 +1,4 @@
-# docker compose --env-file=../../.env  -f docker-compose-standard_worker.yaml -p utah_organoids build
+# docker compose --env-file=../../.env  -f docker-compose-standard_worker.yaml -p utah_organoids_standard build
 version: "2.4"
 services:
   standard_worker:
@@ -9,27 +9,20 @@ services:
       args:
         - PY_VER
         - DEPLOY_KEY
-        - WORKER_BASE_HASH
         - REPO_OWNER
         - REPO_NAME
         - REPO_BRANCH=${REPO_BRANCH:-main}
-        - CONTAINER_USER
-    image: registry.vathes.com/sciops/standard_${REPO_NAME}:py${PY_VER}-debian-${WORKFLOW_VERSION}
+    image: ${DOCKER_IMAGE_TAG}
     environment:
-      - CONTAINER_USER
       - DJ_HOST
       - DJ_USER
       - DJ_PASS
       - DATABASE_PREFIX
       - AWS_ACCESS_KEY
       - AWS_ACCESS_SECRET
-      - AWSACCESSKEYID=${AWS_ACCESS_KEY}
-      - AWSSECRETACCESSKEY=${AWS_ACCESS_SECRET}
-      - RAW_ROOT_DATA_DIR=${S3_ROOT_MOUNTPOINT}/inbox
-      - PROCESSED_ROOT_DATA_DIR=${OUTBOX_MOUNTPOINT}
+      - RAW_ROOT_DATA_DIR=/home/jovyan/s3/inbox
+      - PROCESSED_ROOT_DATA_DIR=/home/jovyan/efs/outbox
       - WORKER_MAX_IDLED_CYCLE
-      - BUCKET_NAME
-      - REPO_NAME
     cap_add:
       - SYS_ADMIN
     devices:
@@ -37,8 +30,8 @@ services:
     security_opt:
       - apparmor:unconfined
     volumes:
-      - ${OUTBOX_MOUNTPOINT}:${OUTBOX_MOUNTPOINT}
-      - ${S3_ROOT_MOUNTPOINT}:${S3_ROOT_MOUNTPOINT}
+      - ${OUTBOX_MOUNTPOINT:-./outbox}:/home/jovyan/efs/outbox
+      - ${S3_ROOT_MOUNTPOINT:-./s3_root}:/home/jovyan/s3
     scale: ${WORKER_COUNT:-1}
     command:
       - /bin/bash

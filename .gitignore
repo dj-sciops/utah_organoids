@@ -72,6 +72,7 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+test*.ipynb
 
 # pyenv
 .python-version
@@ -123,6 +124,7 @@ run.env
 # ssh
 *.ssh
 *.pem
+**/id_ed25519
 
 # github actions
 .github/.test/*
@@ -130,3 +132,5 @@ run.env
 
 # Mac
 .DS_Store
+
+

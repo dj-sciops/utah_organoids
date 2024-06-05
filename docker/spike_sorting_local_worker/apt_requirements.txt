@@ -1,7 +1,0 @@
-locales-all
-build-essential
-vim
-wget
-curl
-docker.io
-sudo

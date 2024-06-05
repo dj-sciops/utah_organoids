@@ -1,5 +1,26 @@
 # Changelog
 
+## `v0.14.0`
+
+
+### Features
+
+*  = 1 ([3d5c455](https://github.com/dj-sciops/utah_organoids/commit/3d5c455c2043df238265be6c63a4522e199d9ca4))
+
+
+## `v0.13.0`
+
+
+### Features
+
+* newer version of element-array-ephys (with spikeinterface v0.101+) ([382d7ec](https://github.com/dj-sciops/utah_organoids/commit/382d7ec20e24ecf32f1c6b0196e6c9113a89f2cc))
+
+
+### Code Refactoring
+
+* unpack elements in DB_PREFIX split ([feb51d4](https://github.com/dj-sciops/utah_organoids/commit/feb51d43ef2c3f8b8e22311b32c243f3e63068c5))
+
+
 ## `v0.12.1`
 
 

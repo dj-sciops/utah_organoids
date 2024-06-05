@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "utah_organoids"
-version = "0.12.1"
+version = "0.14.0"
 description = "Organoids electrophysiology pipeline using the DataJoint elements"
 readme = "README.md"
-requires-python = "<3.10"
+requires-python = "<3.11"
 license = { file = "LICENSE" }
 authors = [{ name = "DataJoint", email = "info@datajoint.com" }]
 keywords = [
@@ -30,7 +30,6 @@ dependencies = [
     "element-array-ephys @ git+https://github.com/dj-sciops/utah_organoids_element-array-ephys.git",
     "element-lab==0.1.2",
     "element-session>=0.1.2",
-    "element-interface @ git+https://github.com/datajoint/element-interface.git",
     "graphviz",
     "hdbscan",
     "intanrhdreader @ git+https://github.com/datajoint/intanrhdreader.git",
@@ -39,7 +38,6 @@ dependencies = [
     "ipywidgets",
     "nbformat>=4.2.0",
     "plotly",
-    "spikeinterface[full]==0.100.1",
     "probeinterface",
 ]
 

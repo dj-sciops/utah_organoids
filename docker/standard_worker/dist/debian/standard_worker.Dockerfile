@@ -1,21 +1,33 @@
 ARG PY_VER
-ARG WORKER_BASE_HASH
-FROM datajoint/djbase:py${PY_VER}-debian-${WORKER_BASE_HASH}
+FROM jupyter/docker-stacks-foundation:python-${PY_VER}
 
 USER root
-RUN apt-get update && apt-get install g++ -y
+RUN apt update && \
+    apt install -y ssh git && \ 
+    pip install --upgrade pip && \
+    pip install gateway_provisioners && \
+    jupyter image-bootstrap install --languages python && \
+    chown jovyan:users /usr/local/bin/bootstrap-kernel.sh && \
+    chmod 0755 /usr/local/bin/bootstrap-kernel.sh && \
+    chown -R jovyan:users /usr/local/bin/kernel-launchers
+CMD /usr/local/bin/bootstrap-kernel.sh
 
-USER anaconda:anaconda
+# Additional packages
+RUN apt install g++ -y
+
+USER jovyan
 ARG DEPLOY_KEY
-COPY --chown=anaconda $DEPLOY_KEY $HOME/.ssh/id_ed25519
+COPY --chown=jovyan $DEPLOY_KEY $HOME/.ssh/id_ed25519
 RUN chmod u=r,g-rwx,o-rwx $HOME/.ssh/id_ed25519 && \
-    printf "ssh\ngit" >> /tmp/apt_requirements.txt && \
-    /entrypoint.sh echo "installed"
+    ssh-keyscan github.com >> $HOME/.ssh/known_hosts
+
 
 ARG REPO_OWNER
 ARG REPO_NAME
 ARG REPO_BRANCH
 WORKDIR $HOME
-RUN ssh-keyscan github.com >> $HOME/.ssh/known_hosts && \
-    git clone -b ${REPO_BRANCH} git@github.com:${REPO_OWNER}/${REPO_NAME}.git && \
-    pip install ./${REPO_NAME}
+RUN git clone -b ${REPO_BRANCH} git@github.com:${REPO_OWNER}/${REPO_NAME}.git && \
+    pip install "./${REPO_NAME}"
+
+
+
