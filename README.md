@@ -99,12 +99,11 @@ Get started with the Utah Organoids project by following these steps:
         pip install . 
         ```
 
-+ If there are new updates to the code, including new packages, please ensure your local code is updated using the following steps:
++ If there are new updates to the code, including new packages, please ensure your local code is updated using the following steps: 
     1. Pull the latest code
-    2. In your activated conda environment, uninstall the updated new package(s). For example:
+    2. In your activated conda environment, you can force installation of the newest available versions of the dependencies:
         ```
-        pip uninstall element-array-ephys element-inferface
-        pip install .
+        pip install --upgrade --upgrade-strategy eager .
         ```
 These steps will synchronize your environment with the latest changes in the codebase.
 
