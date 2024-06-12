@@ -85,19 +85,29 @@ Get started with the Utah Organoids project by following these steps:
     + By creating a `.env` file containing these credentials as environment variables
 
 ## Troubleshooting
-- If you encounter the following error during the (5) step in the `Initial Configuration Instructions` on MacOS with an M2 processor:
++ If you encounter the following error during the (5) step in the `Initial Configuration Instructions` on MacOS with an M2 processor:
 
-```ERROR: Could not build wheels for datajoint, which is required to install pyproject.toml-based projects```
+    ```ERROR: Could not build wheels for datajoint, which is required to install pyproject.toml-based projects```
 
-- Please follow these steps:
-1. Install datajoint using the following command:
-    ```bash
-    pip install datajoint
-    ``` 
-2. Retry the step (5) by executing:
-    ```bash
-    pip install -e .[pipeline] # on MacOS, quotes are needed: pip install -e '.[pipeline]'
-    ```
+    Please follow these steps:
+    1. Install datajoint using the following command:
+        ```bash
+        pip install datajoint
+        ``` 
+    2. Retry the step (5) by executing:
+        ```bash
+        pip install . 
+        ```
+
++ If there are new updates to the code, including new packages, please ensure your local code is updated using the following steps:
+    1. Pull the latest code
+    2. In your activated conda environment, uninstall the updated new package(s). For example:
+        ```
+        pip uninstall element-array-ephys element-inferface
+        pip install .
+        ```
+These steps will synchronize your environment with the latest changes in the codebase.
+
 If you continue to experience any issues, feel free to reach out to us for assistance.
 
 ## Uploading Raw Data
