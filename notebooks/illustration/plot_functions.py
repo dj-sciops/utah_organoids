@@ -1,10 +1,9 @@
 # %%
 # Load Modulues
 import os
-
-if os.path.basename(os.getcwd()) == "notebooks":
-    os.chdir("..")
 if os.path.basename(os.getcwd()) == "illustration":
+    os.chdir("..")
+if os.path.basename(os.getcwd()) == "notebooks":
     os.chdir("..")
 import datajoint as dj
 from datetime import datetime
@@ -119,7 +118,7 @@ def get_nest_dict(data , nest_dict , param , convert=False): # Make a nested dic
 
                 grouped_data =[]
                 for dkey in data_keys:
-                    grouped_data.append(data[dkey]) # group all data based on the keys in the previous statement
+                    grouped_data.extend(data[dkey]) # group all data based on the keys in the previous statement
                     
                 nest_dict[nkey] = grouped_data # add it to the dictionary
 
@@ -176,7 +175,7 @@ def get_nest_dict(data , nest_dict , param , convert=False): # Make a nested dic
 
                     grouped_data =[]
                     for dkey in data_keys:
-                        grouped_data.append(data[dkey]) # group all data based on the keys in the previous statement
+                        grouped_data.extend(data[dkey]) # group all data based on the keys in the previous statement
                         
                     nest_dict[okey][nkey] = grouped_data
 
@@ -186,6 +185,128 @@ def get_nest_dict(data , nest_dict , param , convert=False): # Make a nested dic
 
     return nest_dict
 
+def get_barX(data , bargap=.2 , groupgap=.2): # NEED TO CHANGE SO IT CAN WORK WITH ANY DICTIONARY
+        # Get X values used in a bar plot
+        # data = nested dictionary of data for x values
+        #   first set of keys is for groups, next set of keys is for bars within the group
+        # bargap = gap between bars (center to center)
+        # groupgap = distance between groups 
+
+        x_group = None
+        dict1 = data
+
+        xvalues = []
+        for dict2 in dict1.values():
+            
+            if x_group is None:
+                x_group = list(np.arange(len(dict2))*bargap)
+
+            else:
+                group_offset = x_group[-1] + groupgap + bargap
+                x_group = list(np.arange(len(dict2))*bargap + group_offset)
+
+            xvalues.append(x_group)
+
+        return xvalues
+
+def reorder_dict(dict1 , order):
+    # Reorder dict keys acording to order
+
+    new_dict = {}
+    if set(dict1.keys()).issubset(set(order)): # Check if all dictionary keys are in order (all order doesn't need to be in keys)
+
+        for newkey in order:
+
+            try:
+                new_dict[newkey] = dict1[newkey] # Try and enter value info into newdict with correct order
+            except:
+                continue # if newkey not in dict1 then go to next newkey
+
+        return new_dict
+    
+    # If keys not a subset of order
+    for key1 , value1 in dict1.items(): # iterate through dictionaries (in case they're nested)
+
+        if isinstance(value1 , dict): # if dict1 is nested
+            dict2 = value1
+
+            new_dict[key1] = reorder_dict(dict1=dict2 , order=order) # attempt to reorder nested layer
+
+        else:
+            raise Exception("items in order not found in dictionary")
+        
+    return new_dict
+
+def unnest_list(nested_list):
+    # nested list = list, needs to be universally nested (each element is nested the same number of times) (can change this is needed)
+
+    mylist = nested_list
+
+    while isinstance(mylist[0] , list): # unnest list
+        mylist = sum(mylist , [])
+
+    flattened_list = mylist
+
+    return flattened_list
+# %%
+
+class session:
+
+    def spike_sorting_session(organoid_id , experiment_start_time , start_time , end_time , used_electrodes , paramset):    
+
+        # create spike_sorting sessions
+        session_info = dict(
+            organoid_id=organoid_id,
+            experiment_start_time=experiment_start_time,
+            insertion_number=0,
+            start_time=start_time,
+            end_time=end_time,
+            session_type="spike_sorting",
+        )
+
+        session_probe_info = dict(
+            organoid_id=organoid_id,
+            experiment_start_time=experiment_start_time,
+            insertion_number=0,
+            start_time=start_time,
+            end_time=end_time,
+            probe="Q983",  # probe serial number
+            port_id="A",  # Port ID ("A", "B", etc.)
+            used_electrodes=used_electrodes,  # empty if all electrodes were used
+        )
+
+        # Insert the session
+        SPIKE_SORTING_DURATION = 120  # minutes
+
+        # Start and end time of the session. It should be within the experiment time range
+        start_time = datetime.strptime(session_info["start_time"], "%Y-%m-%d %H:%M:%S")
+        end_time = datetime.strptime(session_info["end_time"], "%Y-%m-%d %H:%M:%S")
+        duration = (end_time - start_time).total_seconds() / 60
+
+        assert (
+            session_info["session_type"] == "spike_sorting"
+            and duration <= SPIKE_SORTING_DURATION
+        ), f"Session type must be 'spike_sorting' and duration must be less than {SPIKE_SORTING_DURATION} minutes"
+        
+        ephys.EphysSession.insert1(session_info, ignore_extra_fields=True, skip_duplicates=True)
+
+        ephys.EphysSessionProbe.insert1(
+            session_probe_info, ignore_extra_fields=True, skip_duplicates=True
+        )
+
+        del session_probe_info["used_electrodes"]
+
+        key = (ephys.EphysSession & session_info).fetch1("KEY")
+
+        # determine sorter
+        sorter_name = "spykingcircus2"
+        si.sorters.get_default_sorter_params(sorter_name)
+
+        # get cluster
+        clustering_task = key | {"paramset_idx" : paramset}
+        ephys.ClusteringTask.insert1(clustering_task , skip_duplicates=True)
+        
+        return clustering_task
 # %%
 # Get Data functions
 class data:
@@ -311,167 +432,296 @@ class data:
 
 class format:
 
-    def horhist(data , bins = 50 , key2_order = None):
-        # Input double nested data =
-        #   First nest = number of plots to be generated <-- might want to change this to a single nested data and run the format function multiple times
-        #   Second nest = number of groups in each plot --> data for those groups
-        # bin_data = What bins will be 
-        #   if vector --> that's what the bins will be
-        #   if int --> number of bins 
-        #   if None --> 50 bins
-        # key2order = Order which the groups will be ploted, based on the keys of dict2 (nested within dict1)
-        #   if None --> will plot in alphabetical order
-        #   only keys within key2_order which are also in dict2 will be included 
+    def get_labels(dict1):
+        # Get all keys in a nested dictionary (doesn't have to be nested), likely will be used as labels for plots
+        # Outputs a similar dictionary with one level less of nest (is input is a {} output will be a list)
 
-        dict1 = data # first dictionary (nested)
+        labels = {}
+        label_list = []
+        for key1 , value1 in dict1.items():
 
-        # Get bin data (if None provided)
-        # Assuming bin data is all the data for the plot (first nest)
-        if isinstance(bins , int):
-            
-            bin_data = {}
-            for key1 , dict2 in dict1.items(): 
-                # key1 = first set of nest keys 
-                # dict2 = second layer dictionaries within dict1
-                
-                values = list(dict2.values()) # 3D List
+            if isinstance(value1 , dict):
+                dict2 = value1
 
-                values_array = np.array(sum(sum(values , []) , [])) # flattened 1D numpy array <-- this may cause problems later
-                
-                _ , key1_bins = np.histogram(values_array , bins=bins) # find bins
+                labels[key1] = format.get_labels(dict1=dict2) # iterate through nests
 
-                bin_data[key1] = key1_bins # put into global dictionary
-
-        elif isinstance(bins , (list , np.ndarray)):
-            
-            bin_data = {}
-            for key1 in dict1.keys():
-            
-                bin_data[key1] = bins
-
-        elif isinstance(bins , dict):
-
-            bin_data = bins
-
+            else:
+                label_list.append(key1) # Get list of keys
+        
+        if isinstance(value1 , dict):
+            return labels
         else:
-            print("Fix bins input")
-            return
+            return label_list
+        
+    def unest_layer(dict1 , take_average=False):
+        # remove one layer of nest
+        # if take_average=True --> the result will be averages of the values for the last key:value pairs
+        # if False --> the result will be all values with one layer removed
+        # ex: {A1:{B1:{C1:[1,5] , C2:[4,6,2]} , B2:{C3:[3,1] , C4:5}}} --> {A1: {B1:[3,6] , B2:[2,5]} } (True)
+        #                                                              --> {A1: {B1:[1,5,4,6,2] , B2:[3,1,5]} } (False)
 
-        # Reformat data into histogram format
-        plot_data = {}
-        keys = {}
-        for key1 , dict2 in dict1.items():
+        new_dict = {}
+        value_list = []
 
-            values_list = []
-            keys_list = []
-            if key2_order:
+        for key1 , value1 in dict1.items():
 
-                for key2 in key2_order:
-                    if key2 in dict2.keys():
-                        
-                        values = dict2[key2]
+            if isinstance(value1 , dict):
+                dict2 = value1
 
-                        values_array = np.array(sum(values , [])) # 2D list --> 1D numpy
+                new_dict[key1] = format.unest_layer(dict1=dict2 , take_average=take_average)
 
-                        # Convert to histogram format
-                        values_hist , _ = np.histogram(values_array , bins=bin_data[key1])
-
-                        # Put into a list for each drug
-                        values_list.append(values_hist)
-                        keys_list.append(key2)
-            
             else:
 
-                for key2 , values in dict2.items():
-                    
-                        values_array = np.array(sum(values , [])) # 2D list --> 1D numpy
+                if take_average:
+                    value_list.append(np.mean(value1))
+                else:
+                    value_list.extend(value1)
 
-                        # Convert to histogram format
-                        values_hist , _ = np.histogram(values_array , bins=bin_data[key1])
+        if isinstance(value1 , dict):
+            return new_dict 
+        else:
+            return value_list
 
-                        # Put into a list for each drug
-                        values_list.append(values_hist)
-                        keys_list.append(key2)
+
+    def horhist(data , bins = 50):
+        # Input = Data Dictionary (values are a list (can be nested))
+        #   Only Effects the bottom two nests (in a tripple nested dictionary the first set of key/value won't be effected)
+        #   First nest = number of groups of horhists
+        #   Second nest = number of horhists in a group
+        #   if data is a single (nonnested) dictionary {} the output will be for one group
+
+        # bin_data = What bins will be 
+        #   bins remain constant throughout group
+        #   if vector (list , numpy) --> bins will be that vector (the same for all groups)
+        #   if int --> number of bins based on group values
+        #   if None --> 50 bins based on group values
+
+        dict1 = data # first dictionary (nested)
+        horhist_data = {}
+        bin_data = {}
+
+        # Group Data
+        bins_list = [] # 1D list 
+        horhist_list = [] # 2D list
+        for key1 , value1 in dict1.items(): # iterate through original data
             
-            # Put into global dictionary
-            plot_data[key1] = np.array(values_list)
-            keys[key1] = keys_list
+            if isinstance(value1 , list): # if the value is data (needs to be in list form)
+                calculate = True
+
+                bins_list.extend(unnest_list(value1)) # put into global(groupwise) list
+                horhist_list.append(unnest_list(value1))
+
+            elif isinstance(value1 , dict):
+                calculate = False
+                dict2 = value1
+
+                horhist_data[key1],bin_data[key1] = format.horhist(data=dict2 , bins = bins) # run function again at nested value               
+                
+            else:
+                raise TypeError("data needs to be a dictionary(can be nested) with a list(can be nested) as values")
         
-        return plot_data , bin_data , keys
+        if calculate: # if the dictionary values are a list, calculate the histogram data
+            # Get Bin Data
+            if isinstance(bins , int):
+                _ , bin_data = np.histogram(a=bins_list , bins=bins)
+
+            elif isinstance(bins , (list , np.ndarray)):
+                bin_data = bins
+
+            else:
+                raise TypeError("bins needs to be type int,list,np.ndarray")
+            
+            # Get Horhist Data
+            horhist_data_list = []          
+            for horhistvalues in horhist_list:
+                horhist_data_list.append(np.histogram(a=horhistvalues , bins=bin_data)[0])
+            horhist_data = np.vstack(horhist_data_list)
+            
+        return horhist_data , bin_data
+    
+    def image(data , cbar_lims):
+        # data = Input Data Dictionary (can be nested)
+        #   last nest layer with data indicates the image plots
+        #   the layer before that indicates groups, the cbar will be based on those groups
+        # cbar_lims = [cbar_min , cbar_max] --> each on a 0-100 scale of the percentile of what the colorbar should include
+        # THE DATA DICIONARY DOESN'T CHANGE
+
+        dict1 = data    
+
+        colorbar = {}
+        values_list = []
+        for key1 , value1 in dict1.items():
+
+            if isinstance(value1 , dict):
+                dict2 = value1
+
+                values_list = format.image(data=dict2 , cbar_lims=cbar_lims)
+                values_array = np.array(values_list)
+
+                colorbar[key1] = []
+                for lim in cbar_lims:
+                    colorbar[key1].append(np.percentile(values_array , lim))   
+
+            else:
+                values_list.append(value1)
+
+        if isinstance(value1 , dict):
+            return colorbar
+        else:
+            return values_list
+
+    def bar(data , bargap = .2 , groupgap = .2 , first_call = True):
+        # Assuming data is a dictionary (could be nested) with values as type list: 
+        # if points = True
+        #   nest order = point values + bar/error values <--- group sorting <--- axis sorting <--- misc. sorting
+        # if points = False
+        #   nest order = bar values <-- group sorting <-- axis sorting <--- misc. sorting
+                        
+        # Makes new variables bar , error, and points 
+        #   bar = mean of point values under the specific key
+        #   error = standard deviationss of values under the specific key
+        #   points = values which are under a specific key
+
+        dict1 = data
+        
+        bar_data = {}
+        error_data = {}
+        points_data = {}
+
+        bar_list = []
+        error_list = []
+        points_list = []
+        x_list = []
+
+        groupoffset = 0
+
+        for key1 , value1 in dict1.items(): # Axis level - [drugs]
+
+            if isinstance(value1 , dict):
+                dict2 = value1
+                get_points = True
+
+                numpoints_list = []
+                for key2 , value2 in dict2.items(): # Group level - [organoids]
+
+                    if isinstance(value2 , dict): 
+                        dict3 = value2
+                        value_level = False
+
+                        bar = bar_data[key1] = {}
+                        error = error_data[key1] = {}
+                        points = points_data[key1] = {}
+                        
+                        bar["data"] , error["data"] , points["data"] , x_list = format.bar(data = dict2 , first_call = False)
+
+                    elif isinstance(value2 , list):
+                        value_level = True
+
+                        # put into value level list
+                        bar_list.append(np.mean(value2))
+                        error_list.append(np.std(value2))
+                        points_list.extend(value2)
+                        numpoints_list.append(len(value2))
+
+                if value_level:
+                    # Get group x values
+                    xgroup = list(np.arange(len(dict2))*bargap + groupoffset)
+                    groupoffset = xgroup[-1] + bargap + groupgap
+
+                    for xidx , x in enumerate(xgroup):
+                        x_list.extend([x]*numpoints_list[xidx])      
+
+                # get x values for bar and error
+                x_unique = list(np.unique(x_list))
+
+                if not value_level or first_call:
+                    if value_level:
+                        bar = bar_data = {}
+                        error = error_data = {}
+                        points = points_data = {}
+
+                        bar["data"] = bar_list
+                        error["data"] = error_list
+                        points["data"] = points_list 
+
+                    # Store x values into global dictionary
+                    bar["xvalues"] = x_unique
+                    error["xvalues"] = x_unique
+                    points["xvalues"] = list(x_list + ((np.random.random(len(x_list)))-1/2)*(bargap/2))
+
+            elif isinstance(value1 , list):
+                get_points = False
+
+                # This will only happen if the original isn't nested
+                bar_list.extend(value1)
+
+                xgroup = list(np.arange(len(value1))*bargap + groupoffset)
+                groupoffset = xgroup[-1] + bargap + groupgap
+                x_list.extend(xgroup)
+        
+        if not get_points:
+            bar_data["data"] = bar_list
+            bar_data["xvalues"] = x_list
+
+            return bar_data
+            
+        elif value_level and not first_call:
+            return bar_list , error_list , points_list , x_list
+        
+        else:
+            return bar_data , error_data , points_data
+
+
+
         
 # %%
 # Plot Data functions
 
 class plot:
 
-    def get_bar(bar_data , errorbar = None , points = None , bargap=.2 , groupgap=.2):
+    def get_bar(xvalues , bar_data , barwidth = None):
         # make bar plot
 
-        # bar_data = height of bars (2D numpy , each 1D are the values for a single group)
-        # errorbar = height of errorbar (2D numpy , 0 for no bar)
-        # points = any points to be plotted (2D numpy , each 1D numpy is for a group , it's a list of tuples each representing points for a bar)
-        # bargap = gap between bars (center to center)
-        # groupgap = gap between groups (center to center)
+        # xvalues = 1D numpy of xaxis values for the bars
+        # bar_data = 1D numpy of bar heights
+        # barwidth = width of bars
+        if barwidth is None:
+            barwidth = .2
 
-        # Get X values (along x axis)
-        numgroup , numbar = bar_data.shape
-        xvalues = np.tile(np.arange(numbar)*bargap , (numgroup,1)).astype(float)
-        groupoffset = (np.arange(numgroup)[:, np.newaxis]) * (np.ones((1, numbar)) * (groupgap + bargap*numbar))
-        xvalues += groupoffset
+        bar_ax = plt.bar(xvalues , bar_data , barwidth , edgecolor='k')
 
-        # Initialize Axis lists
-        bar_ax = []
-        error_ax = []
-        points_ax = []      
-
-        for i in range(numgroup):
-            
-            # Get group values and Plot
-            x_i = xvalues[i]
-            bar_i = bar_data[i]
-            bar_ax.append(plt.bar(x_i , bar_i , bargap , edgecolor='k'))
-            
-            if errorbar is not None:
-                error_i = errorbar[i]
-                error_ax.append(plt.errorbar(x_i , bar_i , yerr=error_i , fmt='o' , color='k' , capsize=4 , markersize=0))
-
-            if points is not None:
-                points_i = points[i]            
-                points_ax.append([])
-                for ii in range(numbar):
-            
-                    x_ii = x_i[ii]
-                    points_ii = points_i[ii]
-
-                    points_ax[i].append(plt.scatter([x_ii]*len(points_ii) + (np.random.random(len(points_ii)))*(bargap/2)-(bargap/4) , points_ii))
-
-        return bar_ax , error_ax , points_ax
+        return bar_ax
     
-    def get_line(line_data , x = None):
+    def get_scatter(xvalues , scatter_data):
+        # get scatter plot
+        
+        # xvalues = 1D numpy of x values for the points
+        # scatter_data = 1D numpy of y values for the points
+
+        scatter_ax = plt.scatter(xvalues , scatter_data)
+
+        return scatter_ax
+    
+    def get_errorbar(xvalues , yvalues , errorbar_data):
+        # get errorbars
+        # xvalues = 1D numpy of x values for the errorbars
+        # yvalues = 1D numpy of y values for the errorbars (center)
+        # errrorbar_data = 1D numpy of errorbar heights (height from center (1/2))
+
+        errorbar_ax = plt.errorbar(xvalues , yvalues , yerr=errorbar_data , fmt='o' , color='k' , capsize=4 , markersize=0)
+
+        return errorbar_ax
+    
+    def get_line(line_data , xvalues = None):
         # get line plot
 
-        # line = 2D numpy , each 1D numpy is a line to be drawn
-        # x = 1D numpy or None or 2D numpy with each 1D being a different axis for each line
+        # line = 1D numpy line to be drawn
+        # x = 1D numpy or None 
 
-        line_ax = []
-        if len(line_data.shape) == 1:
-
-            if x is None:
-                x = np.arange(len(line_data))
-            
-            line_ax.append(plt.plot(x , line_data))
-
-        elif len(line_data.shape) == 2:
-
-            for i , line in enumerate(line_data):
-                if x is None:
-                    x = np.arange(len(line))
-                
-                if len(np.shape(x)) == 1:
-                    line_ax.append(plt.plot(x , line))
-
-                elif len(np.shape(x)) == 2:
-                    line_ax.append(plt.plot(x[i] , line))
+        if xvalues is None:
+            xvalues = np.arange(len(line_data))
+        
+        line_ax = plt.plot(xvalues , line_data)
 
         return line_ax
     
@@ -533,73 +783,97 @@ class plot:
                 # plot (append onto group axis (with individual bars))
                 gax.append(plt.broken_barh(plot_hist , plot_bins))
             
-            # Set xtiks to baselines for each group
+            # Set xticks to baselines for each group
             plt.xticks(np.arange(group+1)*groupgap)
 
             horhist_ax.append(gax)
-
+        
         return horhist_ax
     
-    def get_figure(nrows , ncols , figure_type , figure_data):
-        
+    def get_figure(figure_key , figure_data):
+        # Figure key = 1D or 2D numpy with string values determining the type of plot for each subplot
+            # Can use / to have multiple plots on one subplot. ex: "bar/scatter/errobar" will make a barplot then scatter then error
+        # Figure Data = 1D or 2D numpy. Each value within the numpy is a dicionary containing the data to be used. 
+            # Key names will be the type of data, ex: for a line plot, {"line_data":data...}
+        nrows , ncols = figure_key.shape
+
         # Generate Figure
         fig , ax = plt.subplots(nrows=nrows , ncols=ncols)
-        plot_ax = {}
+
+        plot_ax = np.empty((nrows,ncols) , dtype=object)
 
         # Plot data
         for x in range(nrows):
 
             for y in range(ncols):
-
-                axis_type = figure_type[(x,y)]
-
-                if not axis_type == "no data":
                 
-                    # Set current axis
-                    if nrows == 1:
+                # Get Info based on subplot (axis) within figure
+                axis_key = figure_key[x,y]
+                axis_dict = figure_data[x,y]
+                pax_dict = {}
+                for key in axis_key.split("/"): # splits and iterates if there's a "/" (will just run once if not)
+                
+                    # Set current axis ((x,y) doesn't work if ax is 1D)
+                    if nrows == ncols == 1:
+                        plt.sca(ax)
+                    elif nrows == 1:
                         plt.sca(ax[y])
                     elif ncols == 1:
                         plt.sca(ax[x])
                     else:
                         plt.sca(ax[x,y])
+                    
+                    # Get Data based on key
+                    datadict = axis_dict[key]
 
-                    axis_data = figure_data[(x,y)]
+                    # Plot Data based on which plot the key starts with (get individual plot axis (pax))
+                    if key.startswith("bar_"):
 
-                    if axis_type == "bar":
+                        if not "barwidth" in datadict:
+                            datadict["barwidth"] = None
 
-                        optional_inputs = ["errorbar" , "points" , "bargap" , "groupgap"]
-                        for optional_input in optional_inputs:
-                            if not optional_input in axis_data:
-                                axis_data[optional_input] = None
+                        pax = plot.get_bar(xvalues=datadict["xvalues"] , bar_data=datadict["bar_data"] , barwidth=datadict["barwidth"])
 
-                        plot_ax[(x,y)] = plot.get_bar(bar_data=axis_data["bar_data"],errorbar=axis_data["errorbar"],points=axis_data["points"],bargap=axis_data["bargap"],groupgap=axis_data["groupgap"])
+                    elif key.startswith("errorbar_"):
 
-                    elif axis_type == "line":
+                        pax = plot.get_errorbar(xvalues=datadict["xvalues"] , yvalues=datadict["yvalues"] , errorbar_data=datadict["errorbar_data"])
+
+                    elif key.startswith("scatter_"):
+
+                        pax = plot.get_scatter(xvalues=datadict["xvalues"] , scatter_data=datadict["scatter_data"])
                         
-                        if not "x" in axis_data:
-                            axis_data["x"] = None
+                    elif key.startswith("line_"):
+                        
+                        if not "xvalues" in datadict:
+                            datadict["xvalues"] = None
 
-                        plot_ax[(x,y)] = plot.get_line(line_data=axis_data["line_data"] , x=axis_data["x"])
+                        pax = plot.get_line(line_data=datadict["line_data"] , xvalues=datadict["xvalues"])
 
-                    elif axis_type == "image":
-                        plot_ax[(x,y)] = plot.get_image(image_data=axis_data["image_data"])
+                    elif key.startswith("image_"):
 
-                    elif axis_type == "hist":
+                        pax = plot.get_image(image_data=datadict["image_data"])
 
-                        if not "bins" in axis_data:
-                            axis_data["bins"] = None
+                    elif key.startswith("hist_"):
 
-                        plot_ax[(x,y)] = plot.get_hist(hist_data=axis_data["hist_data"] , bins=axis_data["bins"])
+                        if not "bins" in datadict:
+                            datadict["bins"] = None
 
-                    elif axis_type == "horhist":
+                        pax = plot.get_hist(hist_data=datadict["hist_data"] , bins=datadict["bins"])
 
-                        if not "groupgap" in axis_data:
-                            axis_data["groupgap"] = None
+                    elif key.startswith("horhist_"):
 
-                        plot_ax[(x,y)] = plot.get_horhist(horhist_data=axis_data["horhist_data"] , bins=axis_data["bins"] , groupgap=axis_data["groupgap"])
+                        if not "groupgap" in datadict:
+                            datadict["groupgap"] = None
+
+                        pax = plot.get_horhist(horhist_data=datadict["horhist_data"] , bins=datadict["bins"] , groupgap=datadict["groupgap"])
 
                     else:
-                        raise Exception(f"Invalid Plot type at row = {x} and col = {y}")
+                        raise Exception(f"Invalid Plot type at row = {x} and col = {y}. Must start with 'plottype_'")
+                    
+                    # Save pax in pax_dict
+                    pax_dict[key] = pax
+
+                plot_ax[x,y] = pax_dict
+
 
         return fig , ax , plot_ax
-
