@@ -10,6 +10,17 @@ on:
         description: "Python version"
         required: true
         default: "3.10"
+      worker_type:
+        description: "Use worker image as codebook profile image"
+        required: true
+        type: choice
+        default: "standard"
+        options:
+          - standard
+          - spike_processing
+          - spike_sorting
+          - calcium_imaging
+          - dlc
 
 jobs:
   get_meta:
@@ -20,7 +31,7 @@ jobs:
         name: Get build metadata
         run: |
           ## Get workflow version as codebook env image version
-          echo "workflow_version=$(cat workflow/version.py | grep -oP '\d+\.\d+\.[a-z0-9]+')" >> $GITHUB_OUTPUT
+          echo "workflow_version=$(cat $(find . -name "version.py" | head -n 1) | grep -oP '\d+\.\d+\.[a-z0-9]+')" >> $GITHUB_OUTPUT
     outputs:
       workflow_version: ${{steps.get_version.outputs.workflow_version}}
   call_sciops_docker_image_debian:
@@ -30,6 +41,7 @@ jobs:
     with:
       jhub_ver: ${{ inputs.jhub_ver }}
       py_ver: ${{ inputs.py_ver }}
+      worker_type: ${{ inputs.worker_type }}
       workflow_version: ${{needs.get_meta.outputs.workflow_version}}
     secrets:
       RUNNER_PAT: ${{secrets.RUNNER_PAT}}
