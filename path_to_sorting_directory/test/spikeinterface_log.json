@@ -1,0 +1,16 @@
+{
+    "sorter_name": "spykingcircus2",
+    "sorter_version": "2.0",
+    "datetime": "2024-07-11T18:42:26.943302",
+    "runtime_trace": [],
+    "error": true,
+    "error_trace": [
+        "Traceback (most recent call last):",
+        "  File \"/Users/judewerth/anaconda3/envs/utah_organoids/lib/python3.9/site-packages/spikeinterface/sorters/basesorter.py\", line 257, in run_from_folder",
+        "    SorterClass._run_from_folder(sorter_output_folder, sorter_params, verbose)",
+        "  File \"/Users/judewerth/anaconda3/envs/utah_organoids/lib/python3.9/site-packages/spikeinterface/sorters/internal/spyking_circus2.py\", line 116, in _run_from_folder",
+        "    sampling_frequency = recording.get_sampling_frequency()",
+        "  AttributeError: 'NoneType' object has no attribute 'get_sampling_frequency'"
+    ],
+    "run_time": null
+}
