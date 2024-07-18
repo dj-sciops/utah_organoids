@@ -1,0 +1,60 @@
+{
+    "sorter_name": "spykingcircus2",
+    "sorter_params": {
+        "general": {
+            "ms_before": 2,
+            "ms_after": 2,
+            "radius_um": 100
+        },
+        "sparsity": {
+            "method": "ptp",
+            "threshold": 0.25
+        },
+        "filtering": {
+            "freq_min": 150,
+            "freq_max": 7000,
+            "ftype": "bessel",
+            "filter_order": 2
+        },
+        "detection": {
+            "peak_sign": "neg",
+            "detect_threshold": 4
+        },
+        "selection": {
+            "method": "uniform",
+            "n_peaks_per_channel": 5000,
+            "min_n_peaks": 100000,
+            "select_per_channel": false,
+            "seed": 42
+        },
+        "apply_motion_correction": true,
+        "motion_correction": {
+            "preset": "nonrigid_fast_and_accurate"
+        },
+        "merging": {
+            "minimum_spikes": 10,
+            "corr_diff_thresh": 0.5,
+            "template_metric": "cosine",
+            "censor_correlograms_ms": 0.4,
+            "num_channels": null
+        },
+        "clustering": {
+            "legacy": true
+        },
+        "matching": {
+            "method": "wobble"
+        },
+        "apply_preprocessing": true,
+        "matched_filtering": true,
+        "cache_preprocessing": {
+            "mode": "memory",
+            "memory_limit": 0.5,
+            "delete_cache": true
+        },
+        "multi_units_only": false,
+        "job_kwargs": {
+            "n_jobs": 0.8
+        },
+        "debug": false
+    }
+}
