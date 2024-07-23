@@ -1,6 +1,13 @@
-# Pipeline Deployment (on-premises)
+# Pipeline Deployment (On-Premises)
 
 This page describes the processes and required resources to deploy and operate the data pipeline on your own infrastructure, off of the DataJoint Works platform.
+
+## Guide Overview
+
+- [Prerequisites](#prerequisites)
+- [Data Migration from DataJoint Works to your Local Infrastructure](#data-migration-from-datajoint-works-to-your-local-infrastructure)
+- [Compute](#compute)
+- [Operation at Scale](#operation-at-scale)
 
 ## Prerequisites
 
@@ -19,7 +26,7 @@ On the most basic level, in order to deploy and operate a DataJoint pipeline, yo
 4. compute
    - you need some form of a compute environment with the right software installed to run the pipeline (this could be a laptop, local work station or a HPC cluster)
 
-## Data migration from DataJoint Works to your local infrastructure
+## Data Migration from DataJoint Works to your Local Infrastructure
 
 Once you have a MySQL database server setup locally, you should have a new set of DB credentials for this new MySQL server. You can update this information in the `dj_local_config.json` file in the codebase.
 
@@ -38,15 +45,11 @@ In order to run the pipeline, the minimal setup is described in the README, "Ins
 
 You may need to configure different environments to run the different parts of the pipeline (e.g. some requires GPU, some requires higher RAM, etc.)
 
-## Operation at scale
+## Operation at Scale
 
-The pipeline operation is designed to be operated at scale via "worker" definition - see [here](src/workflow/populate/worker.py)
+The pipeline operation is designed to be operated at scale via "worker" definition - see [here](../workflow/populate/worker.py)
 
-In this particular pipeline, three worker types are defined, handling different parts of the pipeline:
-- standard worker
-- spike_sorting_worker (requires GPU)
-
-For the Docker containerization details for the workers, see [here](./docker)
+For the Docker containerization details for the workers, see [here](../docker/)
 
 After installing the pipeline, you can run a worker via the command
 

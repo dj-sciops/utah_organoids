@@ -1,0 +1,240 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="871pt" height="466pt" viewBox="0.00 0.00 870.88 465.92">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 461.92)">
+<polygon fill="white" stroke="none" points="-4,4 -4,-461.92 866.88,-461.92 866.88,4 -4,4"/>
+<!-- culture.IsolatedRosetteCultureCondition -->
+<g id="node1" class="node">
+<title>culture.IsolatedRosetteCultureCondition</title>
+<g id="a_node1"><a xlink:title="→ culture.IsolatedRosetteCultureisolated_rosette_condition_datetime ------------------------------→ [nullable] culture.Userquality=&quot;&quot;           supplement=null      media=null           media_percent_changed=null substrate=null       isolated_rosette_condition_image_directory=&quot;&quot; isolated_rosette_condition_note=&quot;&quot; ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="462.75,-175.68 233.75,-175.68 233.75,-141.12 462.75,-141.12 462.75,-175.68"/>
+<text text-anchor="start" x="241.75" y="-155.12" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">culture.IsolatedRosetteCultureCondition</text>
+</a>
+</g>
+</g>
+<!-- culture.Experiment -->
+<g id="node2" class="node">
+<title>culture.Experiment</title>
+<g id="a_node2"><a xlink:title="organoid_id          experiment_start_time ------------------------------experiment_end_time  → [nullable] culture.User→ culture.IsolatedRosetteCulture→ [nullable] culture.OrganoidCulture→ [nullable] culture.Drugdrug_concentration=null experiment_plan      ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="689.12,-105.12 573.38,-105.12 573.38,-70.56 689.12,-70.56 689.12,-105.12"/>
+<text text-anchor="start" x="581.38" y="-84.56" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">culture.Experiment</text>
+</a>
+</g>
+</g>
+<!-- culture.ExperimentDirectory -->
+<g id="node15" class="node">
+<title>culture.ExperimentDirectory</title>
+<g id="a_node15"><a xlink:title="→ culture.Experiment------------------------------experiment_directory ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="713.12,-34.56 549.38,-34.56 549.38,0 713.12,0 713.12,-34.56"/>
+<text text-anchor="middle" x="631.25" y="-13.01" font-family="arial" font-size="12.00" fill="darkgreen">culture.ExperimentDirectory</text>
+</a>
+</g>
+</g>
+<!-- culture.Experiment&#45;&gt;culture.ExperimentDirectory -->
+<g id="edge1" class="edge">
+<title>culture.Experiment-&gt;culture.ExperimentDirectory</title>
+<path fill="none" stroke="#000000" stroke-width="2" stroke-opacity="0.250980" d="M631.25,-70.24C631.25,-59.46 631.25,-45.47 631.25,-34.72"/>
+</g>
+<!-- culture.StemCell -->
+<g id="node3" class="node">
+<title>culture.StemCell</title>
+<g id="a_node3"><a xlink:title="→ culture.InductionCulturestem_cell_condition_datetime ------------------------------stem_cell_step       → [nullable] culture.Userdensity=null         quality=&quot;&quot;           supplement=null      media=null           media_percent_changed=null substrate=null       stem_cell_condition_image_directory=&quot;&quot; genomic_dna=null     stem_cell_condition_note=&quot;&quot; discontinued=null    ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="104.5,-246.24 0,-246.24 0,-211.68 104.5,-211.68 104.5,-246.24"/>
+<text text-anchor="start" x="8" y="-225.69" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">culture.StemCell</text>
+</a>
+</g>
+</g>
+<!-- culture.OrganoidCulture -->
+<g id="node4" class="node">
+<title>culture.OrganoidCulture</title>
+<g id="a_node4"><a xlink:title="→ culture.IsolatedRosetteCultureorganoid_culture_date organoid_culture_plate ------------------------------isolated_rosette_culture_wells ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="641,-175.68 497.5,-175.68 497.5,-141.12 641,-141.12 641,-175.68"/>
+<text text-anchor="start" x="505.5" y="-155.12" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">culture.OrganoidCulture</text>
+</a>
+</g>
+</g>
+<!-- culture.OrganoidCulture&#45;&gt;culture.Experiment -->
+<g id="edge2" class="edge">
+<title>culture.OrganoidCulture-&gt;culture.Experiment</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M584.26,-140.8C594.01,-130.02 606.66,-116.03 616.38,-105.28"/>
+</g>
+<!-- culture.OrganoidCultureCondition -->
+<g id="node13" class="node">
+<title>culture.OrganoidCultureCondition</title>
+<g id="a_node13"><a xlink:title="→ culture.OrganoidCultureorganoid_condition_datetime ------------------------------→ [nullable] culture.Userquality=&quot;&quot;           supplement=&quot;&quot;        media=&quot;&quot;             media_percent_changed=null substrate=null       organoid_condition_image_directory=&quot;&quot; organoid_condition_note=&quot;&quot; ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="449.88,-105.12 254.62,-105.12 254.62,-70.56 449.88,-70.56 449.88,-105.12"/>
+<text text-anchor="start" x="262.62" y="-84.56" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">culture.OrganoidCultureCondition</text>
+</a>
+</g>
+</g>
+<!-- culture.OrganoidCulture&#45;&gt;culture.OrganoidCultureCondition -->
+<g id="edge3" class="edge">
+<title>culture.OrganoidCulture-&gt;culture.OrganoidCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M516.17,-140.63C482.41,-129.96 438.88,-116.21 405.16,-105.56"/>
+</g>
+<!-- culture.PostInductionCultureCondition -->
+<g id="node5" class="node">
+<title>culture.PostInductionCultureCondition</title>
+<g id="a_node5"><a xlink:title="→ culture.PostInductionCulturepost_induction_condition_datetime ------------------------------post_induction_step  → [nullable] culture.Userdensity=null         quality=&quot;&quot;           supplement=null      media=null           media_percent_changed=null substrate=null       post_induction_condition_image_directory=&quot;&quot; post_induction_condition_note=&quot;&quot; discontinued=null    ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="667.5,-246.24 449,-246.24 449,-211.68 667.5,-211.68 667.5,-246.24"/>
+<text text-anchor="start" x="457" y="-225.69" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">culture.PostInductionCultureCondition</text>
+</a>
+</g>
+</g>
+<!-- culture.User -->
+<g id="node6" class="node">
+<title>culture.User</title>
+<g id="a_node6"><a xlink:title="user                 ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="229.5,-316.8 149,-316.8 149,-282.24 229.5,-282.24 229.5,-316.8"/>
+<text text-anchor="start" x="157" y="-296.25" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">culture.User</text>
+</a>
+</g>
+</g>
+<!-- culture.User&#45;&gt;culture.IsolatedRosetteCultureCondition -->
+<g id="edge4" class="edge">
+<title>culture.User-&gt;culture.IsolatedRosetteCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M192.6,-282.05C197.29,-262.86 207.54,-231.3 227.25,-211.68 243.39,-195.62 265.26,-184.14 285.97,-176.12"/>
+</g>
+<!-- culture.User&#45;&gt;culture.Experiment -->
+<g id="edge5" class="edge">
+<title>culture.User-&gt;culture.Experiment</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M187.1,-281.9C183.91,-249.04 182.21,-175.94 224.25,-141.12 237.54,-130.11 463.84,-105.82 573.11,-94.66"/>
+</g>
+<!-- culture.User&#45;&gt;culture.StemCell -->
+<g id="edge6" class="edge">
+<title>culture.User-&gt;culture.StemCell</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M155.74,-281.75C134.35,-271.04 106.74,-257.23 85.42,-246.56"/>
+</g>
+<!-- culture.User&#45;&gt;culture.PostInductionCultureCondition -->
+<g id="edge7" class="edge">
+<title>culture.User-&gt;culture.PostInductionCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M229.79,-290.99C286.8,-280.39 392.18,-260.82 468.22,-246.69"/>
+</g>
+<!-- culture.InductionCultureCondition -->
+<g id="node10" class="node">
+<title>culture.InductionCultureCondition</title>
+<g id="a_node10"><a xlink:title="→ culture.InductionCultureinduction_condition_datetime ------------------------------induction_step       → [nullable] culture.Userdensity=null         quality=&quot;&quot;           supplement=null      media=null           media_percent_changed=null substrate=null       induction_condition_image_directory=&quot;&quot; genomic_dna=null     induction_condition_note=&quot;&quot; discontinued=null    ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="430.5,-246.24 236,-246.24 236,-211.68 430.5,-211.68 430.5,-246.24"/>
+<text text-anchor="start" x="244" y="-225.69" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">culture.InductionCultureCondition</text>
+</a>
+</g>
+</g>
+<!-- culture.User&#45;&gt;culture.InductionCultureCondition -->
+<g id="edge8" class="edge">
+<title>culture.User-&gt;culture.InductionCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M224.48,-281.75C246.96,-271.04 275.98,-257.23 298.39,-246.56"/>
+</g>
+<!-- culture.User&#45;&gt;culture.OrganoidCultureCondition -->
+<g id="edge9" class="edge">
+<title>culture.User-&gt;culture.OrganoidCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M175.27,-281.82C168.06,-272.1 160.01,-259.23 156.25,-246.24 143.27,-201.36 127.79,-178.17 156.25,-141.12 168.96,-124.57 211.9,-112.14 254.36,-103.56"/>
+</g>
+<!-- culture.PostInductionCulture -->
+<g id="node7" class="node">
+<title>culture.PostInductionCulture</title>
+<g id="a_node7"><a xlink:title="→ culture.InductionCulturepost_induction_culture_date post_induction_culture_plate ------------------------------post_induction_culture_wells ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="641.62,-316.8 474.88,-316.8 474.88,-282.24 641.62,-282.24 641.62,-316.8"/>
+<text text-anchor="start" x="482.88" y="-296.25" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">culture.PostInductionCulture</text>
+</a>
+</g>
+</g>
+<!-- culture.PostInductionCulture&#45;&gt;culture.PostInductionCultureCondition -->
+<g id="edge10" class="edge">
+<title>culture.PostInductionCulture-&gt;culture.PostInductionCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M558.25,-281.92C558.25,-271.14 558.25,-257.15 558.25,-246.4"/>
+</g>
+<!-- culture.IsolatedRosetteCulture -->
+<g id="node14" class="node">
+<title>culture.IsolatedRosetteCulture</title>
+<g id="a_node14"><a xlink:title="→ culture.PostInductionCultureisolated_rosette_culture_date isolated_rosette_culture_plate ------------------------------isolated_rosette_culture_wells size=null            number_of_lumen=null isolated_rosette_culture_note=&quot;&quot; ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="862.88,-246.24 685.62,-246.24 685.62,-211.68 862.88,-211.68 862.88,-246.24"/>
+<text text-anchor="start" x="693.62" y="-225.69" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">culture.IsolatedRosetteCulture</text>
+</a>
+</g>
+</g>
+<!-- culture.PostInductionCulture&#45;&gt;culture.IsolatedRosetteCulture -->
+<g id="edge11" class="edge">
+<title>culture.PostInductionCulture-&gt;culture.IsolatedRosetteCulture</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M611.09,-281.75C644.69,-271.08 688.02,-257.33 721.58,-246.68"/>
+</g>
+<!-- culture.Drug -->
+<g id="node8" class="node">
+<title>culture.Drug</title>
+<g id="a_node8"><a xlink:title="drug_name            ------------------------------drug_type=null       ">
+<polygon fill="#000000" fill-opacity="0.125490" stroke="none" points="727.88,-175.68 658.62,-175.68 658.62,-141.12 727.88,-141.12 727.88,-175.68"/>
+<text text-anchor="start" x="666.62" y="-155.9" font-family="arial" text-decoration="underline" font-size="10.00">culture.Drug</text>
+</a>
+</g>
+</g>
+<!-- culture.Drug&#45;&gt;culture.Experiment -->
+<g id="edge12" class="edge">
+<title>culture.Drug-&gt;culture.Experiment</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M678.56,-141.15C668.82,-130.38 656.07,-116.29 646.27,-105.45"/>
+</g>
+<!-- lineage.Lineage -->
+<g id="node9" class="node">
+<title>lineage.Lineage</title>
+<g id="a_node9"><a xlink:title="lineage_id           ------------------------------family               line                 passage              frozen_date          storage_position     stand                rack                 box_position         lineage_note=&quot;&quot;      ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="457.38,-457.92 355.12,-457.92 355.12,-423.36 457.38,-423.36 457.38,-457.92"/>
+<text text-anchor="start" x="363.12" y="-437.37" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">lineage.Lineage</text>
+</a>
+</g>
+</g>
+<!-- culture.InductionCulture -->
+<g id="node11" class="node">
+<title>culture.InductionCulture</title>
+<g id="a_node11"><a xlink:title="→ lineage.Lineageinduction_culture_date induction_culture_plate ------------------------------induction_culture_wells culture_plate_type=null induction_culture_note=&quot;&quot; ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="404.62,-387.36 261.88,-387.36 261.88,-352.8 404.62,-352.8 404.62,-387.36"/>
+<text text-anchor="start" x="269.88" y="-366.81" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">culture.InductionCulture</text>
+</a>
+</g>
+</g>
+<!-- lineage.Lineage&#45;&gt;culture.InductionCulture -->
+<g id="edge13" class="edge">
+<title>lineage.Lineage-&gt;culture.InductionCulture</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M388.58,-423.04C377.19,-412.34 362.42,-398.48 351.01,-387.76"/>
+</g>
+<!-- lineage.Sequence -->
+<g id="node12" class="node">
+<title>lineage.Sequence</title>
+<g id="a_node12"><a xlink:title="→ lineage.Lineagesequence             ">
+<polygon fill="#00ff00" fill-opacity="0.188235" stroke="#00ff00" stroke-opacity="0.188235" points="536,-387.36 422.5,-387.36 422.5,-352.8 536,-352.8 536,-387.36"/>
+<text text-anchor="start" x="430.5" y="-366.81" font-family="arial" text-decoration="underline" font-size="12.00" fill="darkgreen">lineage.Sequence</text>
+</a>
+</g>
+</g>
+<!-- lineage.Lineage&#45;&gt;lineage.Sequence -->
+<g id="edge14" class="edge">
+<title>lineage.Lineage-&gt;lineage.Sequence</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M423.92,-423.04C435.31,-412.34 450.08,-398.48 461.49,-387.76"/>
+</g>
+<!-- culture.InductionCulture&#45;&gt;culture.StemCell -->
+<g id="edge15" class="edge">
+<title>culture.InductionCulture-&gt;culture.StemCell</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M261.54,-358.73C223.64,-351.08 177.42,-338.16 140.25,-316.8 108.61,-298.62 80.19,-266.29 64.66,-246.62"/>
+</g>
+<!-- culture.InductionCulture&#45;&gt;culture.PostInductionCulture -->
+<g id="edge16" class="edge">
+<title>culture.InductionCulture-&gt;culture.PostInductionCulture</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M388.29,-352.31C423.29,-341.64 468.43,-327.89 503.39,-317.24"/>
+</g>
+<!-- culture.InductionCulture&#45;&gt;culture.InductionCultureCondition -->
+<g id="edge17" class="edge">
+<title>culture.InductionCulture-&gt;culture.InductionCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M333.25,-352.57C333.25,-325.8 333.25,-273.2 333.25,-246.44"/>
+</g>
+<!-- culture.IsolatedRosetteCulture&#45;&gt;culture.IsolatedRosetteCultureCondition -->
+<g id="edge18" class="edge">
+<title>culture.IsolatedRosetteCulture-&gt;culture.IsolatedRosetteCultureCondition</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M685.32,-213.16C682.26,-212.66 679.23,-212.16 676.25,-211.68 602.26,-199.64 518.83,-186.34 454.64,-176.18"/>
+</g>
+<!-- culture.IsolatedRosetteCulture&#45;&gt;culture.Experiment -->
+<g id="edge19" class="edge">
+<title>culture.IsolatedRosetteCulture-&gt;culture.Experiment</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-dasharray="5,2" stroke-opacity="0.250980" d="M770.85,-211.32C766.19,-192.27 756.17,-161.12 737.25,-141.12 722.44,-125.47 701.95,-113.86 682.93,-105.61"/>
+</g>
+<!-- culture.IsolatedRosetteCulture&#45;&gt;culture.OrganoidCulture -->
+<g id="edge20" class="edge">
+<title>culture.IsolatedRosetteCulture-&gt;culture.OrganoidCulture</title>
+<path fill="none" stroke="#000000" stroke-width="0.75" stroke-opacity="0.250980" d="M724.1,-211.19C692.22,-200.52 651.09,-186.77 619.24,-176.12"/>
+</g>
+</g>
+</svg>
