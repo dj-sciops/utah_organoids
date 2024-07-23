@@ -1,18 +1,35 @@
-# Organoids DataJoint Workflows
+# DataJoint Workflow for Utah Lab
 
-DataJoint workflow for the Organoids project at the University of Utah.
+This is the central codebase for the **DataJoint Workflow for Utah Lab**.
 
-## Organoids Creation Protocol Flowchart
+The pipeline consists of several schemas and tables, covering multiple data modalities and/or DataJoint Elements.
 
-<img src=./images/culture_diagram.png width="50%">
++ Organoids Culture Diagram
 
-## Organoids DataJoint Diagram Experiment
+![Culture Diagram](./images/culture_diagram.png)
 
-<img src=./images/datajoint_diagram_experiment.svg>
++ Culture and Experiment Diagram
 
-## Organoids DataJoint Diagram Ephys Session
+![Experiment Workflow](./images/workflow_lineage_culture.svg)
 
-<img src=./images/datajoint_diagram_ephys_session.svg>
++ Array Ephys DataJoint Diagram
+
+![Array Ephys Workflow](./images/workflow_array_ephys.svg)
+
++ For more details, run the [EXPLORE_pipeline_architecture](./notebooks/EXPLORE_pipeline_architecture.ipynb) notebook.
+
+_Ensure you have a [DataJoint Works account](https://accounts.datajoint.com/) before getting started._
+
+## Quick Start Guide
+
+What are you aiming to achieve with the pipeline?
+
+| User Type         | Description                                                                                                                                                    | Relevant Notebooks     |
+|-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------|
+| **Guest**         | Explore the data without installing anything. [Learn more](./docs/README.md#getting-started-as-a-guest).                                                                        | `EXPLORE`              |
+| **Experimenter**  | Quickly run the pipeline with your new experiment without spending time inspecting the code. [Learn more](./docs/README.md#getting-started-as-a-experimenter).                  | `EXPLORE`              |
+| **Power-User**    | Delve deeper and run specific pipeline computations on the cloud or locally. [Learn more](./docs/README.md#getting-started-as-a-power-user).                                    | `CREATE`, `RUN`, `EXPLORE` |
+| **Developer/Admin** | Maintain and add new features to the pipeline codebase. [Learn more](./docs/README.md#getting-started-as-a-developer-or-admin).                                              | `CREATE`, `RUN`, `EXPLORE` |
 
 ## SciViz website
 
@@ -20,132 +37,23 @@ Data viewer for the Utah Organoids DataJoint pipeline. Please use the entry form
 
 <https://organoids.datajoint.com/>
 
-#### Testing the Data Viewer Locally
 
-1. After making the code changes locally, run the following command to start the application:
+## Citations
 
-```
-docker compose -f webapps/sciviz/docker-compose.yaml up -d
-```
++ If your work uses [SpikeInterface within the pipeline](https://github.com/datajoint/element-array-ephys/tree/datajoint-spikeinterface), cite the respective manuscript. For details, visit [here](https://spikeinterface.readthedocs.io/en/latest/references.html).
++ For other tools integrated within the pipeline, cite their respective manuscripts and Research Resource Identifiers (RRIDs).
++ For work utilizing DataJoint Python and/or Elements, cite the respective manuscripts and RRIDs. For details, visit [here](https://datajoint.com/docs/about/citation/).
 
-1. Access the application using the following URL in an incognito window: <https://localhost/login> and log in with your DataJoint Works credentials.
-1. When you have finished testing, please ensure to stop and remove the Docker container by running the following command:
+DataJoint promotes integration and interoperability across neuroscience ecosystems, encouraging transparency and collaboration in research.
 
-```
-docker compose -f webapps/sciviz/docker-compose.yaml down
-```
+## Additional Resources
 
-## DataJoint Codebook for Organoids (JupyterHub)
-
-Online coding environment:
-
-<http://sciops-codebook.datajoint.com/>
-
-+ Use your DataJoint Works credentials
-+ Select the "Utah - Organoids" server, then press "Start"
-+ Please, make sure to halt the server and log out if you access the codebook on a different day: `File/Hub Control Panel/ Stop My Server` and `Logout`
-
-## Helpful References and Resources
-
-+ Explore **interactive tutorials written in Python** covering various aspects of DataJoint. Access the tutorials [here](https://github.com/datajoint/datajoint-tutorials).
-+ Notebook focusing on **logical operators in DataJoint tables** [here](https://github.com/datajoint-company/db-programming-with-datajoint/blob/master/notebooks/SQL%20Syntax%20for%20DataJoint%20Querying.ipynb)
-
-+ Additional resources: DataJoint documentation references
-  + Documentation on **DataJoint Table Tiers**: Access it [here](https://datajoint.com/docs/core/datajoint-python/0.13/reproduce/table-tiers/)
-  + Documentation on **DataJoint Common Commands**: Access it [here](https://datajoint.com/docs/core/datajoint-python/0.13/query-lang/common-commands/)
-  + Documentation on **DataJoint Operators**: Access it [here] (https://datajoint.com/docs/core/datajoint-python/0.13/query-lang/operators/)
-  + Documentation regarding the **`update` operation**: Access it [here](https://datajoint.com/docs/core/datajoint-python/0.14/manipulation/update/)
-  + Documenation on **DataJoint-to-SQL Transpilation**: Access it [here](https://datajoint.com/docs/core/datajoint-python/0.14/internal/transpilation/)
-  + Documentation on **Quality Assurance and Code Reviews**: Access it [here](https://datajoint.com/docs/elements/management/quality-assurance/)
-
-## Initial Installation & Configuration Instructions
-
-Get started with the Utah Organoids project by following these steps:
-
-1. Install [git](https://git-scm.com/download/win)
-2. Install [conda](https://docs.conda.io/en/latest/miniconda.html)
-3. Clone `utah_organoids` repository
-    ```bash
-    git clone https://github.com/dj-sciops/utah_organoids.git && cd utah_organoids
-    ```
-4. Create conda virtual environment
-    ```bash
-    conda env create -f conda_env.yml --force && conda activate utah_organoids
-    ```
-5. Install dependencies
-    ```bash
-    pip install -e . # on MacOS, quotes are needed: pip install -e '.[pipeline]'
-    ```
-6. To create the `dj_local_conf.json` file, execute the command below. Input your username and password when prompted:
-    ```bash
-    chmod +x ./create_dj_config.sh && ./create_dj_config.sh
-    ```
-7. Insert the AWS functional user credentials to fetch data from the s3 bucket to the notebook:
-    + By inserting the credentials in the `dj_local_conf.json` file
-    + By creating a `.env` file containing these credentials as environment variables
-
-## Troubleshooting
-+ If you encounter the following error during the (5) step in the `Initial Configuration Instructions`:
-
-    ```ERROR: Could not build wheels for datajoint, which is required to install pyproject.toml-based projects```
-
-    Please follow these steps:
-    1. Install datajoint using the following command:
-        ```bash
-        pip install datajoint
-        ``` 
-    2. Retry the step (5) by executing:
-        ```bash
-        pip install . 
-        ```
-
-+ If there are new updates to the code, including new packages, please ensure your local code is updated using the following steps: 
-    1. Pull the latest code
-    2. In your activated conda environment, you can force installation of the newest available versions of the dependencies:
-        ```bash
-        pip install --upgrade --upgrade-strategy eager .
-        ```
-These steps will synchronize your environment with the latest changes in the codebase.
-
-If you continue to experience any issues, feel free to reach out to us for assistance.
-
-## Uploading Raw Data
-
-Please follow these steps to upload your raw data files:
-
-1. Configure `config.yaml` file
-    1. Run the following to locate `config.yaml` file
-
-        ```
-        djsciops config
-        ```
-
-    2. Update the following values
-        1. `account_id`
-        4. `client_id`
-        5. `issuer`
-        6. `bucket`
-        7. `role`
-        8. `local_outbox`
-
-1. On Windows, open the command prompt application by searching for the following:
-    ```
-    Anaconda Prompt (miniconda3)
-    ```
-2. Activate the conda environment by typing the following in the command prompt:
-    ```bash
-    conda activate utah_organoids
-    ```
-3. Open a python interpreter by typing the following in the command prompt:
-    ```bash
-    ipython
-    ```
-4. Change directories to where the raw data is stored
-    ```python
-    cd "D:\"
-    ```
-5. Run data upload for a single subject and a single recording session.
-    ```python
-    from workflow.utils.initiate_session import upload_session_data
-    upload_session_data('<Relative path of data>')
-    ```
++ [Official documentation for DataJoint](https://datajoint.com/docs/)
++ [Interactive tutorials written in Python](https://github.com/datajoint/datajoint-tutorials)
++ [Notebook for logical operators in DataJoint tables](https://github.com/datajoint-company/db-programming-with-datajoint/blob/master/notebooks/SQL%20Syntax%20for%20DataJoint%20Querying.ipynb)
++ [DataJoint Table Tiers](https://datajoint.com/docs/core/datajoint-python/0.13/reproduce/table-tiers/)
++ [DataJoint Common Commands](https://datajoint.com/docs/core/datajoint-python/0.13/query-lang/common-commands/)
++ [DataJoint Operators](https://datajoint.com/docs/core/datajoint-python/0.13/query-lang/operators/)
++ [DataJoint Populate Function](https://datajoint.com/docs/core/datajoint-python/0.14/compute/populate/)
++ [Contribute documentation](https://datajoint.com/docs/about/contribute/)
++ [Quality assurance principles in DataJoint](https://datajoint.com/docs/elements/management/quality-assurance/)
