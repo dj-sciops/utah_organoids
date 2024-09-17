@@ -13,8 +13,8 @@
     "display.width": 40,
     "display.show_tuple_count": true,
     "custom": {
-        "database.prefix": "hms_smirnakis-lab_",
-        "raw_root_data_dir": "home/Data/smirnakislab/raw",
-        "processed_root_data_dir": "home/Data/smirnakislab/processed"
+        "database.prefix": "utah_organoids_",
+        "raw_root_data_dir": "home/Data/utah_organoids/raw",
+        "processed_root_data_dir": "home/Data/utah_organoids/processed"
     }
 }
