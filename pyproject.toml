@@ -27,7 +27,7 @@ dependencies = [
     "datajoint-utilities @ git+https://github.com/datajoint-company/datajoint-utilities.git",
     "djsciops",
     "element-lab==0.1.2",
-    "element-animal @ git+https://github.com/dj-sciops/fmi_luthi_element-animal.git",
+    "element-animal @ git+https://github.com/datajoint/element-animal.git",
     "element-session @ git+https://github.com/datajoint/element-session.git",
     "element-array-ephys @ git+https://github.com/dj-sciops/utah_organoids_element-array-ephys.git",
     "hdbscan",
