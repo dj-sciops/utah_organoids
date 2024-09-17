@@ -1,0 +1,20 @@
+{
+    "database.host": "db.datajoint.com",
+    "database.user": "**************",
+    "database.password": "**************",
+    "database.port": 3306,
+    "connection.init_function": null,
+    "database.reconnect": true,
+    "database.use_tls": false,
+    "enable_python_native_blobs": true,
+    "loglevel": "INFO",
+    "safemode": true,
+    "display.limit": 20,
+    "display.width": 40,
+    "display.show_tuple_count": true,
+    "custom": {
+        "database.prefix": "hms_smirnakis-lab_",
+        "raw_root_data_dir": "home/Data/smirnakislab/raw",
+        "processed_root_data_dir": "home/Data/smirnakislab/processed"
+    }
+}
