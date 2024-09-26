@@ -7,7 +7,7 @@
 5. Clone the `utah_organoids` repository:
 
    ```bash
-   git clone https://github.com/dj-sciopsutah_organoids.git && cd utah_organoids
+   git clone https://github.com/dj-sciops/utah_organoids.git && cd utah_organoids
    ```
 
 6. Create and activate a Conda virtual environment:

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "utah_organoids"
-version = "0.14.1"
+version = "0.14.2"
 description = "Organoids electrophysiology pipeline using the DataJoint elements"
 readme = "README.md"
 requires-python = "==3.10.*"
@@ -29,8 +29,7 @@ dependencies = [
     "element-lab==0.1.2",
     "element-animal @ git+https://github.com/datajoint/element-animal.git",
     "element-session @ git+https://github.com/datajoint/element-session.git",
-    "element-array-ephys @ git+https://github.com/dj-sciops/utah_organoids_element-array-ephys.git",
-    "hdbscan",
+    "element-array-ephys[spykingcircus] @ git+https://github.com/dj-sciops/utah_organoids_element-array-ephys.git",
     "graphviz",
     "scipy<1.12.0",
     "intanrhdreader @ git+https://github.com/datajoint/intanrhdreader.git",
