@@ -13,7 +13,7 @@ RUN apt update && \
 CMD /usr/local/bin/bootstrap-kernel.sh
 
 # Additional packages
-RUN apt install g++ -y
+RUN apt install -y g++ graphviz
 
 ARG DOCKER_GID=1001
 RUN groupadd -o -g ${DOCKER_GID} docker || groupmod -o -g ${DOCKER_GID} docker

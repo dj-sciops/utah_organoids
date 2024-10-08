@@ -13,7 +13,7 @@ RUN apt update && \
 CMD /usr/local/bin/bootstrap-kernel.sh
 
 # Additional packages
-RUN apt install g++ -y
+RUN apt install -y g++ graphviz
 
 USER jovyan
 ARG DEPLOY_KEY
