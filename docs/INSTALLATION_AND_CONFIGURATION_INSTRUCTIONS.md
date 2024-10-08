@@ -30,8 +30,8 @@
 
 DataJoint requires a configuration file named `dj_local_conf.json`. This file should be located in the root directory of the codebase.
 
-1. Generate the `dj_local_config.json` file:
-   - Make a copy of the `sample_dj_local_conf.json` file with the exact name `dj_local_config.json`.
+1. Generate the `dj_local_conf.json` file:
+   - Make a copy of the `sample_dj_local_conf.json` file with the exact name `dj_local_conf.json`.
    - Update the file with your database credentials (username, password, and database host ID).
    - Ensure the file is kept secure and not leaked.
 2. Specify the `database.prefix` in `dj_local_conf.json` to avoid conflicts with other databases.
