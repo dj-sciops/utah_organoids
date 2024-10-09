@@ -28,16 +28,17 @@ On the most basic level, in order to deploy and operate a DataJoint pipeline, yo
 
 ## Data Migration from DataJoint Works to your Local Infrastructure
 
-Once you have a MySQL database server setup locally, you should have a new set of DB credentials for this new MySQL server. You can update this information in the `dj_local_config.json` file in the codebase.
+Once you have a MySQL database server setup locally, you should have a new set of DB credentials for this new MySQL server. You can update this information in the `dj_local_conf.json` file in the codebase.
 
 There are 2 main components of the data that need to be migrated from DataJoint Works to your local infrastructure:
+
 1. the MySQL database
-    - the MySQL database can be exported from DataJoint Works (in the form of MySQL dumps) and imported into your local MySQL server
-    - ***the DataJoint team will perform this export step and provide you with the MySQL dumps***
-    - you can then import these dumps into your local MySQL server (contact your IT team for support on this step)
+   - the MySQL database can be exported from DataJoint Works (in the form of MySQL dumps) and imported into your local MySQL server
+   - **_the DataJoint team will perform this export step and provide you with the MySQL dumps_**
+   - you can then import these dumps into your local MySQL server (contact your IT team for support on this step)
 2. the data files
-    - the data files can be downloaded from AWS S3 to your local file storage (`raw` and `processed`)
-    - ***the DataJoint team will provide you with the script to download the data files***
+   - the data files can be downloaded from AWS S3 to your local file storage (`raw` and `processed`)
+   - **_the DataJoint team will provide you with the script to download the data files_**
 
 ## Compute
 
@@ -60,6 +61,7 @@ run_workflow <worker_name>
 where `<worker_name>` is one of the worker types defined in the `worker.py` file
 
 Workers are designed to be run in parallel, to speed up the processing, you can run multiple workers at the same time:
+
 - on different terminal on the same computer
 - on different computers
 - on multiple Docker containers
