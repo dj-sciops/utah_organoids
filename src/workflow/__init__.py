@@ -8,7 +8,7 @@ load_dotenv()
 
 os.environ["DJ_SUPPORT_FILEPATH_MANAGEMENT"] = "TRUE"
 
-dj.config["filepath_checksum_size_limit"] = 1000000000
+dj.config["filepath_checksum_size_limit"] = 10 * 1024 * 1024  # 10 MB
 
 if "custom" not in dj.config:
     dj.config["custom"] = {}
