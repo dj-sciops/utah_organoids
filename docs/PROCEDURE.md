@@ -33,22 +33,24 @@ This document provides a step-by-step guide for accessing and using the **Utah O
 *Note*: The "Table" sections in each tab display the data entries in a tabular format. These sections are not clickable. If you click on them, the website may turn white, requiring you to log back in.
 
 ## Standard Operating Procedure for the Array Ephys Pipeline
-
-3. Select an organoid experiment and define a time-window for ephys analysis (referred to as `EphysSession` in the pipeline)
+3. Before proceeding, ensure that the data has already been uploaded to the cloud. If you haven't done so yet, follow the instructions in [in the next section](#upload-data-from-your-local-machine-to-the-cloud).
+4. Select an organoid experiment and define a time-window for ephys analysis (referred to as `EphysSession` in the pipeline)
     1. Go to `works.datajoint.com` → `Notebook` tab
     2. Open [this notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_session.ipynb)  to create a new `EphysSession` and follow the instructions. Note that:
         - For LFP analysis, define the `session_type` as `lfp` (details are provided in the notebook). The `EphysSession` for LFP analysis will trigger the analysis automatically after creation.
         - For spike sorting analysis, define the `session_type` as `spike_sorting`, and also create a `EphysSessionProbe` to store probe information, including the channel mapping (details are provided in the notebook). The `EphysSession` and `EphysSessionProbe` will trigger probe insertion detection automatically. For spike sorting, you will need to manually select the spike sorting algorithm and parameter set to run (see the next step).
-4. Ephys spike sorting analysis
+5. Ephys spike sorting analysis
     1. The user must manually select which spike-sorting algorithm and parameter set to run (this is called to create a `ClusteringTask` in the pipeline):
         - Go to `works.datajoint.com` → `Notebook` tab
         - Open [this notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_clustering_paramset.ipynb) to create a new spike sorting parameter set (clustering paramset) for an `EphysSession` and follow the instructions.
         - Open [this notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_clustering_task.ipynb) to select the spike sorting parameter set and the `EphysSession` (i.e., a `ClusteringTask` in the pipeline) and follow the instructions.
         - Spike sorting will trigger automatically after your selection.
-5. Explore LFP/ spike sorting results 
+        - Download spike sorting results to your local machine by following the instructions in [the next section](#download-spike-sorting-results-to-your-local-machine).
+6. Explore LFP / spike sorting results 
     1. Go to `works.datajoint.com` → `Notebook` tab
     2. Open and follow the instructions in [this notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/EXPLORE_array_ephys.ipynb) to explore the ephys results in the pipeline.
     3. Then, open and follow the instructions in [this notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/EXPLORE_quality_metrics.ipynb) to explore the quality metrics for sorted units.
+
 
 ### Upload Data from your Local Machine to the Cloud
 1. Ensure that the local folder you want to upload follows the [file structure guidelines here](https://github.com/dj-sciops/utah_organoids/blob/main/docs/DATA_ORGANIZATION.md).
@@ -60,7 +62,7 @@ This document provides a step-by-step guide for accessing and using the **Utah O
     2. Set up the axon configuration by following the steps in this guide: [Add cloud upload configuration](https://github.com/dj-sciops/utah_organoids/blob/main/docs/CLOUD_UPLOAD_CONFIGURATION_INSTRUCTIONS.md).  
 4. Once the setup is complete, you can upload your local raw data by following the steps in [this notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_session_with_cloud_upload.ipynb)
 
-### Download Data from the Cloud to your Local Machine
+### Download Spike Sorting Results to your Local Machine
 1. You need Axon credentials to download the spike sorting results from the cloud to your local machine. If you don't have them yet:
     1. Request them from the DataJoint team.
     2. Once approved, you’ll be provided with Axon credentials (account_id, client_id, client_secret, issuer, bucket, role) to download results from the AWS S3 bucket.
