@@ -36,19 +36,19 @@ This document provides a step-by-step guide for accessing and using the **Utah O
 
 3. Select an organoid experiment and define a time-window for ephys analysis (referred to as `EphysSession` in the pipeline)
     1. Go to `works.datajoint.com` → `Notebook` tab
-    2. Open [this notebook to create a new `EphysSession`](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_session.ipynb) and follow the instructions. Note that:
+    2. Open [this notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_session.ipynb)  to create a new `EphysSession` and follow the instructions. Note that:
         - For LFP analysis, define the `session_type` as `lfp` (details are provided in the notebook). The `EphysSession` for LFP analysis will trigger the analysis automatically after creation.
         - For spike sorting analysis, define the `session_type` as `spike_sorting`, and also create a `EphysSessionProbe` to store probe information, including the channel mapping (details are provided in the notebook). The `EphysSession` and `EphysSessionProbe` will trigger probe insertion detection automatically. For spike sorting, you will need to manually select the spike sorting algorithm and parameter set to run (see the next step).
 4. Ephys spike sorting analysis
     1. The user must manually select which spike-sorting algorithm and parameter set to run (this is called to create a `ClusteringTask` in the pipeline):
         - Go to `works.datajoint.com` → `Notebook` tab
-        - Open [this notebook to create a new spike sorting parameter set (clustering paramset) for an `EphysSession`](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_clustering_paramset.ipynb) and follow the instructions.
-        - Open [this notebook to select the spike sorting parameter set and the `EphysSession`](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_clustering_task.ipynb)(i.e., a `ClusteringTask` in the pipeline) and follow the instructions.
+        - Open [this notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_clustering_paramset.ipynb) to create a new spike sorting parameter set (clustering paramset) for an `EphysSession` and follow the instructions.
+        - Open [this notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_clustering_task.ipynb) to select the spike sorting parameter set and the `EphysSession` (i.e., a `ClusteringTask` in the pipeline) and follow the instructions.
         - Spike sorting will trigger automatically after your selection.
 5. Explore LFP/ spike sorting results 
     1. Go to `works.datajoint.com` → `Notebook` tab
-    2. Open and follow the instructions in [this notebook here to explore the ephys results in the pipeline](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/EXPLORE_array_ephys.ipynb)
-    3. Then, open and follow the instructions in [this notebook here to explore the quality metrics for sorted units](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/EXPLORE_quality_metrics.ipynb)
+    2. Open and follow the instructions in [this notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/EXPLORE_array_ephys.ipynb) to explore the ephys results in the pipeline.
+    3. Then, open and follow the instructions in [this notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/EXPLORE_quality_metrics.ipynb) to explore the quality metrics for sorted units.
 
 ### Upload Data from your Local Machine to the Cloud
 1. Ensure that the local folder you want to upload follows the [file structure guidelines here](https://github.com/dj-sciops/utah_organoids/blob/main/docs/DATA_ORGANIZATION.md).
