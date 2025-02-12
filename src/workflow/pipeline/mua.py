@@ -100,7 +100,7 @@ class SpikeThresholdAnalysis(dj.Computed):
 
     key_source = MUAEphysSession & "start_time >= '2024-09-07'"
 
-    threshold_uV = 50 * 1e3  # 50 mV
+    threshold_uV = 25  # 25 uV
     peak_sign = "pos"
 
     def make(self, key):
