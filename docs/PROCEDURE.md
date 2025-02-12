@@ -1,37 +1,37 @@
-# Standard Operating Procedure for Utah Organoids data pipeline
+# Standard Operating Procedure for Utah Organoids DataJoint pipeline
 
 ## Overview
 
-This document provides a step-by-step guide to access and use the **Utah Organoids DataJoint pipeline**. The pipeline is designed to manage and analyze data from the Utah lab, focusing on cerebral organoids characterization and electrophysiology data analysis.
+This document provides a step-by-step guide to access and use the **Utah Organoids DataJoint pipeline**. The pipeline is designed to manage and analyze data from the Utah lab, focusing on cerebral organoids characterization and ephys data analysis.
 
-- **Organoid Generation Pipeline**: This pipeline manages the protocols for generating organoids, which includes inducing pluripotent stem cells (iPSCs) to form single neural rosettes (SNRs), followed by the development of these rosettes into organoids.
+- **Organoid Generation Pipeline**: This pipeline manages the protocols metadata for generating organoids, which includes inducing pluripotent stem cells (iPSCs) to form single neural rosettes (SNRs), followed by the development of these rosettes into organoids. 
 
-- **Array Ephys Pipeline**: This pipeline handles array electrophysiology data analysis, managing data and metadata related to probes and ephys recordings. It stores raw files and includes computations for preprocessing, spike sorting, curation, and quality metrics.
+- **Array Ephys Pipeline**: This pipeline handles array ephys data analysis, managing data and metadata related to probes and ephys recordings. It stores raw files and includes computations for preprocessing, spike sorting, curation, and quality metrics.
 
-## Procedure 
+## Accessing the Utah Organoids DataJoint Pipeline
 
 1. Request access and account at [DataJoint Works account](https://accounts.datajoint.com/).
      a. Contact DataJoint team for access & account
      b. Once approved, you’ll be provided with credentials
 
-2. Enter metadata into the **Organoids Generation pipeline** by using the Data viewer for the Utah Organoids DataJoint pipeline. Please use the entry forms provided on the website to manually input relevant data entries.
-     a. Go to the [SciViz website](https://organoids.datajoint.com/) and log in. 
-     b. Follow a series of data-entry steps to specify full details about your organoids generation protocol
+## Standard Operating Procedure for the Organoids Generation Pipeline
+
+2. Enter metadata into the **Organoids Generation Pipeline** steps. Please manually input relevant data using the provided entry forms on the website, as follows:
+     a. Visit the [Organoids SciViz website](https://organoids.datajoint.com/) and log in with your DataJoint credentials (username and password)
+     b. Follow a series of data-entry steps in the "Form" sections of each tab to specify full details about your organoids generation protocol:
         i. `User` page → if you are a new experimenter, create new user
-        ii. `Linage` page → create new “Linage” and “Sequence” 
+        ii. `Linage` page → create new “Linage” and submit; create new “Sequence” and submit
         iii. `Stem Cell` page → create new “Stem Cell”
         iv. `Induction` page → add new “Induction Culture” and “Induction Culture Condition”
         v. `Post Induction` page → add new “Post Induction Culture” and “Post Induction Culture Condition”
         vi. `Isolated Rossette` page → add new “Isolated Rossette Culture” and “Isolated Rossette Culture Condition”
         vii. `Organoid` page → add new “Organoid Culture” and “Organoid Culture Condition”
         viii. `Experiment` page → add new experiments performed on a particular organoid
-            1. organoids ID, datetime, experimenter, condition, etc.
-            2. experiment data directory - relative path to where the acquired data is stored for this experiment
+            1. Include organoids ID, datetime, experimenter, condition, etc.
+            2. Provide the experiment data directory - the relative path to where the acquired data is stored for this experiment.
+Note: The "Table" sections in each tab display the data entries in a tabular format. These sections are not clickable, so if you click on them, the website may turn white, requiring you to log back in.
 
-3. Data analysis in the **Array Ephys Pipeline** 
-    a. Select an organoid experiment and define a time-window for ephys analysis (this is called `EphysSession` in the pipeline)
-        i. Go to `works.datajoint.com` → `Notebook` tab
-        ii. Follow the instruction/procedure in this notebook here <link>
+## Standard Operating Procedure for the Array Ephys Pipeline
     b. Ephys LFP analysis
         i. The LFP analysis will trigger automatically
         ii. See here <link> for further details on the analysis
