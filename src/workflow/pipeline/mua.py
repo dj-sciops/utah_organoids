@@ -26,7 +26,7 @@ class MUAEphysSession(dj.Computed):
     port_id: char(2)  # e.g. A, B, C, ... 
     """
 
-    key_source = culture.Experiment & "organoid_id in ('MB06', 'MB07', 'MB08', 'MB09')"
+    key_source = culture.Experiment & "organoid_id in ('MB05', 'MB06', 'MB07', 'MB08')"
 
     session_duration = timedelta(minutes=1)
 
