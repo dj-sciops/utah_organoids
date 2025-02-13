@@ -44,13 +44,13 @@ What are you aiming to achieve with the pipeline?
 - _Goal_: **Explore the current pipeline architecture and results** without running new data or new analyses, and with no installation required.
 
 - _Steps_:
-  1. Request access to a DataJoint Works account:
+  1. Request access to a DataJoint account:
      1. Contact a member of the DataJoint SciOps team to request a new account.
      2. Once approved, you will receive your DataJoint credentials (username and password) granting access to:
-     - DataJoint Works account
+     - DataJoint platform
      - Organoids SciViz website
      - Local database connections  
-  2. Log in to the [DataJoint Works platform](https://works.datajoint.com/) (no installation required).
+  2. Log in to the [DataJoint platform](https://works.datajoint.com/) (no installation required).
   3. In the `Notebooks` tab, run the notebooks located under `utah_organoids/notebooks/`.
         - `EXPLORE` notebooks: Explore the current pipeline architecture and results. Please run the `EXPLORE_pipeline_architecture.ipynb` to examine the main schemas that compound the pipeline architecture for this project.
         - `CREATE` notebooks: Create new data entries, such as new experiments, parameter sets, or sessions. For example, you can run the `CREATE_new_clustering_paramset.ipynb` notebook to create and insert a new clustering parameter set entry to run `spykingcircus2`.

@@ -12,10 +12,10 @@ This document provides a step-by-step guide to accessing and using the **Utah Or
 
 ## Accessing the Utah Organoids DataJoint Pipeline
 
-1. **Request access to a DataJoint Works account**:
+1. **Request access to a DataJoint account**:
      1. Contact a member of the DataJoint SciOps team (milagros@datajoint.com) to request a new account.
      2. Once approved, you will receive your **DataJoint credentials (username and password)** granting access to:
-     - DataJoint Works account
+     - DataJoint platform
      - Organoids SciViz website
      - Local database connections
 
@@ -50,13 +50,13 @@ This document provides a step-by-step guide to accessing and using the **Utah Or
         - For spike sorting analysis, set the `session_type` as `spike_sorting`, and create a `EphysSessionProbe` to store probe information, including the channel mapping (details are provided in the notebook). The `EphysSession` and `EphysSessionProbe` will trigger probe insertion detection automatically. For spike sorting, you will need to manually select the spike sorting algorithm and parameter set to run (see the next step).
 5. Run spike sorting analysis
     1. Manually select a spike-sorting algorithm and parameter set (this is called to create a `ClusteringTask` in the pipeline):
-        - Go to `works.datajoint.com` → `Notebook` tab
+        - Go to [works.datajoint.com](works.datajoint.com) → `Notebook` tab
         - Open [this notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_clustering_paramset.ipynb) to create a new spike sorting parameter set (clustering paramset) for an `EphysSession` and follow the instructions.
         - Open [this notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_clustering_task.ipynb) to select the spike sorting parameter set and the `EphysSession` (i.e., a `ClusteringTask` in the pipeline) and follow the instructions.
         - Spike sorting will run automatically after your selection.
         - Download spike sorting results to your local machine by following the [download instructions section](#download-spike-sorting-results-to-your-local-machine).
 6. Explore LFP & spike sorting results 
-    1. Go to `works.datajoint.com` → `Notebook` tab
+    1. Go to [works.datajoint.com](works.datajoint.com) → `Notebook` tab
     2. Open and follow the instructions in [this notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/EXPLORE_array_ephys.ipynb) to explore the ephys results in the pipeline.
     3. Then, open and follow the instructions in [this notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/EXPLORE_quality_metrics.ipynb) to explore the quality metrics for sorted units.
 

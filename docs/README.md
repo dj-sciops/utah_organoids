@@ -13,7 +13,7 @@ What are you aiming to achieve with the pipeline?
 
 - _Goal_: **Explore the current pipeline and results** without running new data or new analyses, and with no installation required.
 - _Steps_:
-  1. Run notebooks on [DataJoint Works platform](https://works.datajoint.com/) (no installation required) or locally (requires minimal local setup/installation, see [`Experimenter Guideline`](#getting-started-as-a-experimenter).
+  1. Run notebooks on [DataJoint platform](https://works.datajoint.com/) (no installation required) or locally (requires minimal local setup/installation, see [`Experimenter Guideline`](#getting-started-as-a-experimenter).
   2. Run the `EXPLORE` notebooks. These notebooks showcase each pipeline modality and its results, such as behavior ingestion and synchronization, pipeline architecture, and more.
 
 ## Getting Started as a `Experimenter`
