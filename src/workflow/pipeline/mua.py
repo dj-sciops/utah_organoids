@@ -21,9 +21,10 @@ class MUAEphysSession(dj.Computed):
     definition = """
     -> culture.Experiment
     start_time                  : datetime
-    end_time                    : datetime  
     ---
+    end_time                    : datetime  
     port_id: char(2)  # e.g. A, B, C, ... 
+    unique index (organoid_id, start_time, end_time)
     """
 
     key_source = culture.Experiment & "organoid_id in ('MB05', 'MB06', 'MB07', 'MB08', 'E9', 'E10', 'E11', 'E12', 'O25', 'O26', 'O27', 'O28')"
@@ -101,7 +102,7 @@ class MUASpikes(dj.Computed):
     key_source = MUAEphysSession & "start_time >= '2024-09-07'"
 
     threshold_uV = 25  # 25 uV
-    peak_sign = "pos"
+    peak_sign = "neg"
 
     def make(self, key):
         import intanrhdreader
