@@ -39,8 +39,7 @@ This document provides a step-by-step guide to accessing and using the **Utah Or
 **Note**: Clicking on read-only tables may cause the page to become unresponsive (white screen). This is a known issue currently being fixed. For now, please refresh and re-login.
 ## Standard Operating Procedure for the Array Ephys Pipeline
 
-3. Ensure that the data has already been uploaded to the cloud before proceeding. 
-    - If not uploaded yet, follow the instructions in [in the next section](#upload-data-from-your-local-machine-to-the-cloud).
+3. Follow these [instructions](#upload-data-from-your-local-machine-to-the-cloud) to upload the acquired data before proceeding.
 4. Select an organoid experiment and define a time-window for ephys analysis (referred to as `EphysSession` in the pipeline)
     1. Log in to [works.datajoint.com](works.datajoint.com) → Navigate to `Notebook` tab
     2. Open [the CREATE_new_session.ipynb](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_session.ipynb) notebook to create a new `EphysSession`.
