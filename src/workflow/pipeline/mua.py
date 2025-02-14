@@ -39,13 +39,13 @@ class MUAEphysSession(dj.Computed):
         # Figure out `Port ID` from the existing EphysSession
         if not (ephys.EphysSessionProbe & key):
             raise ValueError(
-                "No EphysSessionProbe found for the experiment - cannot determine the port ID"
+                f"No EphysSessionProbe found for the {key} - cannot determine the port ID"
             )
 
         port_id = set((ephys.EphysSessionProbe & key).fetch("port_id"))
         if len(port_id) > 1:
             raise ValueError(
-                "Multiple Port IDs found for the experiment - cannot determine the port ID"
+                f"Multiple Port IDs found for the {key} - cannot determine the port ID"
             )
         port_id = port_id.pop()
 
@@ -109,6 +109,8 @@ class MUASpikes(dj.Computed):
 
         execution_time = datetime.now(timezone.utc)
 
+        start_time, end_time = (MUAEphysSession & key).fetch1("start_time", "end_time")
+
         port_id = (MUAEphysSession & key).fetch1("port_id")
         parent_folder = (culture.ExperimentDirectory & key).fetch1(
             "experiment_directory"
@@ -117,8 +119,8 @@ class MUASpikes(dj.Computed):
         files, file_times, acq_softwares = (
             ephys.EphysRawFile
             & {"parent_folder": parent_folder}
-            & f"file_time >= '{key['start_time']}'"
-            & f"file_time < '{key['end_time']}'"
+            & f"file_time >= '{start_time}'"
+            & f"file_time < '{end_time}'"
         ).fetch("file_path", "file_time", "acq_software", order_by="file_time")
 
         acq_software = acq_softwares[0]
