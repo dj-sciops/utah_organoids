@@ -1,20 +1,20 @@
-# DataJoint Workflow for Utah Lab
+# DataJoint Workflow for the Utah Organoids Project
 
-This is the central codebase for the **DataJoint Workflow for Utah Lab**. The pipelines are designed to manage and analyze data from the Utah lab, focusing on cerebral organoids characterization and electrophysiology data analysis.
+This is the central codebase for the **DataJoint Workflow for the Utah Organoids Project**. The pipeline supports **cerebral organoids characterization** and **electrophysiology (ephys) data analysis**.
 
-The automated pipeline consists of several schemas and tables, covering multiple data modalities and/or DataJoint Elements.
+### Pipeline Components
 
-- **Organoids generation pipeline**: The protocol for organoid generation includes inducing pluripotent stem cells (iPSCs) to form single neural rosettes (SNRs), which are then developed into organoids. 
+- **Organoid Generation Pipeline**: Manages metadata for organoid generation protocols, tracking the process from induced pluripotent stem cells (iPSCs) to single neural rosettes (SNRs), and mature organoids.
 
-![Culture Diagram](./images/culture_diagram.png)
-
-This pipeline manages data from the organoid generation process, including iPSCs, SNRs, and organoids. It includes the following schemas:
   - `lineage`: Handles lineage and sequence metadata.
   - `culture`: Manages metadata for iPSCs, SNRs, and organoids, covering culture conditions, induction and post-induction details, media used, experiment timelines and directories, and drug concentrations.
 
+![Culture Diagram](./images/culture_diagram.png)
+
 ![Experiment Workflow](./images/workflow_lineage_culture.svg)
 
-- **Array Ephys pipeline**: This pipeline for array electrophysiology data analysis includes the following main steps:
+- **Array Ephys Pipeline**: Handles ephys data analysis, managing metadata and raw data related to probes and ephys recordings. It also includes preprocessing, spike sorting, curation, and quality metrics computations.
+
   - `probe`: Manages the probes and metadata used for the electrophysiology recordings.
   - `ephys`: Manages the electrophysiology data and analysis results, including spike sorting and quality metrics.
     - `EphysRecording`: Represents raw electrophysiological recordings linked to specific probe insertions. `EphysRecordingFile`: Represents the raw data files associated with each recording.
@@ -26,7 +26,14 @@ This pipeline manages data from the organoid generation process, including iPSCs
 
 ![Array Ephys Workflow](./images/workflow_array_ephys.svg)
 
-- For more details, you can explore the pipeline architecture and data in the `EXPLORE` notebooks as Guest following the [Quick Start Guide](#quick-start-guide) below.
+## Accessing the Organoids DataJoint Pipeline
+
+1. **Request access to a DataJoint account**:
+     1. Request a new account from your DataJoint support team.
+     2. Once approved, you will receive your **DataJoint credentials (username and password)** granting access to:
+     - DataJoint platform
+     - Organoids SciViz website
+     - Database connections
 
 ## Quick Start Guide
 
@@ -55,7 +62,7 @@ What are you aiming to achieve with the pipeline?
         - `EXPLORE` notebooks: Explore the current pipeline architecture and results. Please run the `EXPLORE_pipeline_architecture.ipynb` to examine the main schemas of the pipeline.
         - `CREATE` notebooks allow creating new experiments, parameter sets, and sessions. For example, `CREATE_new_clustering_paramset.ipynb` to create a new clustering parameter set for `spykingcircus2`.
 
-The standard operating procedures for the Utah Organoids pipeline is [here](PROCEDURE.md).
+The standard operating procedures for the Utah Organoids DataJoint pipeline is [here](PROCEDURE.md).
 
 ## SciViz website
 

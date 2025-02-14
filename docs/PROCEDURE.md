@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides a step-by-step guide to accessing and using the **Utah Organoids DataJoint pipeline**. The pipeline supports **cerebral organoids characterization** and **electrophysiology (ephys) data analysis**.
+This document provides a step-by-step guide to accessing and using the **Utah Organoids DataJoint pipeline** for the Utah Organoids Project. The pipeline supports **cerebral organoids characterization** and **electrophysiology (ephys) data analysis**.
 
 ### Pipeline Components
 
@@ -10,7 +10,7 @@ This document provides a step-by-step guide to accessing and using the **Utah Or
 
 - **Array Ephys Pipeline**: Handles ephys data analysis, managing metadata and raw data related to probes and ephys recordings. It also includes preprocessing, spike sorting, curation, and quality metrics computations.
 
-## Accessing the Organoids DataJoint Pipeline
+## Accessing the Utah Organoids DataJoint Pipeline
 
 1. **Request access to a DataJoint account**:
      1. Request a new account from your DataJoint support team.
@@ -21,7 +21,7 @@ This document provides a step-by-step guide to accessing and using the **Utah Or
 
 ## Standard Operating Procedure for the Organoids Generation Pipeline
 
-2. **Enter metadata into the Organoids Generation Pipeline**: 
+2. **Enter metadata into the Organoid Generation Pipeline**: 
     1. Manually enter data through the forms on the SciViz website.
     2. Log into [Organoids SciViz](https://organoids.datajoint.com/) with your DataJoint credentials (username and password).
     3. Use the "Form" sections in each tab to enter details about your organoid generation protocol:
