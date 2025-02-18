@@ -30,7 +30,10 @@ class MUAEphysSession(dj.Computed):
     unique index (organoid_id, start_time, end_time)
     """
 
-    key_source = culture.Experiment & "organoid_id in ('MB05', 'MB06', 'MB07', 'MB08', 'E9', 'E10', 'E11', 'E12', 'O25', 'O26', 'O27', 'O28')"
+    key_source = (
+        culture.Experiment
+        & "organoid_id in ('MB05', 'MB06', 'MB07', 'MB08', 'E9', 'E10', 'E11', 'E12', 'O25', 'O26', 'O27', 'O28')"
+    )
 
     session_duration = timedelta(minutes=1)
 
@@ -213,7 +216,9 @@ class MUATracePlot(dj.Computed):
 
     spike_rate_threshold = 0.5
 
-    key_source = MUASpikes & (MUASpikes.Channel & f"spike_rate >= {spike_rate_threshold}")
+    key_source = MUASpikes & (
+        MUASpikes.Channel & f"spike_rate >= {spike_rate_threshold}"
+    )
 
     def make(self, key):
         execution_time = datetime.now(timezone.utc)
@@ -260,7 +265,7 @@ class MUATracePlot(dj.Computed):
             wfs = []
             for idx in spk_ind:
                 if idx - pad_len >= 0 and idx + pad_len < len(trace):
-                    wfs.append(trace[idx - pad_len:idx + pad_len])
+                    wfs.append(trace[idx - pad_len : idx + pad_len])
             mean_wf = np.mean(np.vstack(wfs), axis=0)
 
             title_ = title + f" | ChnID: {ch_id}"
@@ -271,7 +276,9 @@ class MUATracePlot(dj.Computed):
             filepath = Path(tmp_dir.name) / f"{filename}_waveform.png"
             wf_fig.savefig(filepath)
 
-            trace_fig = _plot_trace_with_peaks(trace, times, spk_ind, f"ch_{ch_id}", title_)
+            trace_fig = _plot_trace_with_peaks(
+                trace, times, spk_ind, f"ch_{ch_id}", title_
+            )
 
             self.Channel.insert1(
                 {
@@ -301,11 +308,12 @@ def _get_si_recording(start_time, end_time, parent_folder, port_id):
     Get the spikeinterface recording object for the given time range.
     """
     import intanrhdreader
+
     files, file_times, acq_softwares = (
-            ephys.EphysRawFile
-            & {"parent_folder": parent_folder}
-            & f"file_time >= '{start_time}'"
-            & f"file_time < '{end_time}'"
+        ephys.EphysRawFile
+        & {"parent_folder": parent_folder}
+        & f"file_time >= '{start_time}'"
+        & f"file_time < '{end_time}'"
     ).fetch("file_path", "file_time", "acq_software", order_by="file_time")
 
     acq_software = acq_softwares[0]
@@ -349,13 +357,11 @@ def _build_si_recording_object(files, acq_software="intan"):
 
     # Read data. Concatenate if multiple files are found.
     for file_path in (
-            find_full_path(ephys.get_ephys_root_data_dir(), f) for f in files
+        find_full_path(ephys.get_ephys_root_data_dir(), f) for f in files
     ):
         if not si_recording:
             stream_name = [
-                s
-                for s in si_extractor.get_streams(file_path)[0]
-                if "amplifier" in s
+                s for s in si_extractor.get_streams(file_path)[0] if "amplifier" in s
             ][0]
             si_recording: si.BaseRecording = si_extractor(
                 file_path, stream_name=stream_name
@@ -370,7 +376,9 @@ def _build_si_recording_object(files, acq_software="intan"):
     return si_recording
 
 
-def _plot_trace_with_peaks(trace, times, peak_indices, trace_name="trace", title="Spike Detection"):
+def _plot_trace_with_peaks(
+    trace, times, peak_indices, trace_name="trace", title="Spike Detection"
+):
     from plotly import graph_objects as go
 
     fig = go.Figure()
@@ -382,12 +390,15 @@ def _plot_trace_with_peaks(trace, times, peak_indices, trace_name="trace", title
             mode="markers",
             marker=dict(color="red"),
             name="spike",
-        ))
+        )
+    )
     # add y-axis title as `uV` and x-axis title as `Time (s)`
     fig.update_layout(
         title=title,
         yaxis_title="Amplitude (uV)",
         xaxis_title="Time (s)",
+        width=1200,  # Adjust width for better interactivity
+        height=800,  # Adjust height for better visibility
     )
 
     return fig
@@ -395,6 +406,7 @@ def _plot_trace_with_peaks(trace, times, peak_indices, trace_name="trace", title
 
 def _plot_mean_waveform(mean_wf, fs, title="Mean Waveform"):
     import matplotlib.pyplot as plt
+
     times = np.arange(-len(mean_wf) / 2, len(mean_wf) / 2) / fs
     times *= 1e3  # times in ms
     fig, ax = plt.subplots()
