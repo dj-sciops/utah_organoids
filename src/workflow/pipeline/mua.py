@@ -4,6 +4,8 @@ import numpy as np
 import scipy.stats
 from scipy.signal import find_peaks
 import json
+import tempfile
+from pathlib import Path
 
 import spikeinterface as si
 from spikeinterface import extractors, preprocessing
@@ -204,8 +206,9 @@ class MUATracePlot(dj.Computed):
         -> master
         -> MUASpikes.Channel
         ---
+        mean_waveform: longblob
         trace_plot: longblob
-        average_waveform: longblob
+        waveform_plot: attach
         """
 
     spike_rate_threshold = 0.5
@@ -242,6 +245,8 @@ class MUATracePlot(dj.Computed):
             }
         )
 
+        tmp_dir = tempfile.TemporaryDirectory()
+
         chn_query = MUASpikes.Channel & key & f"spike_rate >= {spk_rate_thres}"
         for chn_data in chn_query.fetch(as_dict=True):
             ch_id = si_recording.channel_ids[chn_data["channel_idx"]]
@@ -257,14 +262,24 @@ class MUATracePlot(dj.Computed):
                 if idx - pad_len >= 0 and idx + pad_len < len(trace):
                     wfs.append(trace[idx - pad_len:idx + pad_len])
             mean_wf = np.mean(np.vstack(wfs), axis=0)
-            fig = _plot_trace_with_peaks(trace, times, spk_ind, f"ch_{ch_id}", title + f" | ChnID: {ch_id}")
+
+            title_ = title + f" | ChnID: {ch_id}"
+            wf_fig = _plot_mean_waveform(mean_wf, fs, title_)
+
+            # format a string into a filename compatible string
+            filename = title_.replace(" ", "").replace(":", "-").replace("|", "-")
+            filepath = Path(tmp_dir.name) / f"{filename}_waveform.png"
+            wf_fig.savefig(filepath)
+
+            trace_fig = _plot_trace_with_peaks(trace, times, spk_ind, f"ch_{ch_id}", title_)
 
             self.Channel.insert1(
                 {
                     **key,
                     "channel_idx": chn_data["channel_idx"],
-                    "trace_plot": json.loads(fig.to_json()),
-                    "average_waveform": mean_wf,
+                    "trace_plot": json.loads(trace_fig.to_json()),
+                    "mean_waveform": mean_wf,
+                    "waveform_plot": filepath,
                 }
             )
 
@@ -277,6 +292,8 @@ class MUATracePlot(dj.Computed):
                 / 3600,
             }
         )
+
+        tmp_dir.cleanup()
 
 
 def _get_si_recording(start_time, end_time, parent_folder, port_id):
@@ -373,4 +390,16 @@ def _plot_trace_with_peaks(trace, times, peak_indices, trace_name="trace", title
         xaxis_title="Time (s)",
     )
 
+    return fig
+
+
+def _plot_mean_waveform(mean_wf, fs, title="Mean Waveform"):
+    import matplotlib.pyplot as plt
+    times = np.arange(-len(mean_wf) / 2, len(mean_wf) / 2) / fs
+    times *= 1e3  # times in ms
+    fig, ax = plt.subplots()
+    ax.plot(times, mean_wf)
+    ax.set_title(title)
+    ax.set_xlabel("Time (ms)")
+    ax.set_ylabel("Amplitude (uV)")
     return fig
