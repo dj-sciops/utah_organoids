@@ -18,6 +18,7 @@ __all__ = ["probe", "ephys", "ephys_report", "ephys_sorter"]
 
 logger = dj.logger
 
+
 # Set s3 stores configuration
 datajoint_blob = dict(
     protocol="s3",

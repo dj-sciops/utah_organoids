@@ -26,7 +26,9 @@
    pip install .
    ```
 
-# Configuration Instructions
+# Configuration Instructions: Credential Types
+
+## Configuring DataJoint Credentials for Connecting to the Database (Guest, Experimenter, Power-User,Admin/Developer)
 
 DataJoint requires a configuration file named `dj_local_conf.json`. This file should be located in the root directory of the codebase.
 
@@ -42,6 +44,22 @@ DataJoint requires a configuration file named `dj_local_conf.json`. This file sh
      - `processed_root_data_dir` is the root directory where the processed data files will be generated and stored
    - **_All data paths stored in the pipeline will be relative to these root directories._**
 
-4. Insert the AWS functional user credentials to fetch data from the s3 bucket to the notebook:
-   - By inserting the credentials in the `dj_local_conf.json` file
-   - By creating a `.env` file containing these credentials as environment variables
+## Configuring AWS Credentials for Accessing External Data in the Notebook (Optional for Guest, Experimenter, Power-User,Admin/Developer)
+
+To configure AWS functional user credentials in `dj.config`, follow this method:
+
+2. Use a `.env` file for the AWS `access_key` and `secret_key`. Ensure these credentials remain confidential.
+   Create a `.env` file in the root directory of your local repository with the following keys:
+
+```
+
+AWS_ACCESS_KEY=xxx
+AWS_SECRET_ACCESS_KEY=xxx
+
+```
+
+3. To confirm that the AWS credentials are set up correctly, check the `stores` field in the `dj.config` in your notebook.
+
+## Configuring Axon Credentials for Uploading/Downloading Data to the Cloud (Power-User,Admin/Developer)
+
+Axon credentials are configured via `djsciops` for uploading and downloading data in the cloud. For detailed instructions, please follow the [RUN_ON_THE_CLOUD_GUIDE](RUN_ON_THE_CLOUD_GUIDE.md)
