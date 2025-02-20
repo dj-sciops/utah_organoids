@@ -3,9 +3,9 @@ from datetime import timedelta, datetime, timezone
 import numpy as np
 import scipy.stats
 from scipy.signal import find_peaks
-import json
 import tempfile
 from pathlib import Path
+import matplotlib.pyplot as plt
 
 import spikeinterface as si
 from spikeinterface import extractors, preprocessing
@@ -308,6 +308,8 @@ class MUATracePlot(dj.Computed):
         )
 
         tmp_dir.cleanup()
+        plt.close("all")
+        plt.clf()
 
 
 def _get_si_recording(start_time, end_time, parent_folder, port_id):
@@ -410,8 +412,6 @@ def _plot_trace_with_peaks(
 
 
 def _plot_mean_waveform(mean_wf, fs, title="Mean Waveform"):
-    import matplotlib.pyplot as plt
-
     times = np.arange(-len(mean_wf) / 2, len(mean_wf) / 2) / fs
     times *= 1e3  # times in ms
     fig, ax = plt.subplots()
