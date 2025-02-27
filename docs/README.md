@@ -54,6 +54,6 @@ What are you aiming to achieve with the pipeline?
   2. May contribute to the pipeline codebase and project documentation.
   3. Refer to the [Troubleshooting guide](TROUBLESHOOTING.md) for assistance if needed.
 
-
 ## Standard Operating Procedure for the Utah Organoids DataJoint pipeline
-You can find the standard operating procedures for the Utah Organoids DataJoint pipeline [here](PROCEDURE.md). Please refer to this document for detailed instructions on how to use the pipeline.
+
+You can find the standard operating procedures for the Utah Organoids DataJoint pipeline in the main [README](../README.md). Please refer to this document for detailed instructions on how to use the pipeline.
