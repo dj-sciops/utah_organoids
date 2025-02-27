@@ -32,7 +32,6 @@ SciViz: # top level tab
           components:
             User Table:
               route: /userviewer
-              link: /userdetails
               x: 0
               y: 0
               height: 1
@@ -64,7 +63,6 @@ SciViz: # top level tab
           components:
             Lineage Table:
               route: /lineageviewer
-              link: /lineagedetails
               x: 0
               y: 0
               height: 1
@@ -88,7 +86,6 @@ SciViz: # top level tab
                 - utah_organoids_lineage.Lineage
             Sequence Table:
               route: /sequenceviewer
-              link: /sequencedetails
               x: 0
               y: 2
               height: 1
@@ -124,7 +121,6 @@ SciViz: # top level tab
           components:
             Stem Cell Table:
               route: /stemcellviewer
-              link: /stemcelldetails
               x: 0
               y: 0
               height: 1
@@ -156,7 +152,7 @@ SciViz: # top level tab
               booleans:
                 - media_change
                 - discontinued
-                - genomic_dna                
+                - genomic_dna
     Induction:
       route: /induction
       grids:
@@ -167,7 +163,6 @@ SciViz: # top level tab
           components:
             Induction Culture Table:
               route: /inductioncultureviewer
-              link: /inductionculturedetails
               x: 0
               y: 0
               height: 1
@@ -195,7 +190,6 @@ SciViz: # top level tab
                   destination: utah_organoids_lineage.Lineage
             Induction Culture Condition Table:
               route: /inductioncultureconditionviewer
-              link: /inductioncultureconditiondetails
               x: 0
               y: 2
               height: 1
@@ -238,7 +232,6 @@ SciViz: # top level tab
           components:
             Post Induction Culture Table:
               route: /postinductioncultureviewer
-              link: /postinductionculturedetails
               x: 0
               y: 0
               height: 1
@@ -266,7 +259,6 @@ SciViz: # top level tab
                   destination: utah_organoids_culture.InductionCulture
             Post Induction Culture Condition Table:
               route: /postinductioncultureconditionviewer
-              link: /postinductioncultureconditiondetails
               x: 0
               y: 2
               height: 1
@@ -308,7 +300,6 @@ SciViz: # top level tab
           components:
             Isolated Rosette Culture Table:
               route: /isolatedrosettecultureviewer
-              link: /isolatedrosetteculturedetails
               x: 0
               y: 0
               height: 1
@@ -336,7 +327,6 @@ SciViz: # top level tab
                   destination: utah_organoids_culture.PostInductionCulture
             Isolated Rosette Culture Condition Table:
               route: /isolatedrosettecultureconditionviewer
-              link: /isolatedrosettecultureconditiondetails
               x: 0
               y: 2
               height: 1
@@ -375,7 +365,6 @@ SciViz: # top level tab
           components:
             Organoid Culture Table:
               route: /organoidcultureviewer
-              link: /organoidculturedetails
               x: 0
               y: 0
               height: 1
@@ -403,7 +392,6 @@ SciViz: # top level tab
                   destination: utah_organoids_culture.IsolatedRosetteCulture
             Organoid Culture Condition Table:
               route: /organoidcultureconditionviewer
-              link: /organoidcultureconditiondetails
               x: 0
               y: 2
               height: 1
@@ -442,7 +430,6 @@ SciViz: # top level tab
           components:
             Experiment Table:
               route: /experimentviewer
-              link: /experimentdetails
               x: 0
               y: 0
               height: 1
@@ -476,7 +463,6 @@ SciViz: # top level tab
                   destination: utah_organoids_culture.OrganoidCulture
             Experiment Directory Table:
               route: /experimentdirectoryviewer
-              link: /experimentdirectorydetails
               x: 0
               y: 2
               height: 1

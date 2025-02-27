@@ -2,7 +2,7 @@ import datajoint as dj
 from datajoint_utilities.dj_worker import DataJointWorker, ErrorLog, WorkerLog
 
 from workflow import DB_PREFIX, SUPPORT_DB_PREFIX, WORKER_MAX_IDLED_CYCLE
-from workflow.pipeline import analysis, ephys, ephys_sorter
+from workflow.pipeline import analysis, ephys, ephys_sorter, mua
 from workflow.support import ingestion_support
 
 logger = dj.logger
@@ -54,6 +54,9 @@ standard_worker(ephys.CuratedClustering, max_calls=5)
 standard_worker(ephys.WaveformSet, max_calls=5)
 standard_worker(ephys.QualityMetrics, max_calls=5)
 standard_worker(ingestion_support.PostEphys, max_calls=5)
+
+standard_worker(mua.MUASpikes, max_calls=5)
+standard_worker(mua.MUATracePlot, max_calls=5)
 
 
 def get_workflow_operation_overview():
