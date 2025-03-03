@@ -19,7 +19,7 @@ The **Utah Organoids DataJoint pipelines** facilitate **cerebral organoid charac
 ## Exploring the Pipelines
 
   1. Log into [works.datajoint.com](https://works.datajoint.com)  and navigate to the `Notebook` tab.
-  2. Run [EXPLORE_pipeline_architecture.ipynb](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/EXPLORE_pipeline_architecture.ipynb) to visualize the data pipeline structure, including key schemas, tables, and their relationships.
+  2. Run [EXPLORE_pipeline_architecture.ipynb](./notebooks/EXPLORE_pipeline_architecture.ipynb) to visualize the data pipeline structure, including key schemas, tables, and their relationships.
 
 ## Organoid Generation Pipeline
 
@@ -42,12 +42,12 @@ The **Utah Organoids DataJoint pipelines** facilitate **cerebral organoid charac
 
 ### **Upload Data to the Cloud**
 
-  1. Ensure data follows the [file structure guidelines](https://github.com/dj-sciops/utah_organoids/blob/main/docs/DATA_ORGANIZATION.md).
+  1. Ensure data follows the [file structure guidelines](./docs/installation_and_configuration/DATA_ORGANIZATION.md).
   2. Request Axon credentials from the DataJoint support team.
   3. Set up your local machine (if you haven't already):
-      1. [Install the pipeline code](https://github.com/dj-sciops/utah_organoids/blob/main/docs/installation_and_configuration/INSTALLATION_AND_CONFIGURATION.md).  
-      2. Configure axon settings ([Cloud upload configuration](https://github.com/dj-sciops/utah_organoids/blob/main/docs/installation_and_configuration/CLOUD_UPLOAD_CONFIGURATION.md)).  
-  4. Upload data via the [cloud upload notebook](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_session_with_cloud_upload.ipynb) using either:
+      1. [Install the pipeline code](./docs/installation_and_configuration/INSTALLATION_AND_CONFIGURATION.md).  
+      2. Configure axon settings ([Cloud upload configuration](./docs/installation_and_configuration/CLOUD_UPLOAD_CONFIGURATION.md)).  
+  4. Upload data via the [cloud upload notebook](./notebooks/UPLOAD_session_data_to_cloud.ipynb) using either:
       1. Jupyter Notebook Server:
           - Open a terminal or command prompt.
           - Activate the `utah_organoids` environment with `conda activate utah_organoids`.
@@ -68,12 +68,12 @@ The **Utah Organoids DataJoint pipelines** facilitate **cerebral organoid charac
 
 1. Navigate to [works.datajoint.com](https://works.datajoint.com) and open the `Dashboard` tab.  
 2. Click on `Plots` > `MUA Trace Plots`, then select a data entry to explore the MUA results. The interactive plot allows you to zoom in and out of the raw traces and examine detected peaks.  
-3. (Optional) For a more detailed analysis, go to the `Notebook` tab on [works.datajoint.com](https://works.datajoint.com) and run the [EXPLORE_MUA_analysis.ipynb](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/EXPLORE_MUA_analysis.ipynb) notebook to inspect the `MUA` schema in depth.
+3. (Optional) For a more detailed analysis, go to the `Notebook` tab on [works.datajoint.com](https://works.datajoint.com) and run the [EXPLORE_MUA_analysis.ipynb](./notebooks/EXPLORE_MUA_analysis.ipynb) notebook to inspect the `MUA` schema in depth.
 
 ### **Define an `EphysSession`** (i.e. a time-window for ephys analysis)
 
   1. Log into [works.datajoint.com](https://works.datajoint.com)  and navigate to the `Notebook` tab.
-  2. Open and execute [CREATE_new_session.ipynb](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_session.ipynb).
+  2. Open and execute [CREATE_new_session.ipynb](./notebooks/CREATE_new_session.ipynb).
   3. Define a time window for analysis:
       - **For Spike Sorting Analysis**: Set `session_type` to `spike_sorting`, and create an `EphysSessionProbe` to store probe information, including the channel mapping. This triggers probe insertion detection automatically. For spike sorting, you will need to manually select the spike sorting algorithm and parameter set to run in the next step.
 
@@ -81,23 +81,23 @@ The **Utah Organoids DataJoint pipelines** facilitate **cerebral organoid charac
 
   1. Create a `ClusteringTask` by selecting a spike-sorting algorithm and parameter set:
       - Go to [works.datajoint.com](works.datajoint.com) → `Notebook` tab
-      - Run [CREATE_new_clustering_paramset.ipynb](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_clustering_paramset.ipynb) to configure a new parameter set.
-      - Assign parameters to an `EphysSession` using [CREATE_new_clustering_task.ipynb](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/CREATE_new_clustering_task.ipynb).
+      - Run [CREATE_new_clustering_paramset.ipynb](./notebooks/CREATE_new_clustering_paramset.ipynb) to configure a new parameter set.
+      - Assign parameters to an `EphysSession` using [CREATE_new_clustering_task.ipynb](./notebooks/CREATE_new_clustering_task.ipynb).
       - The pipeline will automatically run the spike sorting process.
       - Follow the [download spike sorting results](#download-spike-sorting-results-to-your-local-machine) to retrieve results.
 
 ### **Explore Spike Sorting Results**
 
   1. Go to [works.datajoint.com](https://works.datajoint.com) → `Notebook` tab
-  2. Open [EXPLORE_array_ephys.ipynb](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/EXPLORE_array_ephys.ipynb) to inspect processed ephys data.
+  2. Open [EXPLORE_spike_sorting.ipynb](./notebooks/EXPLORE_spike_sorting.ipynb) to inspect processed ephys data.
 
 ### **Download Spike Sorting Results to Your Local Machine**
 
   1. Request Axon credentials from the DataJoint support team.
   2. Set up your local machine (if you haven't already):
-      1. [Install the pipeline code](https://github.com/dj-sciops/utah_organoids/blob/main/docs/installation_and_configuration/INSTALLATION_AND_CONFIGURATION_INSTRUCTIONS.md#installation-of-the-pipeline-codebase).  
-      2. Configure axon settings ([Cloud upload configuration](https://github.com/dj-sciops/utah_organoids/blob/main/docs/CLOUD_UPLOAD_CONFIGURATION_INSTRUCTIONS.md)).  
-  3. Download spike sorting results via the [DOWNLOAD_spike_sorted_data.ipynb](https://github.com/dj-sciops/utah_organoids/blob/main/notebooks/DOWNLOAD_spike_sorted_data.ipynb) using either:
+      1. [Install the pipeline code](./docs/installation_and_configuration/INSTALLATION_AND_CONFIGURATION.md#installation-of-the-pipeline-codebase).  
+      2. Configure axon settings ([Cloud upload configuration](./docs/CLOUD_UPLOAD_CONFIGURATION.md)).  
+  3. Download spike sorting results via the [DOWNLOAD_spike_sorted_data.ipynb](./notebooks/DOWNLOAD_spike_sorted_data.ipynb) using either:
       1. Jupyter Notebook Server:
           - Open a terminal or command prompt.
           - Activate the `utah_organoids` environment with `conda activate utah_organoids`.
@@ -116,7 +116,7 @@ The **Utah Organoids DataJoint pipelines** facilitate **cerebral organoid charac
 
 ## Troubleshooting
 
-For help, refer to the [Documentation](./docs/README.md), [Troubleshooting Guide](./docs/TROUBLESHOOTING.md), or contact the DataJoint support team.
+For help, refer to the [Documentation](./docs/README.md), [Troubleshooting Guide](./docs/troubleshooting/TROUBLESHOOTING.md), or contact the DataJoint support team.
 
 ## Citation Policy
 

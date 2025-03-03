@@ -5,9 +5,9 @@
 1. Follow [`INSTALLATION_AND_CONFIGURATION.md`](INSTALLATION_AND_CONFIGURATION.md) to install dependencies and pipeline codebase, and configure your environment to connect to the database.
    - Ensure that the `raw_root_data_dir` and `processed_root_data_dir` in the `dj_local_conf.json` file are set to the local directories on your machine where the data will be stored and processed.
 
-2. Organize data using the [`DATA_ORGANIZATION.md`](../configuration/DATA_ORGANIZATION.md) structure.
+2. Organize data using the [`DATA_ORGANIZATION.md`](./DATA_ORGANIZATION.md) structure.
 
-3. Create a new session using: [CREATE_new_session.ipynb](../notebooks/CREATE_new_session.ipynb).
+3. Create a new session using: [CREATE_new_session.ipynb](../../notebooks/CREATE_new_session.ipynb).
 
 ## Execute Computations
 

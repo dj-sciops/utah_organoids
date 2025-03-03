@@ -6,7 +6,7 @@ Welcome to the documentation for the **Utah Organoids Data Pipelines**. This gui
 
 | User Type           | Description                                                                                                                                   | Relevant Notebooks         |
 | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| **Guest**           | Explore data without installation. [Guideline](#getting-started-as-a-guest).                                                       | `EXPLORE` notebooks                  |
+| **Guest**           | Explore data without installation.                                                       | `EXPLORE` notebooks                  |
 | **Experimenter**    | Run pipeline for new experiments without debugging. | [RUN_ON_CLOUD.md](./installation_and_configuration/RUN_ON_CLOUD.md)                  |
 | **Power-User**      | Run specific computations, debugging locally and in the cloud.                  | [RUN_LOCALLY.md](./installation_and_configuration/RUN_LOCALLY.md), [RUN_ON_CLOUD.md](./installation_and_configuration/RUN_ON_CLOUD.md) |
 | **Developer/Admin** | Extend, maintain, and debug pipeline.                                | [INSTALLATION_AND_CONFIGURATION.md](./installation_and_configuration/INSTALLATION_AND_CONFIGURATION.md), [TROUBLESHOOTING.md](./troubleshooting/TROUBLESHOOTING.md) |

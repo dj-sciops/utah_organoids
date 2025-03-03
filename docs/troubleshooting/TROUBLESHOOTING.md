@@ -1,9 +1,5 @@
 # Troubleshooting Guide
 
-## Debugging `populate` Function
-
-- Run [RUN_debug notebooks](../notebooks/RUN_debug_spike_sorting.ipynb) with an example of error message and how to fix it with a step-by-step guidance.
-
 ## Common Installation Errors
 
 - `ERROR: Could not build wheels for datajoint`

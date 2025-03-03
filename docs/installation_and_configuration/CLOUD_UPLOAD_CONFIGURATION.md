@@ -8,9 +8,9 @@
 
 2. Configure credentials (config.yaml) for cloud upload:
 
-     ```
-     djsciops config
-     ```
+    ```
+    djsciops config
+    ```
 
    - Open the `config.yaml` file in any text editor and update the following fields with the project account details:
      1. `account_id`
@@ -22,8 +22,7 @@
 
 3. Expected output sample:
 
-   ```yaml
-
+  ```
   aws:
     account_id: account_id
   boto3:
@@ -39,9 +38,8 @@
     bucket: bucket
     role: role
   version: 1.5.8
+  ```
 
-   ```
-
-3. Upload data using [CREATE_new_session_with_cloud_upload](../notebooks/CREATE_new_session_with_cloud_upload.ipynb).
+3. Upload data using [UPLOAD_session_data_to_cloud](../../notebooks/UPLOAD_session_data_to_cloud.ipynb) notebook.
 
 **Security Warning:** _Never commit your `config.yaml` file containing cloud credentials to the repository. Always store sensitive information such as `account_id`, `client_secret`, and `AWS keys` in a secure location, such as environment variables or a secrets manager. To prevent accidental leaks, ensure that `config.yaml` is added to your `.gitignore` file._

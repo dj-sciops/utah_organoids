@@ -48,9 +48,9 @@ You may need to configure different environments to run the different parts of t
 
 ## Operation at Scale
 
-The pipeline operation is designed to be operated at scale via "worker" definition - see [here](../workflow/populate/worker.py)
+The pipeline operation is designed to be operated at scale via "worker" definition - see [here](../../src/workflow/populate/worker.py).
 
-For the Docker containerization details for the workers, see [here](../docker/)
+For the Docker containerization details for the workers, see [here](../../docker/)
 
 After installing the pipeline, you can run a worker via the command
 

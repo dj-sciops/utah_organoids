@@ -114,6 +114,6 @@ dj.config
 
 ## Axon Credentials (Cloud Upload/Download)
 
-1. Follow [CLOUD_UPLOAD_CONFIGURATION.md]./docs/installation/CLOUD_UPLOAD_CONFIGURATION.md) to set up the Axon credentials.
+1. Follow [CLOUD_UPLOAD_CONFIGURATION.md](./CLOUD_UPLOAD_CONFIGURATION.md) to set up the Axon credentials.
 
 **Security Warning:** _Ensure that sensitive credentials, such as database passwords, API keys, and cloud authentication tokens, are never hardcoded in the repository. Use environment variables or secure configuration files (`.env`, `dj_local_conf.json`) and restrict access to authorized users only._
