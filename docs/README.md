@@ -13,7 +13,7 @@ What are you aiming to achieve with the pipeline?
 
 - _Goal_: **Explore the current pipeline and results** without running new data or new analyses, and with no installation required.
 - _Steps_:
-  1. Run notebooks on [DataJoint Works platform](https://works.datajoint.com/) (no installation required) or locally (requires minimal local setup/installation, see [`Experimenter Guideline`](#getting-started-as-a-experimenter).
+  1. Run notebooks on [DataJoint platform](https://works.datajoint.com/) (no installation required) or locally (requires minimal local setup/installation, see [`Experimenter Guideline`](#getting-started-as-a-experimenter).
   2. Run the `EXPLORE` notebooks. These notebooks showcase each pipeline modality and its results, such as behavior ingestion and synchronization, pipeline architecture, and more.
 
 ## Getting Started as a `Experimenter`
@@ -53,3 +53,7 @@ What are you aiming to achieve with the pipeline?
   1. [Run the Workflow Computations Locally](RUN_LOCALLY_GUIDE.md).
   2. May contribute to the pipeline codebase and project documentation.
   3. Refer to the [Troubleshooting guide](TROUBLESHOOTING.md) for assistance if needed.
+
+## Standard Operating Procedure for the Utah Organoids DataJoint pipeline
+
+You can find the standard operating procedures for the Utah Organoids DataJoint pipeline in the main [README](../README.md). Please refer to this document for detailed instructions on how to use the pipeline.
