@@ -76,6 +76,7 @@ The **Utah Organoids DataJoint pipelines** facilitate **cerebral organoid charac
   2. Open and execute [CREATE_new_session.ipynb](./notebooks/CREATE_new_session.ipynb).
   3. Define a time window for analysis:
       - **For Spike Sorting Analysis**: Set `session_type` to `spike_sorting`, and create an `EphysSessionProbe` to store probe information, including the channel mapping. This triggers probe insertion detection automatically. For spike sorting, you will need to manually select the spike sorting algorithm and parameter set to run in the next step.
+      - **For LFP Analysis**: Set `session_type` to `lfp`, or `both` (spike sorting and lfp analyses for the session selected). This automatically run the LFP analysis pipeline.
 
 ### **Run Spike Sorting Analysis**
 
@@ -90,6 +91,11 @@ The **Utah Organoids DataJoint pipelines** facilitate **cerebral organoid charac
 
   1. Go to [works.datajoint.com](https://works.datajoint.com) → `Notebook` tab
   2. Open [EXPLORE_spike_sorting.ipynb](./notebooks/EXPLORE_spike_sorting.ipynb) to inspect processed ephys data.
+
+### **Explore LFP Results**
+
+  1. Go to [works.datajoint.com](https://works.datajoint.com) → `Notebook` tab
+  2. Open [EXPLORE_LFP_analysis.ipynb](./notebooks/EXPLORE_LFP_analysis.ipynb) to inspect processed LFP data.
 
 ### **Download Spike Sorting Results to Your Local Machine**
 
