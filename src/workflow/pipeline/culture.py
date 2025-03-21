@@ -185,7 +185,6 @@ class Experiment(dj.Manual):
     ---
     experiment_end_time         : datetime
     -> [nullable] User
-    -> [nullable] IsolatedRosetteCulture
     -> [nullable] OrganoidCulture
     -> [nullable] Drug
     drug_concentration=null     : float # concentration in uM
