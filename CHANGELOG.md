@@ -1,5 +1,11 @@
 # Changelog
 
+## `V0.15.1`
+
+### Features
+
+- fix: remove foreign key IsolatedRosetteCulture due to redundancy([a37b0ea](https://github.com/dj-sciops/utah_organoids/commit/a37b0ea08ffb843e4dd90464f2fdda9071e93d38))
+
 ## `v0.14.0`
 
 ### Features
