@@ -53,9 +53,12 @@ spike_sorting_worker(ephys_sorter.PostProcessing, max_calls=6)
 standard_worker(ephys.CuratedClustering, max_calls=5)
 standard_worker(ephys.WaveformSet, max_calls=5)
 standard_worker(ephys.QualityMetrics, max_calls=5)
+
 standard_worker(ingestion_support.PostEphys, max_calls=5)
 standard_worker(ephys_report.ProbeLevelReport, max_calls=6)
 standard_worker(report.SpikeInterfaceReport, max_calls=6)
+
+standard_worker(analysis.SpectrogramPlot, max_calls=6)
 
 standard_worker(mua.MUASpikes, max_calls=5)
 standard_worker(mua.MUATracePlot, max_calls=5)
