@@ -33,7 +33,18 @@ stores: dict[str, Any] = dj.config.get("stores", {})
 stores.setdefault("datajoint-blob", datajoint_blob)
 dj.config["stores"] = stores
 
+stage_dir = get_processed_root_data_dir()
+dj.config["stores"]["ephys-processed"] = dict(
+    protocol="s3",
+    endpoint="s3.amazonaws.com:9000",
+    bucket="dj-sciops",
+    access_key=os.getenv("AWS_ACCESS_KEY", None),
+    secret_key=os.getenv("AWS_ACCESS_SECRET", None),
+    location=f"{ORG_NAME}_{WORKFLOW_NAME}/outbox",
+    stage=stage_dir.as_posix() if stage_dir else None,
+)
 
+# ------------- Activate "ephys" schema -------------
 if not ephys.schema.is_activated():
     ephys.activate(DB_PREFIX + "ephys", DB_PREFIX + "probe", linking_module=__name__)
     ephys_sorter.activate(DB_PREFIX + "ephys_sorter", ephys_module=ephys)
