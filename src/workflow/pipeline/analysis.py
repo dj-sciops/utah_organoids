@@ -2,6 +2,9 @@ import datajoint as dj
 import numpy as np
 from scipy import signal
 from datetime import timedelta, datetime, timezone
+import tempfile
+import matplotlib.pyplot as plt
+from pathlib import Path
 
 from workflow import DB_PREFIX
 
