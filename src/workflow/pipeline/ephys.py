@@ -2,8 +2,7 @@ import os
 from typing import Any
 
 import datajoint as dj
-from element_array_ephys import ephys_no_curation as ephys
-from element_array_ephys import ephys_report, probe
+from element_array_ephys import probe, ephys_no_curation as ephys, ephys_report
 from element_array_ephys.spike_sorting import si_spike_sorting as ephys_sorter
 
 from workflow import DB_PREFIX, ORG_NAME, WORKFLOW_NAME
@@ -19,7 +18,7 @@ __all__ = ["probe", "ephys", "ephys_report", "ephys_sorter"]
 logger = dj.logger
 
 
-# Set s3 stores configuration
+# ------------- Configure external storage -------------
 datajoint_blob = dict(
     protocol="s3",
     endpoint="s3.amazonaws.com:9000",
@@ -47,8 +46,12 @@ dj.config["stores"]["ephys-processed"] = dict(
 # ------------- Activate "ephys" schema -------------
 if not ephys.schema.is_activated():
     ephys.activate(DB_PREFIX + "ephys", DB_PREFIX + "probe", linking_module=__name__)
+
+if not ephys_sorter.schema.is_activated():
     ephys_sorter.activate(DB_PREFIX + "ephys_sorter", ephys_module=ephys)
 
+
+# ------------- Add default entries -------------
 
 # Add "spykingcircus2" to ClusteringMethod
 ephys.ClusteringMethod.insert1(

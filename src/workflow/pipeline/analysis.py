@@ -1,6 +1,7 @@
 import datajoint as dj
 import numpy as np
 from scipy import signal
+import matplotlib.pyplot as plt
 
 from workflow import DB_PREFIX
 
@@ -59,8 +60,8 @@ class LFPSpectrogram(dj.Computed):
         definition = """
         -> master
         ---
-        spectrogram: longblob # Power with dimensions (frequecy, time).
-        time: longblob        # Timestamps
+        spectrogram: longblob # Power with dimensions (frequency, time)
+        time: longblob        # Timestamps 
         frequency: longblob   # Fourier frequencies
         """
 
