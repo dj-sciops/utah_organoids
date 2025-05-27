@@ -14,6 +14,10 @@ logger = dj.logger
 
 @schema
 class SpectralBand(dj.Lookup):
+    """
+    Spectral bands defined by the lab.
+    """
+
     definition = """
     band_name: varchar(16)
     ---
