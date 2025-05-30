@@ -124,6 +124,10 @@ class LFPSpectrogram(dj.Computed):
         std_power: float             # Std dev of band power (μV²/Hz)
         """
 
+    def key_source(self):
+        # Use only the default param_idx for high-gamma windowing params for automated population
+        return (ephys.LFP.Trace * SpectrogramParameters & dict(param_idx=3))    
+    
     def make(self, key):
         # Load LFP trace and sampling rate
         lfp = (ephys.LFP.Trace & key).fetch1("lfp")
