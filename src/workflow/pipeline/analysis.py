@@ -1,7 +1,7 @@
 import datajoint as dj
+import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
-import matplotlib.pyplot as plt
 
 from workflow import DB_PREFIX
 
@@ -66,13 +66,15 @@ class LFPQC(dj.Computed):
         lfp_skewness = float(stats.skew(lfp))
         lfp_kurtosis = float(stats.kurtosis(lfp))
 
-        self.insert1({
-            **key,
-            "lfp_std": lfp_std,
-            "noise_level": lfp_noise_level,
-            "lfp_skewness": lfp_skewness,
-            "lfp_kurtosis": lfp_kurtosis
-        })
+        self.insert1(
+            {
+                **key,
+                "lfp_std": lfp_std,
+                "noise_level": lfp_noise_level,
+                "lfp_skewness": lfp_skewness,
+                "lfp_kurtosis": lfp_kurtosis,
+            }
+        )
 
 
 @schema
@@ -85,14 +87,16 @@ class SpectrogramParameters(dj.Lookup):
     description="":  varchar(64)
     """
     contents = [
-        (0,2.0, 1.0, "2s window, 50% overlap (delta, theta, alpha)"),
-        (1, 0.5, 0.25, "0.5s window, 50% overlap (beta, gamma)"),  
+        (0, 2.0, 1.0, "2s window, 50% overlap (delta, theta, alpha)"),
+        (1, 0.5, 0.25, "0.5s window, 50% overlap (beta, gamma)"),
         (2, 0.25, 0.125, "0.25s window, 50% overlap (high-gamma)"),
     ]
+
 
 @schema
 class LFPSpectrogram(dj.Computed):
     """Spectrograms and frequency-domain power metrics for each LFP trace."""
+
     definition = """
     -> ephys.LFP.Trace
     -> SpectrogramParameters
@@ -114,6 +118,7 @@ class LFPSpectrogram(dj.Computed):
 
     class ChannelPower(dj.Part):
         """Power in each frequency band, per LFP trace."""
+
         definition = """
         -> master
         -> SpectralBand
@@ -125,52 +130,66 @@ class LFPSpectrogram(dj.Computed):
 
     def key_source(self):
         # Use only the default param_idx for high-gamma windowing params for automated population
-        return (ephys.LFP.Trace * SpectrogramParameters & "param_idx=2")    
-    
+        return ephys.LFP.Trace * SpectrogramParameters & "param_idx=2"
+
     def make(self, key):
         # Load LFP trace and sampling rate
         lfp = (ephys.LFP.Trace & key).fetch1("lfp")
         fs = (ephys.LFP & key).fetch1("lfp_sampling_rate")
 
         # Spectrogram window parameters
-        window_size, overlap_size = (SpectrogramParameters & key).fetch1("window_size", "overlap_size")
+        window_size, overlap_size = (SpectrogramParameters & key).fetch1(
+            "window_size", "overlap_size"
+        )
         nperseg = int(window_size * fs)
         noverlap = int(overlap_size * fs)
 
         # Compute spectrogram
         freq, t, Sxx = signal.spectrogram(
-            lfp, fs=fs, window="tukey",
-            nperseg=nperseg, noverlap=noverlap,
-            scaling="density", mode="psd"
+            lfp,
+            fs=fs,
+            window="tukey",
+            nperseg=nperseg,
+            noverlap=noverlap,
+            scaling="density",
+            mode="psd",
         )
 
         # Insert overall spectrogram
         self.insert1(key)
-        self.ChannelSpectrogram.insert1({
-            **key,
-            "spectrogram": Sxx,
-            "frequency": freq,
-            "time": t,
-        })
+        self.ChannelSpectrogram.insert1(
+            {
+                **key,
+                "spectrogram": Sxx,
+                "frequency": freq,
+                "time": t,
+            }
+        )
 
         # Compute band power metrics
         band_powers = {}
         for band in (SpectralBand()).fetch(as_dict=True):
             band_mask = (freq >= band["lower_freq"]) & (freq < band["upper_freq"])
-            band_power = Sxx[band_mask].mean(axis=0) if band_mask.any() else np.zeros_like(t)
+            band_power = (
+                Sxx[band_mask].mean(axis=0) if band_mask.any() else np.zeros_like(t)
+            )
             band_powers[band["band_name"]] = band_power
 
-            self.ChannelPower.insert1({
-                **key,
-                "band_name": band["band_name"],
-                "power_time_series": band_power,
-                "mean_power": float(band_power.mean()),
-                "std_power": float(band_power.std()),
-            })
+            self.ChannelPower.insert1(
+                {
+                    **key,
+                    "band_name": band["band_name"],
+                    "power_time_series": band_power,
+                    "mean_power": float(band_power.mean()),
+                    "std_power": float(band_power.std()),
+                }
+            )
 
         # Compute delta/alpha power ratio
         delta_power = band_powers.get("delta", np.zeros_like(t))
-        alpha_power = band_powers.get("alpha", np.ones_like(t) * 1e-12)  # Avoid division by zero
+        alpha_power = band_powers.get(
+            "alpha", np.ones_like(t) * 1e-12
+        )  # Avoid division by zero
         ratio_trace = delta_power / (alpha_power + 1e-12)
 
         # Compute session-level summary metrics
@@ -180,13 +199,17 @@ class LFPSpectrogram(dj.Computed):
 
         # 90% amplitude envelope range (μV RMS)
         amp_envelope = np.sqrt(np.mean(Sxx, axis=0))  # broadband RMS amplitude envelope
-        power_range_90pct = float(np.percentile(amp_envelope, 95) - np.percentile(amp_envelope, 5))
+        power_range_90pct = float(
+            np.percentile(amp_envelope, 95) - np.percentile(amp_envelope, 5)
+        )
 
         # Insert final summary metrics
-        self.update1({
-            **key,
-            "delta_band_mean_power": delta_band_mean_power,
-            "alpha_band_mean_power": alpha_band_mean_power,
-            "delta_alpha_ratio_mean": delta_alpha_ratio_mean,
-            "power_range_90pct": power_range_90pct,
-        })
+        self.update1(
+            {
+                **key,
+                "delta_band_mean_power": delta_band_mean_power,
+                "alpha_band_mean_power": alpha_band_mean_power,
+                "delta_alpha_ratio_mean": delta_alpha_ratio_mean,
+                "power_range_90pct": power_range_90pct,
+            }
+        )
