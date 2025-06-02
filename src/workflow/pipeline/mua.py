@@ -1,20 +1,18 @@
-import datajoint as dj
-from datetime import timedelta, datetime, timezone
-import numpy as np
-import scipy.stats
-from scipy.signal import find_peaks
 import json
 import tempfile
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+import datajoint as dj
+import numpy as np
+import scipy.stats
 import spikeinterface as si
-from spikeinterface import extractors, preprocessing
-
 from element_interface.utils import find_full_path
+from scipy.signal import find_peaks
+from spikeinterface import extractors, preprocessing
 
 from workflow import DB_PREFIX
 from workflow.pipeline import culture, ephys
-
 
 schema = dj.schema(DB_PREFIX + "mua")
 
@@ -25,15 +23,12 @@ class MUAEphysSession(dj.Computed):
     -> culture.Experiment
     start_time                  : datetime
     ---
-    end_time                    : datetime  
-    port_id: char(2)  # e.g. A, B, C, ... 
+    end_time                    : datetime
+    port_id: char(2)  # e.g. A, B, C, ...
     unique index (organoid_id, start_time, end_time)
     """
 
-    key_source = (
-        culture.Experiment
-        & "organoid_id in ('MB05', 'MB06', 'MB07', 'MB08', 'E9', 'E10', 'E11', 'E12', 'O25', 'O26', 'O27', 'O28')"
-    )
+    key_source = culture.Experiment & "organoid_id NOT in ('O09','O10','O11','O12')"
 
     session_duration = timedelta(minutes=1)
 
