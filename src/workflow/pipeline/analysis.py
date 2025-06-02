@@ -70,7 +70,7 @@ class LFPQC(dj.Computed):
             {
                 **key,
                 "lfp_std": lfp_std,
-                "noise_level": lfp_noise_level,
+                "lfp_noise_level": lfp_noise_level,
                 "lfp_skewness": lfp_skewness,
                 "lfp_kurtosis": lfp_kurtosis,
             }
