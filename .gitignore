@@ -104,9 +104,6 @@ ENV/
 # mypy
 .mypy_cache/
 
-# datajoint
-dj_local_c*.json
-
 # emacs
 **/*~
 **/#*#
@@ -114,9 +111,11 @@ dj_local_c*.json
 docker-compose.yml
 Diagram.ipynb
 
-# docker
+# config files
 .env
 run.env
+dj_local_c*.json
+config.yaml
 
 # vscode
 .vscode/*

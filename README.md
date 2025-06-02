@@ -1,76 +1,155 @@
-# DataJoint Workflow for Utah Lab
+# Utah Organoids DataJoint Pipelines
 
-This is the central codebase for the **DataJoint Workflow for Utah Lab**. The pipelines are designed to manage and analyze data from the Utah lab, focusing on cerebral organoids characterization and electrophysiology data analysis.
+The **Utah Organoids DataJoint pipelines** facilitate **cerebral organoid characterization** and **electrophysiology (ephys) data analysis**.
 
-The automated pipeline consists of several schemas and tables, covering multiple data modalities and/or DataJoint Elements.
+### Pipeline Components
 
-- **Organoids generation pipeline**: The protocol for organoid generation includes inducing pluripotent stem cells (iPSCs) to form single neural rosettes (SNRs), which are then developed into organoids. 
+- **Organoid Generation Pipeline**: Manages metadata for organoid generation protocols, tracking the process from induced pluripotent stem cells (iPSCs) to single neural rosettes (SNRs) to mature organoids.
 
-![Culture Diagram](./images/culture_diagram.png)
+- **Array Ephys Pipeline**: Manages and analyzes ephys recordings, including spike sorting and quality metrics.
 
-This pipeline manages data from the organoid generation process, including iPSCs, SNRs, and organoids. It includes the following schemas:
-  - `lineage`: Handles lineage and sequence metadata.
-  - `culture`: Manages metadata for iPSCs, SNRs, and organoids, covering culture conditions, induction and post-induction details, media used, experiment timelines and directories, and drug concentrations.
+## Accessing the Pipelines
 
-![Experiment Workflow](./images/workflow_lineage_culture.svg)
+1. **Request Access**: Contact the DataJoint support team for an account.
+2. **Log in**: Use your DataJoint credentials to access:
+     - works.datajoint.com (run notebooks & manage computations)
+     - Organoids SciViz (enter experimental metadata)
+     - Database connections (access data through the pipeline)
 
-- **Array Ephys pipeline**: This pipeline for array electrophysiology data analysis includes the following main steps:
-  - `probe`: Manages the probes and metadata used for the electrophysiology recordings.
-  - `ephys`: Manages the electrophysiology data and analysis results, including spike sorting and quality metrics.
-    - `EphysRecording`: Represents raw electrophysiological recordings linked to specific probe insertions. `EphysRecordingFile`: Represents the raw data files associated with each recording.
-    - `Preprocessing`: Applies preprocessing steps like filtering and artifact removal to raw data.
-    - `Clustering`: Stores the spike sorting results.
-    - `Curation`: Facilitates manual or automated curation of sorted spike data.
-    - `QualityMetrics`: Calculates and stores quality metrics after the spike sorting.
-    - `Unit`: Final output of curated, high-quality single-unit data.
+## Exploring the Pipelines
 
-![Array Ephys Workflow](./images/workflow_array_ephys.svg)
+  1. Log into [works.datajoint.com](https://works.datajoint.com)  and navigate to the `Notebook` tab.
+  2. Run [EXPLORE_pipeline_architecture.ipynb](./notebooks/EXPLORE_pipeline_architecture.ipynb) to visualize the data pipeline structure, including key schemas, tables, and their relationships.
 
-- For more details, you can explore the pipeline architecture and data in the `EXPLORE` notebooks as Guest following the [Quick Start Guide](#quick-start-guide) below.
+## Organoid Generation Pipeline
 
-## Quick Start Guide
+### **Metadata Entry**
 
-What are you aiming to achieve with the pipeline?
+  1. Log into [Organoids SciViz](https://organoids.datajoint.com/) with your DataJoint credentials (username and password).
+  2. Enter data in the corresponding sections:
+      - `User` page → if you are a new experimenter, register a new experimenter.
+      - `Lineage` page → create new “Lineage” and “Sequence” and submit.
+      - `Stem Cell` page → register new “Stem Cell” data.
+      - `Induction` page → add new “Induction Culture” and “Induction Culture Condition”
+      - `Post Induction` page → add new “Post Induction Culture” and “Post Induction Culture Condition”
+      - `Isolated Rosette` page → add new “Isolated Rosette Culture” and “Isolated Rosette Culture Condition”
+      - `Organoid` page → add new “Organoid Culture” and “Organoid Culture Condition”
+      - `Experiment` page → log new experiments performed on a particular organoid
+          - Include metadata: organoid ID, datetime, experimenter, condition, etc.
+          - Provide the experiment data directory — the relative path to where the acquired data is stored.
 
-| User Type           | Description                                                                                                                                                    | Relevant Notebooks         |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| **Guest**           | Explore the data without installing anything. [Learn more](./docs/README.md#getting-started-as-a-guest).                                                       | `EXPLORE`                  |
-| **Experimenter**    | Run the pipeline for your new experiment efficiently without diving into the code, including **instructions on uploading data to the cloud**.[Learn more](./docs/README.md#getting-started-as-a-experimenter). | `EXPLORE`                  |
-| **Power-User**      | Gain deeper insights by running specific pipeline computations on the cloud or locally, and **understand how the data is processed**. [Learn more](./docs/README.md#getting-started-as-a-power-user).                   | `CREATE`, `RUN`, `EXPLORE` |
-| **Developer/Admin** | Maintain and enhance the pipeline codebase, implement new features, and contribute actively to the project. [Learn more](./docs/README.md#getting-started-as-a-developer-or-admin).                                | `CREATE`, `RUN`, `EXPLORE` | 
+## Array Ephys Pipeline
 
-## Summary on Getting Started with Works App
+### **Upload Data to the Cloud**
 
-- _Goal_: **Explore the current pipeline architecture and results** without running new data or new analyses, and with no installation required.
+  1. Ensure data follows the [file structure guidelines](./docs/installation_and_configuration/DATA_ORGANIZATION.md).
+  2. Request Axon credentials from the DataJoint support team.
+  3. Set up your local machine (if you haven't already):
+      1. [Install the pipeline code](./docs/installation_and_configuration/INSTALLATION_AND_CONFIGURATION.md).  
+      2. Configure axon settings ([Cloud upload configuration](./docs/installation_and_configuration/CLOUD_UPLOAD_CONFIGURATION.md)).  
+  4. Upload data via the [cloud upload notebook](./notebooks/UPLOAD_session_data_to_cloud.ipynb) using either:
+      1. Jupyter Notebook Server:
+          - Open a terminal or command prompt.
+          - Activate the `utah_organoids` environment with `conda activate utah_organoids`.
+          - Ensure `Jupyter` is installed in the `utah_organoids` environment. If not, install it by running `conda install jupyter`.
+          - Navigate to the `utah_organoids/notebooks` directory in the terminal.
+          - Run `jupyter notebook` in the terminal which will open the Jupyter notebook web interface.
+          - Click on the notebook there (`UPLOAD_session_data_to_cloud.ipynb`) and follow the instructions to upload your data to the cloud.
+          - Note: to execute each code cell sequentially, press `Shift + Enter` on your keyboard or click "Run".
+          - Close the browser tab and stop Jupyter with `Ctrl + C` in the terminal when you are done with the upload and notebook.
+      2. Visual Studio Code (VS Code):
+          - Install VS Code and the Python extension.
+          - Select the kernel for the notebook by clicking on the kernel name `utah_organoids` in the top right corner of the notebook.
+          - Open the `CREATE_new_session_with_cloud_upload.ipynb` notebook in VS Code.
+          - Click on the "Run Cell" button in the top right corner of each code cell to execute the code.
+          - Follow the instructions in the notebook to upload your data to the cloud.
 
-- _Steps_:
-  1. Ensure you have a [DataJoint Works account](https://accounts.datajoint.com/) before getting started.
-  2. Log in [DataJoint Works platform](https://works.datajoint.com/) (no installation required) 
-  3. In the `Notebooks` tab, run the `utah_organoids/notebooks/` notebooks. These notebooks showcase each pipeline modality and its results, for example:
-        - `EXPLORE` notebooks to explore the curent pipeline architecture and results, e.g., `EXPLORE_pipeline_architecture.ipynb` to explore the main schemas that compound the pipeline architecture for this project.
-## SciViz website
+### **Analyzing Multi-Unit Activity (MUA) in Raw Traces**  
 
-Data viewer for the Utah Organoids DataJoint pipeline. Please use the entry forms provided on the website to manually input relevant data entries.
+1. Navigate to [works.datajoint.com](https://works.datajoint.com) and open the `Dashboard` tab.  
+2. Click on `Plots` > `MUA Trace Plots`, then select a data entry to explore the MUA results. The interactive plot allows you to zoom in and out of the raw traces and examine detected peaks.  
+3. (Optional) For a more detailed analysis, go to the `Notebook` tab on [works.datajoint.com](https://works.datajoint.com) and run the [EXPLORE_MUA_analysis.ipynb](./notebooks/EXPLORE_MUA_analysis.ipynb) notebook to inspect the `MUA` schema in depth.
 
-<https://organoids.datajoint.com/>
+### **Define an `EphysSession`** (i.e. a time-window for ephys analysis)
 
-## Citations
+  1. Log into [works.datajoint.com](https://works.datajoint.com)  and navigate to the `Notebook` tab.
+  2. Open and execute [CREATE_new_session.ipynb](./notebooks/CREATE_new_session.ipynb).
+  3. Define a time window for analysis:
+      - **For Spike Sorting Analysis**: Set `session_type` to `spike_sorting`, and create an `EphysSessionProbe` to store probe information, including the channel mapping. This triggers probe insertion detection automatically. For spike sorting, you will need to manually select the spike sorting algorithm and parameter set to run in the next step.
+      - **For LFP Analysis**: Set `session_type` to `lfp`, or `both` (spike sorting and lfp analyses for the session selected). This automatically run the LFP analysis pipeline.
 
-- If your work uses [SpikeInterface within the pipeline](https://github.com/datajoint/element-array-ephys/tree/datajoint-spikeinterface), cite the respective manuscript. For details, visit [here](https://spikeinterface.readthedocs.io/en/latest/references.html).
-- For other tools integrated within the pipeline, cite their respective manuscripts and Research Resource Identifiers (RRIDs).
-- For work utilizing DataJoint Python and/or Elements, cite the respective manuscripts and RRIDs. For details, visit [here](https://datajoint.com/docs/about/citation/).
+### **Run Spike Sorting Analysis**
 
-DataJoint promotes integration and interoperability across neuroscience ecosystems, encouraging transparency and collaboration in research.
+  1. Create a `ClusteringTask` by selecting a spike-sorting algorithm and parameter set:
+      - Go to [works.datajoint.com](works.datajoint.com) → `Notebook` tab
+      - Run [CREATE_new_clustering_paramset.ipynb](./notebooks/CREATE_new_clustering_paramset.ipynb) to configure a new parameter set.
+      - Assign parameters to an `EphysSession` using [CREATE_new_clustering_task.ipynb](./notebooks/CREATE_new_clustering_task.ipynb).
+      - The pipeline will automatically run the spike sorting process.
+      - Follow the [download spike sorting results](#download-spike-sorting-results-to-your-local-machine) to retrieve results.
 
-## Additional Resources
+### **Explore Spike Sorting Results**
 
-- [Official documentation for DataJoint](https://datajoint.com/docs/)
-- [Interactive tutorials written in Python](https://github.com/datajoint/datajoint-tutorials)
-- [Notebook for logical operators in DataJoint tables](https://github.com/datajoint-company/db-programming-with-datajoint/blob/master/notebooks/SQL%20Syntax%20for%20DataJoint%20Querying.ipynb)
-- [DataJoint Table Tiers](https://datajoint.com/docs/core/datajoint-python/0.13/reproduce/table-tiers/)
-- [DataJoint Common Commands](https://datajoint.com/docs/core/datajoint-python/0.13/query-lang/common-commands/)
-- [DataJoint Operators](https://datajoint.com/docs/core/datajoint-python/0.13/query-lang/operators/)
-- [DataJoint Populate Function](https://datajoint.com/docs/core/datajoint-python/0.14/compute/populate/)
-- [Contribute documentation](https://datajoint.com/docs/about/contribute/)
-- [Quality assurance principles in DataJoint](https://datajoint.com/docs/elements/management/quality-assurance/)
-- [DataJoint External Storage for Large Data Objects](https://datajoint.com/docs/core/datajoint-python/0.14/sysadmin/external-store/)
+  1. Go to [works.datajoint.com](https://works.datajoint.com) → `Notebook` tab
+  2. Open [EXPLORE_spike_sorting.ipynb](./notebooks/EXPLORE_spike_sorting.ipynb) to inspect processed ephys data.
+
+### **Explore LFP Results**
+
+  1. Go to [works.datajoint.com](https://works.datajoint.com) → `Notebook` tab
+  2. Open [EXPLORE_LFP_analysis.ipynb](./notebooks/EXPLORE_LFP_analysis.ipynb) to inspect processed LFP data.
+
+### **Download Spike Sorting Results to Your Local Machine**
+
+  1. Request Axon credentials from the DataJoint support team.
+  2. Set up your local machine (if you haven't already):
+      1. [Install the pipeline code](./docs/installation_and_configuration/INSTALLATION_AND_CONFIGURATION.md#installation-of-the-pipeline-codebase).  
+      2. Configure axon settings ([Cloud upload configuration](./docs/CLOUD_UPLOAD_CONFIGURATION.md)).  
+  3. Download spike sorting results via the [DOWNLOAD_spike_sorted_data.ipynb](./notebooks/DOWNLOAD_spike_sorted_data.ipynb) using either:
+      1. Jupyter Notebook Server:
+          - Open a terminal or command prompt.
+          - Activate the `utah_organoids` environment with `conda activate utah_organoids`.
+          - Ensure `Jupyter` is installed in the `utah_organoids` environment. If not, install it by running `conda install jupyter`.
+          - Navigate to the `utah_organoids/notebooks` directory in the terminal.
+          - Run `jupyter notebook` in the terminal which will open the Jupyter notebook web interface.
+          - Click on the notebook there (`DOWNLOAD_spike_sorted_data.ipynb`) and follow the instructions to download results.
+          - Note: to execute each code cell sequentially, press `Shift + Enter` on your keyboard or click "Run".
+          - Close the browser tab and stop Jupyter with `Ctrl + C` in the terminal when you are done with the upload and notebook.
+      2. Visual Studio Code (VS Code):
+          - Install VS Code and the Python extension.
+          - Select the kernel for the notebook by clicking on the kernel name `utah_organoids` in the top right corner of the notebook.
+          - Open the `DOWNLOAD_spike_sorted_data.ipynb` notebook in VS Code.
+          - Click on the "Run Cell" button in the top right corner of each code cell to execute the code.
+          - Follow the instructions in the notebook to download spike sorting results.
+
+## Troubleshooting
+
+For help, refer to the [Documentation](./docs/README.md), [Troubleshooting Guide](./docs/troubleshooting/TROUBLESHOOTING.md), or contact the DataJoint support team.
+
+## Citation Policy
+
+If your work uses DataJoint Python, DataJoint Elements, or any integrated tools within the pipeline, please cite the respective manuscripts and Research Resource Identifiers (RRIDs).
+
+### DataJoint Python and MATLAB
+
+Yatsenko D, Reimer J, Ecker AS, Walker EY, Sinz F, Berens P, Hoenselaar A, Cotton RJ, Siapas AS, Tolias AS.  
+*DataJoint: managing big scientific data using MATLAB or Python.* bioRxiv. 2015 Jan 1:031658.  
+[DOI: 10.1101/031658](https://doi.org/10.1101/031658)  
+*Resource Identification (RRID):* [SCR_014543](https://scicrunch.org/resolver/SCR_014543)
+
+### DataJoint Relational Model
+
+Yatsenko D, Walker EY, Tolias AS.  
+*DataJoint: a simpler relational data model.* arXiv:1807.11104. 2018 Jul 29.  
+[DOI: 10.48550/arXiv.1807.11104](https://doi.org/10.48550/arXiv.1807.11104)  
+*Resource Identification (RRID):* [SCR_014543](https://scicrunch.org/resolver/SCR_014543)
+
+### DataJoint Elements
+
+Yatsenko D, Nguyen T, Shen S, Gunalan K, Turner CA, Guzman R, Sasaki M, Sitonic D, Reimer J, Walker EY, Tolias AS.  
+*DataJoint Elements: Data Workflows for Neurophysiology.* bioRxiv. 2021 Jan 1.  
+[DOI: 10.1101/2021.03.30.437358](https://doi.org/10.1101/2021.03.30.437358)  
+*Resource Identification (RRID):* [SCR_021894](https://scicrunch.org/resolver/SCR_021894)
+
+### Citing Other Integrated Tools
+
+- If your work uses **SpikeInterface**, please [cite the respective manuscript](https://spikeinterface.readthedocs.io/en/latest/references.html).  
+- For other integrated tools within the pipeline, cite their respective **manuscripts** and **RRIDs**.

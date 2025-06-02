@@ -111,48 +111,6 @@ SciViz: # top level tab
                 - type: table
                   input: Lineage ID
                   destination: utah_organoids_lineage.Lineage
-    Stem Cell:
-      route: /stemcell
-      grids:
-        grid5:
-          type: fixed
-          columns: 1
-          row_height: 520
-          components:
-            Stem Cell Table:
-              route: /stemcellviewer
-              x: 0
-              y: 0
-              height: 1
-              width: 1
-              type: antd-table
-              restriction: >
-                def restriction(**kwargs):
-                    return dict(**kwargs)
-              dj_query: >
-                def dj_query(utah_organoids_culture):
-                    table = utah_organoids_culture.StemCell
-                    return dict(query=(table), fetch_args=[])
-            Stem Cell Form:
-              route: /stemcellform
-              x: 0
-              y: 1
-              height: 1
-              width: 1
-              type: form
-              tables:
-                - utah_organoids_culture.StemCell
-              map:
-                - type: table
-                  input: Induction Culture
-                  destination: utah_organoids_culture.InductionCulture
-                - type: table
-                  input: User
-                  destination: utah_organoids_culture.User
-              booleans:
-                - media_change
-                - discontinued
-                - genomic_dna
     Induction:
       route: /induction
       grids:
@@ -211,6 +169,48 @@ SciViz: # top level tab
               type: form
               tables:
                 - utah_organoids_culture.InductionCultureCondition
+              map:
+                - type: table
+                  input: Induction Culture
+                  destination: utah_organoids_culture.InductionCulture
+                - type: table
+                  input: User
+                  destination: utah_organoids_culture.User
+              booleans:
+                - media_change
+                - discontinued
+                - genomic_dna
+    Stem Cell:
+      route: /stemcell
+      grids:
+        grid5:
+          type: fixed
+          columns: 1
+          row_height: 520
+          components:
+            Stem Cell Table:
+              route: /stemcellviewer
+              x: 0
+              y: 0
+              height: 1
+              width: 1
+              type: antd-table
+              restriction: >
+                def restriction(**kwargs):
+                    return dict(**kwargs)
+              dj_query: >
+                def dj_query(utah_organoids_culture):
+                    table = utah_organoids_culture.StemCell
+                    return dict(query=(table), fetch_args=[])
+            Stem Cell Form:
+              route: /stemcellform
+              x: 0
+              y: 1
+              height: 1
+              width: 1
+              type: form
+              tables:
+                - utah_organoids_culture.StemCell
               map:
                 - type: table
                   input: Induction Culture

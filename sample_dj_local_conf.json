@@ -14,7 +14,7 @@
     "display.show_tuple_count": true,
     "custom": {
         "database.prefix": "utah_organoids_",
-        "raw_root_data_dir": "home/Data/utah_organoids/raw",
-        "processed_root_data_dir": "home/Data/utah_organoids/processed"
+        "raw_root_data_dir": "home/Data/utah_organoids/inbox",
+        "processed_root_data_dir": "home/Data/utah_organoids/outbox"
     }
 }

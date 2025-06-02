@@ -1,5 +1,32 @@
 # Changelog
 
+## `V0.17.0`
+
+### Features
+
+- fix: LFPSpectrogram logic([343a88a](https://github.com/dj-sciops/utah_organoids/pull/140/commits/343a88a339f1b045a4e88d8505c84df77552c73f))
+
+- feat: add new LFPTraceQC table([048a328](https://github.com/dj-sciops/utah_organoids/pull/140/commits/048a328d82263d38a3d26b0673a436987b537d31)
+
+- fix: update params in SpectrogramParameters([f32f7e2](https://github.com/dj-sciops/utah_organoids/pull/140/commits/f32f7e23444b48fee0aab9d22e47f630c9aca668)
+
+- feat: add new attributes and logic to LFPSpectrogram ([040dc0f](https://github.com/dj-sciops/utah_organoids/pull/140/commits/040dc0f4de5599df23fbbe7c90d62aeb3a2727fa)
+
+
+## `V0.16.0`
+
+### Features
+
+- feat: Add `report` schema to store `SpikeInterfaceReport` plots & update worker orchestration([d2f2bc3](https://github.com/dj-sciops/utah_organoids/pull/131/commits/d2f2bc3b1fc0faef7d110e75f6b088876d91e55b))
+
+- feat: new table SpectrogramPlot and Channel to create plotly figure ([c3783b8](https://github.com/dj-sciops/utah_organoids/pull/131/commits/c3783b80618b76738d2c4e2f91e1bc5a98677b23))
+
+## `V0.15.1`
+
+### Features
+
+- fix: remove foreign key IsolatedRosetteCulture due to redundancy([a37b0ea](https://github.com/dj-sciops/utah_organoids/commit/a37b0ea08ffb843e4dd90464f2fdda9071e93d38))
+
 ## `v0.14.0`
 
 ### Features
