@@ -134,7 +134,7 @@ class SpectrogramAndPowerPlots(dj.Computed):
 
                 # Save spectrogram plot
                 filename_spectrogram = (
-                    f"organoid_{key['organoid_id']}_ch{electrode}_spectrogram.png"
+                    f"organoid_{key['organoid_id']}_ch{electrode}_{key['start_time']}_{key['end_time']}_spectrogram.png"
                 )
                 filepath_spectrogram = tmp_path / filename_spectrogram
                 spectrogram_fig.savefig(
