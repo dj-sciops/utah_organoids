@@ -177,8 +177,8 @@ class LFPSpectrogram(dj.Computed):
                     **key,
                     "band_name": band["band_name"],
                     "power_time_series": band_power,
-                    "mean_power": float(band_power.mean()),
-                    "std_power": float(band_power.std()),
+                    "mean_power": band_power.mean(),
+                    "std_power": band_power.std(),
                 }
             )
 
