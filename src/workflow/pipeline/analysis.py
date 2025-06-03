@@ -99,7 +99,7 @@ class LFPSpectrogram(dj.Computed):
     -> SpectrogramParameters
     ---
     delta_band_mean_power: float  # Average delta power (1-4 Hz) over entire recording (μV²/Hz)
-    power_range_90pct: float      # 90% range (95th-5th percentile) of broadband RMS amplitude envelope (μV RMS)
+    power_range_90pct: float      # 90%% range (95th-5th percentile) of broadband RMS amplitude envelope (μV RMS)
     """
 
     class ChannelSpectrogram(dj.Part):
@@ -123,6 +123,7 @@ class LFPSpectrogram(dj.Computed):
         std_power: float             # Std dev of band power (μV²/Hz)
         """
 
+    @property
     def key_source(self):
         # Use only the default param_idx for high-gamma windowing params for automated population
         return ephys.LFP.Trace * SpectrogramParameters & "param_idx=2"

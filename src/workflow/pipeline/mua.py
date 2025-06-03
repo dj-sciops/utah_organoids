@@ -102,8 +102,6 @@ class MUASpikes(dj.Computed):
         spike_amp: longblob    # spike amplitudes in uV
         """
 
-    key_source = MUAEphysSession
-
     threshold_uV = 50  # 50 uV
     peak_sign = "both"
 
