@@ -185,6 +185,7 @@ class MUASpikes(dj.Computed):
         self.update1(
             {
                 **key,
+                "threshold_uv": threshold_uV,
                 "execution_duration": (
                     datetime.now(timezone.utc) - execution_time
                 ).total_seconds()
