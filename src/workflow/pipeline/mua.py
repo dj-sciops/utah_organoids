@@ -29,6 +29,8 @@ class MUAEphysSession(dj.Computed):
     unique index (organoid_id, start_time, end_time)
     """
 
+    key_source = culture.Experiment & ephys.EphysSessionProbe
+
     session_duration = timedelta(minutes=1)
 
     def make(self, key):
