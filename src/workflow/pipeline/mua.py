@@ -29,8 +29,6 @@ class MUAEphysSession(dj.Computed):
     unique index (organoid_id, start_time, end_time)
     """
 
-    key_source = culture.Experiment & "organoid_id NOT in ('O09','O10','O11','O12')"
-
     session_duration = timedelta(minutes=1)
 
     def make(self, key):
