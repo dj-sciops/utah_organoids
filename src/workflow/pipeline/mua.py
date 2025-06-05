@@ -40,6 +40,12 @@ class MUAEphysSession(dj.Computed):
         # Figure out `Port ID` from the existing EphysSessionProbe
         port_id = set((ephys.EphysSessionProbe & key).fetch("port_id"))
 
+        # Figure out `Port ID` from the existing EphysSession
+        if not (ephys.EphysSessionProbe & key):
+            raise ValueError(
+                f"No EphysSessionProbe found for the {key} - cannot determine the port ID"
+            )
+
         # Check if there are multiple port IDs for the same experiment, if so, it needs to be fixed in the EphysSessionProbe table
         if len(port_id) > 1:
             raise ValueError(
