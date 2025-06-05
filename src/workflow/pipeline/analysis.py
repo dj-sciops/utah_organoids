@@ -84,9 +84,9 @@ class SpectrogramParameters(dj.Lookup):
     description="":  varchar(64)
     """
     contents = [
-        (0, 2.0, 1.0, "2s window, 50% overlap (delta, theta, alpha)"),
-        (1, 0.5, 0.25, "0.5s window, 50% overlap (beta, gamma)"),
-        (2, 0.25, 0.125, "0.25s window, 50% overlap (high-gamma)"),
+        (0, 2.0, 1.0, "2s window, 50pct overlap (delta, theta, alpha)"),
+        (1, 0.5, 0.25, "0.5s window, 50pct overlap (beta, gamma)"),
+        (2, 0.25, 0.125, "0.25s window, 50pct overlap (high-gamma)"),
     ]
 
 
@@ -99,7 +99,7 @@ class LFPSpectrogram(dj.Computed):
     -> SpectrogramParameters
     ---
     delta_band_mean_power: float  # Average delta power (1-4 Hz) over entire recording (μV²/Hz)
-    power_range_90pct: float      # 90% spread of broadband amplitude envelope derived from spectrogram (a.u.)
+    power_range_90pct: float      # 90pct spread of broadband amplitude envelope derived from spectrogram (a.u.)
     """
 
     class ChannelSpectrogram(dj.Part):
