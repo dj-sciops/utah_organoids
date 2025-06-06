@@ -131,13 +131,12 @@ class MUASpikes(dj.Computed):
         refractory_period = 0.002  # 2 ms
         refractory_samples = int(refractory_period * fs)
 
-        threshold_uV = self.threshold_uV
         peak_sign = self.peak_sign
 
         self.insert1(
             {
                 **key,
-                "threshold_uv": threshold_uV,
+                "threshold_uv": self.threshold_uV,
                 "peak_sign": peak_sign,
                 "fs": fs,
                 "execution_duration": 0,
@@ -152,7 +151,7 @@ class MUASpikes(dj.Computed):
             # median absolute deviation
             noise_level = scipy.stats.median_abs_deviation(trace, scale="normal")
             # spike detection
-            threshold_uV = max(threshold_uV, 5 * noise_level)
+            threshold_uV = max(self.threshold_uV, 5 * noise_level)
             if peak_sign == "neg":
                 spk_ind, spk_amp = find_peaks(
                     -trace, height=threshold_uV, distance=refractory_samples
@@ -171,7 +170,7 @@ class MUASpikes(dj.Computed):
             self.Channel.insert1(
                 dict(
                     **key,
-                    threshold_uv=threshold_uV,
+                    threshold_uv=self.threshold_uV,
                     channel_idx=ch_idx,
                     channel_id=ch_id,
                     spike_count=len(spk_ind),
@@ -185,7 +184,7 @@ class MUASpikes(dj.Computed):
         self.update1(
             {
                 **key,
-                "threshold_uv": threshold_uV,
+                "threshold_uv": self.threshold_uV,
                 "execution_duration": (
                     datetime.now(timezone.utc) - execution_time
                 ).total_seconds()
