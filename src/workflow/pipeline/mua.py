@@ -143,6 +143,8 @@ class MUASpikes(dj.Computed):
             }
         )
 
+        key["threshold_uv"] = self.threshold_uV
+
         for ch_idx, ch_id in enumerate(si_recording.channel_ids):
             # channel trace in uV
             trace = np.squeeze(
@@ -170,7 +172,6 @@ class MUASpikes(dj.Computed):
             self.Channel.insert1(
                 dict(
                     **key,
-                    threshold_uv=self.threshold_uV,
                     channel_idx=ch_idx,
                     channel_id=ch_id,
                     spike_count=len(spk_ind),
