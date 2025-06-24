@@ -47,24 +47,24 @@ spike_sorting_worker = DataJointWorker(
 # standard_worker(mua.MUASpikes, max_calls=20)
 # standard_worker(mua.MUATracePlot, max_calls=20)
 
-# ephys LFP
-standard_worker(ingestion_support.FileProcessing)
-standard_worker(ephys.EphysSessionInfo, max_calls=200)
-standard_worker(ephys.LFP, max_calls=20)
-standard_worker(analysis.LFPQC, max_calls=20)
-standard_worker(analysis.LFPSpectrogram, max_calls=20)
-standard_worker(report.SpectrogramAndPowerPlots, max_calls=10)
+# # ephys LFP
+# standard_worker(ingestion_support.FileProcessing)
+# standard_worker(ephys.EphysSessionInfo, max_calls=200)
+# standard_worker(ephys.LFP, max_calls=20)
+# standard_worker(analysis.LFPQC, max_calls=20)
+# standard_worker(analysis.LFPSpectrogram, max_calls=20)
+# standard_worker(report.SpectrogramAndPowerPlots, max_calls=10)
 
-# ephys spike sorting
-spike_sorting_worker(ephys_sorter.PreProcessing, max_calls=6)
-spike_sorting_worker(ephys_sorter.SIClustering, max_calls=6)
-spike_sorting_worker(ephys_sorter.PostProcessing, max_calls=6)
-# spike_sorting_worker(ephys_sorter.SIExport, max_calls=6)
-standard_worker(ephys.CuratedClustering, max_calls=5)
-standard_worker(ephys.WaveformSet, max_calls=5)
-standard_worker(ephys.QualityMetrics, max_calls=5)
-# standard_worker(report.SpikeInterfaceReport, max_calls=6)
-standard_worker(ingestion_support.PostEphys, max_calls=5)
+# # ephys spike sorting
+# spike_sorting_worker(ephys_sorter.PreProcessing, max_calls=6)
+# spike_sorting_worker(ephys_sorter.SIClustering, max_calls=6)
+# spike_sorting_worker(ephys_sorter.PostProcessing, max_calls=6)
+# # spike_sorting_worker(ephys_sorter.SIExport, max_calls=6)
+# standard_worker(ephys.CuratedClustering, max_calls=5)
+# standard_worker(ephys.WaveformSet, max_calls=5)
+# standard_worker(ephys.QualityMetrics, max_calls=5)
+# # standard_worker(report.SpikeInterfaceReport, max_calls=6)
+# standard_worker(ingestion_support.PostEphys, max_calls=5)
 
 
 def get_workflow_operation_overview():
