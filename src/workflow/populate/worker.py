@@ -47,11 +47,11 @@ spike_sorting_worker = DataJointWorker(
 # standard_worker(mua.MUASpikes, max_calls=20)
 # standard_worker(mua.MUATracePlot, max_calls=20)
 
-# # ephys LFP
-# standard_worker(ingestion_support.FileProcessing)
-# standard_worker(ephys.EphysSessionInfo, max_calls=200)
-# standard_worker(ephys.LFP, max_calls=20)
-# standard_worker(analysis.LFPQC, max_calls=20)
+# ephys LFP
+standard_worker(ingestion_support.FileProcessing)
+standard_worker(ephys.EphysSessionInfo, max_calls=200)
+standard_worker(ephys.LFP, max_calls=20)
+standard_worker(analysis.LFPQC, max_calls=20)
 # standard_worker(analysis.LFPSpectrogram, max_calls=20)
 # standard_worker(report.SpectrogramAndPowerPlots, max_calls=10)
 
