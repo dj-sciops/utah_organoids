@@ -44,8 +44,8 @@ spike_sorting_worker = DataJointWorker(
 
 # mua
 # standard_worker(mua.MUAEphysSession, max_calls=20)
-# standard_worker(mua.MUASpikes, max_calls=20)
-# standard_worker(mua.MUATracePlot, max_calls=20)
+standard_worker(mua.MUASpikes, max_calls=20)
+standard_worker(mua.MUATracePlot, max_calls=20)
 
 # ephys LFP
 standard_worker(ingestion_support.FileProcessing)
