@@ -1,0 +1,4 @@
+[submodule "src/workflow/pipeline/patch_clamp_ephys"]
+	path = src/workflow/pipeline/patch_clamp_ephys
+	url = https://github.com/dj-sciops/utah_organoids_patch-clamp-ephys.git
+	branch = master
