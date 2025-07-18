@@ -27,7 +27,7 @@ ARG REPO_NAME
 ARG REPO_BRANCH
 WORKDIR $HOME
 RUN git clone --recursive -b ${REPO_BRANCH} git@github.com:${REPO_OWNER}/${REPO_NAME}.git && \
-   pip install "./${REPO_NAME}"
+    pip install "./${REPO_NAME}"
 
 
 
