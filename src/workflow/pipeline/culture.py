@@ -1,13 +1,14 @@
 import datajoint as dj
+from workflow import DB_PREFIX
 
 from . import lineage
 
 if "custom" not in dj.config:
     dj.config["custom"] = {}
 
-DB_PREFIX = dj.config["custom"].get("database.prefix", "")
-
 schema = dj.schema(DB_PREFIX + "culture")
+
+logger = dj.logger
 
 
 @schema
@@ -142,6 +143,15 @@ class OrganoidCulture(dj.Manual):
     organoid_culture_plate: int unsigned
     ---
     isolated_rosette_culture_wells: varchar(8)    # Wells from the 96-well plate used to embed organoids
+    """
+
+
+@schema
+class OrganoidImplantationImage(dj.Manual):
+    definition = """
+    -> OrganoidCulture
+    ---
+    organoid_implantation_image: attach  # Organoid implantation image (TIF file)
     """
 
 
