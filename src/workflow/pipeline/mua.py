@@ -34,6 +34,12 @@ class MUAEphysSession(dj.Computed):
     session_duration = timedelta(minutes=1)
 
     def make(self, key):
+
+        raise ValueError(
+            "Manual insertion is required for MUAEphysSession."
+            "Do not use the populate() method."
+        )
+
         exp_start, exp_end = (culture.Experiment & key).fetch1(
             "experiment_start_time", "experiment_end_time"
         )
