@@ -1,5 +1,11 @@
 # Changelog
 
+## `V0.18.1`
+
+### Features
+
+- fix: add `unsigned_to_signed` to `_build_si_recording_object` for new version of SI 0.103+
+
 ## `V0.18.0`
 
 ### Features

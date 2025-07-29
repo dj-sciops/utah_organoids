@@ -355,6 +355,12 @@ def _get_si_recording(start_time, end_time, parent_folder, port_id):
     si_recording = si_recording.select_channels(
         si_recording.channel_ids[port_indices]
     )  # select only the port data
+
+    # Check if recording is unsigned and convert if necessary
+    # Please check the SI documentation for more details: https://spikeinterface.readthedocs.io/en/latest/how_to/unsigned_to_signed.html
+    if str(si_recording.get_dtype()).startswith("u"):
+        si_recording = si.preprocessing.unsigned_to_signed(si_recording)
+
     return si_recording
 
 
