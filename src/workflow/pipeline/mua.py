@@ -1,4 +1,3 @@
-import json
 import tempfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -10,7 +9,6 @@ import scipy.stats
 import spikeinterface as si
 from element_interface.utils import find_full_path
 from scipy.signal import find_peaks
-from spikeinterface import extractors, preprocessing
 
 from workflow import DB_PREFIX
 from workflow.pipeline import culture, ephys
@@ -33,6 +31,10 @@ class MUAEphysSession(dj.Computed):
     session_duration = timedelta(minutes=1)
 
     def make(self, key):
+        raise NotImplementedError(
+            "Manual insertion is required for `MUAEphysSession`. `Populate()` method is implemented but not currently in use."
+        )
+
         exp_start, exp_end = (culture.Experiment & key).fetch1(
             "experiment_start_time", "experiment_end_time"
         )
@@ -107,6 +109,7 @@ class MUASpikes(dj.Computed):
     peak_sign = "both"
 
     def make(self, key):
+
         execution_time = datetime.now(timezone.utc)
 
         start_time, end_time = (MUAEphysSession & key).fetch1("start_time", "end_time")
@@ -148,7 +151,7 @@ class MUASpikes(dj.Computed):
         for ch_idx, ch_id in enumerate(si_recording.channel_ids):
             # channel trace in uV
             trace = np.squeeze(
-                si_recording.get_traces(channel_ids=[ch_id], return_scaled=True)
+                si_recording.get_traces(channel_ids=[ch_id], return_in_uV=True)
             )
             # median absolute deviation
             noise_level = scipy.stats.median_abs_deviation(trace, scale="normal")
@@ -230,6 +233,7 @@ class MUATracePlot(dj.Computed):
             "experiment_directory"
         )
         si_recording = _get_si_recording(start_time, end_time, parent_folder, port_id)
+
         # Preprocess the recording
         si_recording = si.preprocessing.bandpass_filter(
             recording=si_recording, freq_min=300, freq_max=6000
@@ -257,7 +261,7 @@ class MUATracePlot(dj.Computed):
         for chn_data in chn_query.fetch(as_dict=True):
             ch_id = si_recording.channel_ids[chn_data["channel_idx"]]
             trace = np.squeeze(
-                si_recording.get_traces(channel_ids=[ch_id], return_scaled=True)
+                si_recording.get_traces(channel_ids=[ch_id], return_in_uV=True)
             )
             spk_ind = chn_data["spike_indices"]
 
@@ -328,6 +332,11 @@ def _get_si_recording(start_time, end_time, parent_folder, port_id):
         & f"file_time < '{end_time}'"
     ).fetch("file_path", "file_time", "acq_software", order_by="file_time")
 
+    if not acq_softwares:
+        raise ValueError(
+            f"No ephys files found for time range {start_time} to {end_time}"
+        )
+
     acq_software = acq_softwares[0]
 
     # read intan header
@@ -346,6 +355,12 @@ def _get_si_recording(start_time, end_time, parent_folder, port_id):
     si_recording = si_recording.select_channels(
         si_recording.channel_ids[port_indices]
     )  # select only the port data
+
+    # Check if recording is unsigned and convert if necessary
+    # Please check the SI documentation for more details: https://spikeinterface.readthedocs.io/en/latest/how_to/unsigned_to_signed.html
+    if str(si_recording.get_dtype()).startswith("u"):
+        si_recording = si.preprocessing.unsigned_to_signed(si_recording)
+
     return si_recording
 
 
@@ -359,32 +374,38 @@ def _build_si_recording_object(files, acq_software="intan"):
     Returns:
         si_recording: SI recording object
     """
+
+    from spikeinterface.extractors.extractor_classes import (
+        recording_extractor_full_dict,
+    )
+
     si_recording = None
 
-    si_extractor: si.extractors.neoextractors = (
-        si.extractors.extractorlist.recording_extractor_full_dict[
-            acq_software.replace(" ", "").lower()
-        ]
-    )  # data extractor object
+    si_extractor = recording_extractor_full_dict[acq_software.replace(" ", "").lower()]
 
     # Read data. Concatenate if multiple files are found.
     for file_path in (
         find_full_path(ephys.get_ephys_root_data_dir(), f) for f in files
     ):
+        # Get stream name for this file
+        streams = si_extractor.get_streams(file_path)[0]
+        amplifier_streams = [s for s in streams if "amplifier" in s]
+
+        if not amplifier_streams:
+            raise ValueError(f"No amplifier stream found in file: {file_path}")
+
+        stream_name = amplifier_streams[0]
+
         if not si_recording:
-            stream_name = [
-                s for s in si_extractor.get_streams(file_path)[0] if "amplifier" in s
-            ][0]
-            si_recording: si.BaseRecording = si_extractor(
-                file_path, stream_name=stream_name
-            )
+            si_recording = si_extractor(file_path, stream_name=stream_name)
         else:
-            si_recording: si.BaseRecording = si.concatenate_recordings(
+            si_recording = si.concatenate_recordings(
                 [
                     si_recording,
                     si_extractor(file_path, stream_name=stream_name),
                 ]
             )
+
     return si_recording
 
 

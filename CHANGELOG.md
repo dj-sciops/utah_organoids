@@ -1,5 +1,21 @@
 # Changelog
 
+## `V0.18.1`
+
+### Features
+
+- fix: add `unsigned_to_signed` to `_build_si_recording_object` for new version of SI 0.103+
+
+## `V0.18.0`
+
+### Features
+
+- fix: `_build_si_recording_object` for new version of SI where `extractorlist` no longer exists and add proper error handling for missing amplifier streams
+- fix: update `return_scaled` to `return_in_uV` for consistency across tables
+- fix: temporarily block `MUAEphysSession` auto-population with `NotImplementedError`
+- fix: remove unused imports 
+- update: add error handling for empty `acq_softwares` list in `_get_si_recording`
+
 ## `V0.17.1`
 
 ### Features
