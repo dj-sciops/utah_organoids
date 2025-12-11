@@ -216,7 +216,7 @@ class MUATracePlot(dj.Computed):
         waveform_plot: attach
         """
 
-    spike_rate_threshold = 0.5
+    spike_rate_threshold = 100.0  # Hz, temporarily set high for testing/validation (default was 0.5 Hz)
 
     key_source = (
         MUASpikes
