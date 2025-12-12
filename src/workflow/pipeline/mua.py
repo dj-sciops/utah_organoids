@@ -332,7 +332,7 @@ def _get_si_recording(start_time, end_time, parent_folder, port_id):
         & f"file_time < '{end_time}'"
     ).fetch("file_path", "file_time", "acq_software", order_by="file_time")
 
-    if not acq_softwares:
+    if len(acq_softwares) == 0:
         raise ValueError(
             f"No ephys files found for time range {start_time} to {end_time}"
         )
