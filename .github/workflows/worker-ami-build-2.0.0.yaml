@@ -32,11 +32,9 @@ on:
         required: true
       RUNNER_AWS_SECRET_ACCESS_KEY:
         required: true
-      DJ_HOST:
+      WORKS_API_CLIENT_ID:
         required: true
-      DJ_USER:
-        required: true
-      DJ_PASS:
+      WORKS_API_CLIENT_SECRET:
         required: true
       BUILD_PAT:
         required: true
@@ -97,20 +95,19 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.BUILD_PAT }}
-          repository: 'datajoint-company/dj-gitops'
-          path: 'dj-gitops'
+          repository: 'datajoint-company/datajoint-worker-management'
+          ref: main
+          path: 'datajoint-worker-management'
       - name: Setup Python
         uses: actions/setup-python@v5
         # WARNING: Running pip as the 'root'
         # https://github.com/actions/setup-python/issues/513
         with:
           python-version: '3.10'
-      - run: pip install --user datajoint
       - name: Call fetcher
         env:
-          DJ_HOST: ${{ secrets.DJ_HOST }}
-          DJ_USER: ${{ secrets.DJ_USER }}
-          DJ_PASS: ${{ secrets.DJ_PASS }}
+          WORKS_API_CLIENT_ID: ${{ secrets.WORKS_API_CLIENT_ID }}
+          WORKS_API_CLIENT_SECRET: ${{ secrets.WORKS_API_CLIENT_SECRET }}
           REPO_NAME: ${{github.event.repository.name}}
           WORKER_TYPE: ${{ inputs.worker_type }}
           WORKFLOW_VERSION: ${{ inputs.workflow_version }}
@@ -118,7 +115,7 @@ jobs:
         run: |
           export ORG_NAME=$(echo ${REPO_NAME} | cut -d "_" -f 1)
           export WORKFLOW_NAME=$(echo ${REPO_NAME} | cut -d "_" -f 2)
-          cd ${GITHUB_WORKSPACE}/dj-gitops/infrastructures/packer/worker_ami/inputs/
+          cd ${GITHUB_WORKSPACE}/datajoint-worker-management/packer/worker_ami/inputs/
           python fetcher.py
       - name: Build worker AMI
         env:
@@ -133,8 +130,8 @@ jobs:
         run: |
           set -euo pipefail
           # Set up deploy SSH key
-          echo -n "${{ secrets.DEPLOY_SSH_KEY_BASE64 }}" | base64 -d > ${GITHUB_WORKSPACE}/dj-gitops/infrastructures/packer/worker_ami/keys/${REPO_NAME}-deploy.pem
-          cd ${GITHUB_WORKSPACE}/dj-gitops/infrastructures/packer/worker_ami
+          echo -n "${{ secrets.DEPLOY_SSH_KEY_BASE64 }}" | base64 -d > ${GITHUB_WORKSPACE}/datajoint-worker-management/packer/worker_ami/keys/${REPO_NAME}-deploy.pem
+          cd ${GITHUB_WORKSPACE}/datajoint-worker-management/packer/worker_ami
           packer init .
           packer build -var-file ./inputs/${REPO_NAME}/${STAGING}.pkrvars.hcl . | tee ./outputs/packer.temp.log
       - name: Terminate builder
@@ -143,15 +140,13 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.BUILD_AWS_SECRET_ACCESS_KEY }}
         if: always()
         run: |
-          cd ${GITHUB_WORKSPACE}/dj-gitops/infrastructures/packer/worker_ami/outputs
+          cd ${GITHUB_WORKSPACE}/datajoint-worker-management/packer/worker_ami/outputs
           bash terminate_builder_by_log.sh packer.temp.log
       - name: Update worker AMI metadata
         if: ${{ inputs.staging == 'stable' }}
         env:
-          DJ_HOST: ${{ secrets.DJ_HOST }}
-          DJ_USER: ${{ secrets.DJ_USER }}
-          DJ_PASS: ${{ secrets.DJ_PASS }}
+          WORKS_API_CLIENT_ID: ${{ secrets.WORKS_API_CLIENT_ID }}
+          WORKS_API_CLIENT_SECRET: ${{ secrets.WORKS_API_CLIENT_SECRET }}
         run: |
-          cd ${GITHUB_WORKSPACE}/dj-gitops/infrastructures/packer/worker_ami/outputs/
+          cd ${GITHUB_WORKSPACE}/datajoint-worker-management/packer/worker_ami/outputs/
           python insert_ami_meta.py
-          
