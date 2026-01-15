@@ -1,0 +1,187 @@
+{
+  "timestamp": "2026-01-15T00:41:48.675782",
+  "test_data_dir": "/Users/milagros/data/utah_organoids/patch_clamp/2020-08-28",
+  "n_files": 9,
+  "n_success": 9,
+  "n_failed": 0,
+  "parameters": {
+    "istep_start": 0.55,
+    "istep_end": 1.55,
+    "feature_params": {
+      "filter": 10.0,
+      "dv_cutoff": 4.0,
+      "max_interval": 0.02,
+      "min_height": 10.0,
+      "min_peak": -20.0,
+      "thresh_frac": 0.05,
+      "baseline_interval": 0.1,
+      "baseline_detect_thresh": 0.3,
+      "subthresh_min_amp": -80.0,
+      "n_subthres_sweeps": 4,
+      "sag_target": -100.0,
+      "sag_range_right": -89.0,
+      "sag_range_left": -120.0,
+      "adapt_avg_n_sweeps": 3,
+      "adapt_first_n_ratios": 2,
+      "spike_detection_delay": 0.001,
+      "suprathreshold_target_delta_v": 15.0,
+      "suprathreshold_target_delta_i": 15.0,
+      "latency_target_delta_i": 5.0
+    }
+  },
+  "results": [
+    {
+      "recording": "2020_08_28_0006",
+      "file": "/Users/milagros/data/utah_organoids/patch_clamp/2020-08-28/2020_08_28_0006.abf",
+      "timestamp": "2026-01-15T00:41:31.864987",
+      "success": true,
+      "error": null,
+      "features": {
+        "has_ap": true,
+        "input_resistance": 1994.0235900878915,
+        "sag": 0.019496334716677666,
+        "ap_threshold": -40.0390625,
+        "ap_width": 8.499999999999952,
+        "ap_peak": 14.19677734375,
+        "rheobase_stim_amp": 10.0,
+        "max_firing_rate": 2.0
+      }
+    },
+    {
+      "recording": "2020_08_28_0009",
+      "file": "/Users/milagros/data/utah_organoids/patch_clamp/2020-08-28/2020_08_28_0009.abf",
+      "timestamp": "2026-01-15T00:41:34.519052",
+      "success": true,
+      "error": null,
+      "features": {
+        "has_ap": true,
+        "input_resistance": 1179.00131225586,
+        "sag": 0.08542568981647491,
+        "ap_threshold": -41.05224609375,
+        "ap_width": 5.739999999999967,
+        "ap_peak": 17.132568359375,
+        "rheobase_stim_amp": 25.0,
+        "max_firing_rate": 1.0
+      }
+    },
+    {
+      "recording": "2020_08_28_0018",
+      "file": "/Users/milagros/data/utah_organoids/patch_clamp/2020-08-28/2020_08_28_0018.abf",
+      "timestamp": "2026-01-15T00:41:35.976402",
+      "success": true,
+      "error": null,
+      "features": {
+        "has_ap": true,
+        "input_resistance": 1467.6535034179726,
+        "sag": 0.0,
+        "ap_threshold": -37.823486328125,
+        "ap_width": 4.1600000000000525,
+        "ap_peak": 35.479736328125,
+        "rheobase_stim_amp": 10.0,
+        "max_firing_rate": 6.0
+      }
+    },
+    {
+      "recording": "2020_08_28_0023",
+      "file": "/Users/milagros/data/utah_organoids/patch_clamp/2020-08-28/2020_08_28_0023.abf",
+      "timestamp": "2026-01-15T00:41:37.238235",
+      "success": true,
+      "error": null,
+      "features": {
+        "has_ap": true,
+        "input_resistance": 2855.0738330301065,
+        "sag": 0.0,
+        "ap_threshold": -43.157958984375,
+        "ap_width": 6.019999999999914,
+        "ap_peak": 15.521240234375,
+        "rheobase_stim_amp": 5.0,
+        "max_firing_rate": 4.0
+      }
+    },
+    {
+      "recording": "2020_08_28_0029",
+      "file": "/Users/milagros/data/utah_organoids/patch_clamp/2020-08-28/2020_08_28_0029.abf",
+      "timestamp": "2026-01-15T00:41:38.789697",
+      "success": true,
+      "error": null,
+      "features": {
+        "has_ap": true,
+        "input_resistance": 4026.474295141493,
+        "sag": 0.0,
+        "ap_threshold": -22.998046875,
+        "ap_width": 7.380000000000053,
+        "ap_peak": 19.64111328125,
+        "rheobase_stim_amp": 11.0,
+        "max_firing_rate": 2.0
+      }
+    },
+    {
+      "recording": "2020_08_28_0043",
+      "file": "/Users/milagros/data/utah_organoids/patch_clamp/2020-08-28/2020_08_28_0043.abf",
+      "timestamp": "2026-01-15T00:41:40.311663",
+      "success": true,
+      "error": null,
+      "features": {
+        "has_ap": true,
+        "input_resistance": 2567.025909423831,
+        "sag": 0.08177906274795532,
+        "ap_threshold": -35.906982421875,
+        "ap_width": 7.179999999999964,
+        "ap_peak": 13.525390625,
+        "rheobase_stim_amp": 10.0,
+        "max_firing_rate": 1.0
+      }
+    },
+    {
+      "recording": "2020_08_28_0054",
+      "file": "/Users/milagros/data/utah_organoids/patch_clamp/2020-08-28/2020_08_28_0054.abf",
+      "timestamp": "2026-01-15T00:41:42.212828",
+      "success": true,
+      "error": null,
+      "features": {
+        "has_ap": true,
+        "input_resistance": 2007.809448242189,
+        "sag": 0.11304757557809353,
+        "ap_threshold": -40.850830078125,
+        "ap_width": 6.900000000000017,
+        "ap_peak": 14.27001953125,
+        "rheobase_stim_amp": 10.0,
+        "max_firing_rate": 1.0
+      }
+    },
+    {
+      "recording": "2020_08_28_0055",
+      "file": "/Users/milagros/data/utah_organoids/patch_clamp/2020-08-28/2020_08_28_0055.abf",
+      "timestamp": "2026-01-15T00:41:43.967965",
+      "success": true,
+      "error": null,
+      "features": {
+        "has_ap": true,
+        "input_resistance": 947.0883178710941,
+        "sag": 0.11255329102277756,
+        "ap_threshold": -38.96484375,
+        "ap_width": 3.2600000000000406,
+        "ap_peak": 33.19091796875,
+        "rheobase_stim_amp": 10.0,
+        "max_firing_rate": 14.0
+      }
+    },
+    {
+      "recording": "2020_08_28_0058",
+      "file": "/Users/milagros/data/utah_organoids/patch_clamp/2020-08-28/2020_08_28_0058.abf",
+      "timestamp": "2026-01-15T00:41:46.309259",
+      "success": true,
+      "error": null,
+      "features": {
+        "has_ap": true,
+        "input_resistance": 2727.2349548339866,
+        "sag": 0.07074929215013981,
+        "ap_threshold": -43.75,
+        "ap_width": 5.099999999999993,
+        "ap_peak": 26.0986328125,
+        "rheobase_stim_amp": 5.0,
+        "max_firing_rate": 11.0
+      }
+    }
+  ]
+}

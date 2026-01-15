@@ -1,0 +1,499 @@
+{
+  "file_id": "2020_08_28_0029",
+  "has_ap": true,
+  "v_baseline": -60.11392593383789,
+  "bias_current": 0.0,
+  "tau": 183.46763257481354,
+  "capacitance": 45.56533064080231,
+  "input_resistance": 4026.474295141493,
+  "f_i_curve_slope": 0.6666666666666664,
+  "max_firing_rate": 2.0,
+  "sag": 0.0,
+  "vm_for_sag": {
+    "__ndarray__": true,
+    "data": [
+      -99.725341796875
+    ],
+    "shape": [
+      1
+    ]
+  },
+  "indices_for_sag": {
+    "__ndarray__": true,
+    "data": [
+      52498
+    ],
+    "shape": [
+      1
+    ]
+  },
+  "sag_sweep_indices": {
+    "__ndarray__": true,
+    "data": [
+      0
+    ],
+    "shape": [
+      1
+    ]
+  },
+  "ap_threshold": -22.998046875,
+  "ap_width": 7.380000000000053,
+  "ap_height": 59.6923828125,
+  "ap_peak": 19.64111328125,
+  "ap_trough": -40.05126953125,
+  "ap_fast_trough": -34.72900390625,
+  "ap_slow_trough": -40.05126953125,
+  "ap_adp": NaN,
+  "ap_trough_3w": -36.016845703125,
+  "ap_trough_4w": -38.006591796875,
+  "ap_trough_5w": -39.24560546875,
+  "ap_trough_to_threshold": 17.05322265625,
+  "ap_trough_4w_to_threshold": 15.008544921875,
+  "ap_trough_5w_to_threshold": 16.24755859375,
+  "ap_peak_to_threshold": 42.63916015625,
+  "ap_upstroke": 17.944457004113257,
+  "ap_downstroke": 5.724922104386868,
+  "ap_updownstroke_ratio": 3.134445618109434,
+  "hs_firing_rate": null,
+  "avg_firing_rate": 1.0,
+  "hs_adaptation": null,
+  "hs_median_isi": null,
+  "hs_latency": null,
+  "avg_hs_latency": 66.52000000000002,
+  "avg_rheobase_latency": 93.22666666666667,
+  "rheobase_index": 7,
+  "rheobase_stim_amp": 11.0,
+  "hero_sweep_stim_amp": null,
+  "hero_sweep_index": null,
+  "all_firing_rate": {
+    "__ndarray__": true,
+    "data": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "shape": [
+      12
+    ]
+  },
+  "all_stim_amp": {
+    "__ndarray__": true,
+    "data": [
+      -10.0,
+      -7.0,
+      -4.0,
+      -1.0,
+      2.0,
+      5.0,
+      8.0,
+      11.0,
+      14.0,
+      17.0,
+      20.0,
+      23.0
+    ],
+    "shape": [
+      12
+    ]
+  },
+  "input_resistance_vm": {
+    "__ndarray__": true,
+    "data": [
+      -99.725341796875,
+      -88.067626953125,
+      -75.30517578125,
+      -59.663387298583984
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "input_resistance_stim_ap": {
+    "__ndarray__": true,
+    "data": [
+      -10.0,
+      -7.0,
+      -4.0,
+      0.0
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "all_adaptation": {
+    "__ndarray__": true,
+    "data": [
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "shape": [
+      12
+    ]
+  },
+  "all_v_baseline": {
+    "__ndarray__": true,
+    "data": [
+      -59.47203063964844,
+      -58.84653091430664,
+      -59.663387298583984,
+      -59.59218215942383,
+      -60.156829833984375,
+      -60.49980163574219,
+      -60.26176452636719,
+      -61.02354049682617,
+      -60.296348571777344,
+      -59.99152374267578,
+      -60.275028228759766,
+      -61.28818130493164
+    ],
+    "shape": [
+      12
+    ]
+  },
+  "all_median_isi": {
+    "__ndarray__": true,
+    "data": [
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      0.19250000000000012,
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "shape": [
+      12
+    ]
+  },
+  "all_first_isi": {
+    "__ndarray__": true,
+    "data": [
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      0.19250000000000012,
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "shape": [
+      12
+    ]
+  },
+  "all_latency": {
+    "__ndarray__": true,
+    "data": [
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      0.17069999999999996,
+      0.11204000000000003,
+      0.08382,
+      0.06833999999999996,
+      0.06652000000000002
+    ],
+    "shape": [
+      12
+    ]
+  },
+  "spikes_sweep_id": {
+    "__ndarray__": true,
+    "data": [
+      7,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_threshold_t": {
+    "__ndarray__": true,
+    "data": [
+      0.7207,
+      0.9132000000000001,
+      0.6620400000000001,
+      0.63382,
+      0.61834,
+      0.6165200000000001
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_peak_t": {
+    "__ndarray__": true,
+    "data": [
+      0.72604,
+      0.9275800000000001,
+      0.6680600000000001,
+      0.6390600000000001,
+      0.6249600000000001,
+      0.62268
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_trough_t": {
+    "__ndarray__": true,
+    "data": [
+      0.7780800000000001,
+      0.99472,
+      0.71206,
+      0.6794600000000001,
+      0.6471600000000001,
+      0.64854
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_threshold_v": {
+    "__ndarray__": true,
+    "data": [
+      -22.998046875,
+      -22.174072265625,
+      -26.5625,
+      -25.189208984375,
+      -25.57373046875,
+      -24.932861328125
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_peak_v": {
+    "__ndarray__": true,
+    "data": [
+      19.64111328125,
+      7.598876953125,
+      22.0703125,
+      22.821044921875,
+      23.25439453125,
+      22.625732421875
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_trough_v": {
+    "__ndarray__": true,
+    "data": [
+      -40.05126953125,
+      -37.73193359375,
+      -36.248779296875,
+      -34.82666015625,
+      -33.11767578125,
+      -32.1533203125
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_fast_trough_t": {
+    "__ndarray__": true,
+    "data": [
+      0.7448400000000001,
+      0.9526000000000001,
+      0.6865800000000001,
+      0.65976,
+      0.6431800000000001,
+      0.63978
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_fast_trough_v": {
+    "__ndarray__": true,
+    "data": [
+      -34.72900390625,
+      -29.193115234375,
+      -32.470703125,
+      -32.8857421875,
+      -32.196044921875,
+      -30.279541015625
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_slow_trough_t": {
+    "__ndarray__": true,
+    "data": [
+      0.7780800000000001,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_slow_trough_v": {
+    "__ndarray__": true,
+    "data": [
+      -40.05126953125,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_adp_t": {
+    "__ndarray__": true,
+    "data": [
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_adp_v": {
+    "__ndarray__": true,
+    "data": [
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_trough_3w_t": {
+    "__ndarray__": true,
+    "data": [
+      0.7481800000000001,
+      0.9676600000000001,
+      0.6902600000000001,
+      0.6619400000000001,
+      0.6463800000000001,
+      0.64436
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_trough_3w_v": {
+    "__ndarray__": true,
+    "data": [
+      -36.016845703125,
+      -35.07080078125,
+      -33.880615234375,
+      -33.43505859375,
+      -32.757568359375,
+      -31.4208984375
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_trough_4w_t": {
+    "__ndarray__": true,
+    "data": [
+      0.7555200000000001,
+      0.9781200000000001,
+      0.6954400000000001,
+      0.6690600000000001,
+      0.6471600000000001,
+      0.64854
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_trough_4w_v": {
+    "__ndarray__": true,
+    "data": [
+      -38.006591796875,
+      -37.017822265625,
+      -35.44921875,
+      -34.423828125,
+      -33.11767578125,
+      -32.1533203125
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_trough_5w_t": {
+    "__ndarray__": true,
+    "data": [
+      0.7614000000000001,
+      0.9903200000000001,
+      0.70484,
+      0.67222,
+      0.6471600000000001,
+      0.64854
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "spikes_trough_5w_v": {
+    "__ndarray__": true,
+    "data": [
+      -39.24560546875,
+      -37.646484375,
+      -36.065673828125,
+      -34.771728515625,
+      -33.11767578125,
+      -32.1533203125
+    ],
+    "shape": [
+      6
+    ]
+  },
+  "adapt_avg": null
+}

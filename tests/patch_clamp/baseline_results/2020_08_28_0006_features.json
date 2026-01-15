@@ -1,0 +1,445 @@
+{
+  "file_id": "2020_08_28_0006",
+  "has_ap": true,
+  "v_baseline": -60.54644012451172,
+  "bias_current": 0.0,
+  "tau": 103.3404741438013,
+  "capacitance": 51.825101095843266,
+  "input_resistance": 1994.0235900878915,
+  "f_i_curve_slope": 0.3999999999999998,
+  "max_firing_rate": 2.0,
+  "sag": 0.019496334716677666,
+  "vm_for_sag": {
+    "__ndarray__": true,
+    "data": [
+      -99.93896484375,
+      -94.635009765625
+    ],
+    "shape": [
+      2
+    ]
+  },
+  "indices_for_sag": {
+    "__ndarray__": true,
+    "data": [
+      43981,
+      51321
+    ],
+    "shape": [
+      2
+    ]
+  },
+  "sag_sweep_indices": {
+    "__ndarray__": true,
+    "data": [
+      0,
+      1
+    ],
+    "shape": [
+      2
+    ]
+  },
+  "ap_threshold": -40.0390625,
+  "ap_width": 8.499999999999952,
+  "ap_height": 61.334228515625,
+  "ap_peak": 14.19677734375,
+  "ap_trough": -47.137451171875,
+  "ap_fast_trough": -40.9423828125,
+  "ap_slow_trough": -47.137451171875,
+  "ap_adp": NaN,
+  "ap_trough_3w": -43.22509765625,
+  "ap_trough_4w": -45.263671875,
+  "ap_trough_5w": -46.099853515625,
+  "ap_trough_to_threshold": 7.098388671875,
+  "ap_trough_4w_to_threshold": 5.224609375,
+  "ap_trough_5w_to_threshold": 6.060791015625,
+  "ap_peak_to_threshold": 54.23583984375,
+  "ap_upstroke": 23.74510338410435,
+  "ap_downstroke": 5.7903422188497915,
+  "ap_updownstroke_ratio": 4.100811745945672,
+  "hs_firing_rate": null,
+  "avg_firing_rate": 1.0,
+  "hs_adaptation": null,
+  "hs_median_isi": null,
+  "hs_latency": null,
+  "avg_hs_latency": 36.37999999999997,
+  "avg_rheobase_latency": 47.91999999999996,
+  "rheobase_index": 6,
+  "rheobase_stim_amp": 10.0,
+  "hero_sweep_stim_amp": null,
+  "hero_sweep_index": null,
+  "all_firing_rate": {
+    "__ndarray__": true,
+    "data": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.0,
+      1.0,
+      1.0
+    ],
+    "shape": [
+      9
+    ]
+  },
+  "all_stim_amp": {
+    "__ndarray__": true,
+    "data": [
+      -20.0,
+      -15.0,
+      -10.0,
+      -5.0,
+      0.0,
+      5.0,
+      10.0,
+      15.0,
+      20.0
+    ],
+    "shape": [
+      9
+    ]
+  },
+  "input_resistance_vm": {
+    "__ndarray__": true,
+    "data": [
+      -99.93896484375,
+      -94.635009765625,
+      -82.4951171875,
+      -71.83837890625,
+      -61.486690521240234
+    ],
+    "shape": [
+      5
+    ]
+  },
+  "input_resistance_stim_ap": {
+    "__ndarray__": true,
+    "data": [
+      -20.0,
+      -15.0,
+      -10.0,
+      -5.0,
+      0.0
+    ],
+    "shape": [
+      5
+    ]
+  },
+  "all_adaptation": {
+    "__ndarray__": true,
+    "data": [
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "shape": [
+      9
+    ]
+  },
+  "all_v_baseline": {
+    "__ndarray__": true,
+    "data": [
+      -59.407501220703125,
+      -61.07877731323242,
+      -58.90720748901367,
+      -61.486690521240234,
+      -60.2709846496582,
+      -60.497886657714844,
+      -62.4449577331543,
+      -60.26800537109375,
+      -60.55595397949219
+    ],
+    "shape": [
+      9
+    ]
+  },
+  "all_median_isi": {
+    "__ndarray__": true,
+    "data": [
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      0.18838,
+      NaN,
+      NaN
+    ],
+    "shape": [
+      9
+    ]
+  },
+  "all_first_isi": {
+    "__ndarray__": true,
+    "data": [
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      0.18838,
+      NaN,
+      NaN
+    ],
+    "shape": [
+      9
+    ]
+  },
+  "all_latency": {
+    "__ndarray__": true,
+    "data": [
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      0.1069,
+      0.04791999999999996,
+      0.03637999999999997
+    ],
+    "shape": [
+      9
+    ]
+  },
+  "spikes_sweep_id": {
+    "__ndarray__": true,
+    "data": [
+      6,
+      6,
+      7,
+      8
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_threshold_t": {
+    "__ndarray__": true,
+    "data": [
+      0.6569,
+      0.84528,
+      0.59792,
+      0.58638
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_peak_t": {
+    "__ndarray__": true,
+    "data": [
+      0.663,
+      0.8570000000000001,
+      0.6031200000000001,
+      0.59164
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_trough_t": {
+    "__ndarray__": true,
+    "data": [
+      0.74406,
+      0.93188,
+      0.64814,
+      0.63122
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_threshold_v": {
+    "__ndarray__": true,
+    "data": [
+      -40.0390625,
+      -33.0322265625,
+      -39.727783203125,
+      -39.202880859375
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_peak_v": {
+    "__ndarray__": true,
+    "data": [
+      14.19677734375,
+      -4.16259765625,
+      15.68603515625,
+      15.899658203125
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_trough_v": {
+    "__ndarray__": true,
+    "data": [
+      -47.137451171875,
+      -43.682861328125,
+      -44.54345703125,
+      -40.020751953125
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_fast_trough_t": {
+    "__ndarray__": true,
+    "data": [
+      0.682,
+      0.88204,
+      0.6227600000000001,
+      0.61468
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_fast_trough_v": {
+    "__ndarray__": true,
+    "data": [
+      -40.9423828125,
+      -31.9091796875,
+      -40.240478515625,
+      -37.725830078125
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_slow_trough_t": {
+    "__ndarray__": true,
+    "data": [
+      0.74406,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_slow_trough_v": {
+    "__ndarray__": true,
+    "data": [
+      -47.137451171875,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_adp_t": {
+    "__ndarray__": true,
+    "data": [
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_adp_v": {
+    "__ndarray__": true,
+    "data": [
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_trough_3w_t": {
+    "__ndarray__": true,
+    "data": [
+      0.6884600000000001,
+      0.9063200000000001,
+      0.6297400000000001,
+      0.6195400000000001
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_trough_3w_v": {
+    "__ndarray__": true,
+    "data": [
+      -43.22509765625,
+      -39.697265625,
+      -43.24951171875,
+      -38.262939453125
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_trough_4w_t": {
+    "__ndarray__": true,
+    "data": [
+      0.69698,
+      0.9228600000000001,
+      0.63814,
+      0.6281000000000001
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_trough_4w_v": {
+    "__ndarray__": true,
+    "data": [
+      -45.263671875,
+      -42.242431640625,
+      -44.20166015625,
+      -39.739990234375
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_trough_5w_t": {
+    "__ndarray__": true,
+    "data": [
+      0.7052,
+      0.93188,
+      0.6436400000000001,
+      0.63122
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "spikes_trough_5w_v": {
+    "__ndarray__": true,
+    "data": [
+      -46.099853515625,
+      -43.682861328125,
+      -44.482421875,
+      -40.020751953125
+    ],
+    "shape": [
+      4
+    ]
+  },
+  "adapt_avg": null
+}
