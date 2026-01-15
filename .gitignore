@@ -47,9 +47,9 @@ coverage.xml
 .hypothesis/
 /tests/user_data
 
-# datajoint test/other files
-test_*
-test-*
+# datajoint test/other files (excludes tests/patch_clamp/)
+/test_*
+/test-*
 testing
 scripts/LFP analysis
 .env
@@ -116,7 +116,13 @@ ENV/
 **/#*#
 **/.#*
 docker-compose.yml
+
+# others
 Diagram.ipynb
+coscientist_scripts/
+literature/
+draft_manuscript/
+AGENTS.md
 
 # config files
 .env
