@@ -8,6 +8,7 @@ import numpy as np
 
 from workflow import DB_PREFIX
 from workflow.pipeline import analysis, ephys, ephys_sorter
+from workflow.pipeline.patch_clamp_ephys import schema_ephys as patch_clamp
 
 logger = dj.logger
 schema = dj.schema(DB_PREFIX + "report")
@@ -204,3 +205,123 @@ class SpectrogramAndPowerPlots(dj.Computed):
                 / 3600,
             }
         )
+
+
+@schema
+class PatchClampReport(dj.Computed):
+    """
+    Convert patch-clamp plot file paths to dashboard-compatible attachments.
+
+    This table reads PNG files from existing patch_clamp plot tables and stores
+    them as binary attachments for use with the dashboard PlotGrid component.
+    """
+
+    definition = """
+    -> patch_clamp.APandIntrinsicProperties
+    """
+
+    class FICurve(dj.Part):
+        """F-I curve plot attachment."""
+        definition = """
+        -> master
+        ---
+        fi_plot: attach
+        """
+
+    class FirstSpike(dj.Part):
+        """First spike waveform plot attachment."""
+        definition = """
+        -> master
+        ---
+        spike_plot: attach
+        """
+
+    class PhasePlane(dj.Part):
+        """Phase plane (dV/dt vs V) plot attachment."""
+        definition = """
+        -> master
+        ---
+        phase_plot: attach
+        """
+
+    class CurrentStep(dj.Part):
+        """Current step traces plot attachment."""
+        definition = """
+        -> master
+        ---
+        istep_plot: attach
+        """
+
+    class VICurve(dj.Part):
+        """V-I curve (input resistance) plot attachment."""
+        definition = """
+        -> master
+        ---
+        vi_plot: attach
+        """
+
+    def make(self, key):
+        """
+        Read plot file paths from patch_clamp tables and store as attachments.
+        """
+        # Get the directory from experiment metadata
+        ephys_exp = (patch_clamp.EphysExperimentsForAnalysis & key).fetch1()
+        directory = Path(ephys_exp.get('directory', '')).expanduser()
+
+        # Insert master record
+        self.insert1(key)
+
+        # F-I Curve
+        fi_query = patch_clamp.FICurvePlots & key
+        if fi_query:
+            fi_path = fi_query.fetch1('fi_png_path')
+            if fi_path:
+                full_path = directory / fi_path
+                if full_path.exists():
+                    self.FICurve.insert1({**key, 'fi_plot': str(full_path)})
+                else:
+                    logger.warning(f"F-I plot not found: {full_path}")
+
+        # First Spike
+        spike_query = patch_clamp.FirstSpikePlots & key
+        if spike_query:
+            spike_path = spike_query.fetch1('spike_png_path')
+            if spike_path:
+                full_path = directory / spike_path
+                if full_path.exists():
+                    self.FirstSpike.insert1({**key, 'spike_plot': str(full_path)})
+                else:
+                    logger.warning(f"First spike plot not found: {full_path}")
+
+        # Phase Plane
+        phase_query = patch_clamp.PhasePlanes & key
+        if phase_query:
+            phase_path = phase_query.fetch1('phase_png_path')
+            if phase_path:
+                full_path = directory / phase_path
+                if full_path.exists():
+                    self.PhasePlane.insert1({**key, 'phase_plot': str(full_path)})
+                else:
+                    logger.warning(f"Phase plane plot not found: {full_path}")
+
+        # Current Step Traces
+        istep_query = patch_clamp.CurrentStepPlots & key
+        if istep_query:
+            istep_path = istep_query.fetch1('istep_png_large_path')
+            if istep_path:
+                full_path = directory / istep_path
+                if full_path.exists():
+                    self.CurrentStep.insert1({**key, 'istep_plot': str(full_path)})
+                else:
+                    logger.warning(f"Current step plot not found: {full_path}")
+
+        # V-I Curve
+        vi_query = patch_clamp.VICurvePlots & key
+        if vi_query:
+            vi_path = vi_query.fetch1('vi_png_path')
+            if vi_path:
+                full_path = directory / vi_path
+                if full_path.exists():
+                    self.VICurve.insert1({**key, 'vi_plot': str(full_path)})
+                else:
+                    logger.warning(f"V-I plot not found: {full_path}")
