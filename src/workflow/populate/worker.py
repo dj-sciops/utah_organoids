@@ -2,7 +2,7 @@ import datajoint as dj
 from datajoint_utilities.dj_worker import DataJointWorker, ErrorLog, WorkerLog
 
 from workflow import DB_PREFIX, SUPPORT_DB_PREFIX, WORKER_MAX_IDLED_CYCLE
-from workflow.pipeline import analysis, ephys, ephys_report, ephys_sorter, mua, report
+from workflow.pipeline import analysis, ephys, ephys_report, ephys_sorter, mua, patch_clamp, report
 from workflow.support import ingestion_support
 
 logger = dj.logger
@@ -65,6 +65,18 @@ standard_worker(ephys.WaveformSet, max_calls=5)
 standard_worker(ephys.QualityMetrics, max_calls=5)
 # standard_worker(report.SpikeInterfaceReport, max_calls=6)
 standard_worker(ingestion_support.PostEphys, max_calls=5)
+
+# patch-clamp
+standard_worker(patch_clamp.Animals, max_calls=2)
+standard_worker(patch_clamp.PatchCells, max_calls=2)
+standard_worker(patch_clamp.EphysRecordings, max_calls=2)
+standard_worker(patch_clamp.APandIntrinsicProperties, max_calls=2)
+standard_worker(patch_clamp.CurrentStepPlots, max_calls=2)
+standard_worker(patch_clamp.FICurvePlots, max_calls=2)
+standard_worker(patch_clamp.VICurvePlots, max_calls=2)
+standard_worker(patch_clamp.FirstSpikePlots, max_calls=2)
+standard_worker(patch_clamp.PhasePlanes, max_calls=2)
+standard_worker(report.PatchClampReport, max_calls=2)
 
 
 def get_workflow_operation_overview():
