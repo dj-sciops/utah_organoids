@@ -40,6 +40,9 @@ dependencies = [
     "nbformat>=4.2.0",
     "plotly",
     "probeinterface",
+    # Patch-clamp dependencies (pyabf replaces stfio, ipfx replaces AllenSDK)
+    "pyabf>=2.3.0",
+    "ipfx>=1.0.0",
 ]
 
 [project.optional-dependencies]
