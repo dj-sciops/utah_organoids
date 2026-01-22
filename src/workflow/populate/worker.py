@@ -10,6 +10,7 @@ logger = dj.logger
 __all__ = [
     "standard_worker",
     "spike_sorting_worker",
+    "standard_second_worker"
     "WorkerLog",
     "ErrorLog",
 ]
@@ -24,7 +25,17 @@ standard_worker = DataJointWorker(
     "standard_worker",
     worker_schema_name,
     db_prefix=[DB_PREFIX, SUPPORT_DB_PREFIX],
-    run_duration=-1,
+    run_duration=60 * 60 * 24, # 1 day
+    max_idled_cycle=WORKER_MAX_IDLED_CYCLE,
+    sleep_duration=30,
+    autoclear_error_patterns=autoclear_error_patterns,
+)
+
+standard_second_worker = DataJointWorker(
+    "standard_second_worker",
+    worker_schema_name,
+    db_prefix=[DB_PREFIX, SUPPORT_DB_PREFIX],
+    run_duration=60 * 60 * 24, # 1 day
     max_idled_cycle=WORKER_MAX_IDLED_CYCLE,
     sleep_duration=30,
     autoclear_error_patterns=autoclear_error_patterns,
@@ -34,13 +45,16 @@ spike_sorting_worker = DataJointWorker(
     "spike_sorting_worker",
     worker_schema_name,
     db_prefix=[DB_PREFIX, SUPPORT_DB_PREFIX],
-    run_duration=-1,
+    run_duration=60 * 60 * 24, # 1 day
     max_idled_cycle=WORKER_MAX_IDLED_CYCLE,
     sleep_duration=30,
     autoclear_error_patterns=autoclear_error_patterns,
 )
 
 # -------- Define flow(s) --------
+
+# temporal standard_second_worker
+standard_second_worker(mua.MUASpikes, max_calls=20)
 
 # mua
 # standard_worker(mua.MUAEphysSession, max_calls=20)
