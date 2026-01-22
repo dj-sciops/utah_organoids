@@ -8,6 +8,7 @@ on:
         type: choice
         options:
           - standard
+          - standard_second
           - spike_sorting
       staging:
         description: "Staging"
