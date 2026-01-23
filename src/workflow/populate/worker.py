@@ -10,7 +10,7 @@ logger = dj.logger
 __all__ = [
     "standard_worker",
     "spike_sorting_worker",
-    "standard_second_worker"
+    "standard_second_worker",
     "WorkerLog",
     "ErrorLog",
 ]
