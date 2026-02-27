@@ -2,11 +2,28 @@ import datajoint as dj
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
+import sys
 import os
+from datetime import datetime, timezone, timedelta
+from scipy.stats import stats, chi2
+from scipy.signal import coherence, butter, sosfiltfilt, hilbert, welch
+from specparam import SpectralModel
+from scipy.interpolate import interp1d
+import plotly.tools as tls
+import plotly.io as pio
+from element_array_ephys.ephys_no_curation import map_channel_to_electrode
+from tensorpac import Pac, PreferredPhase, EventRelatedPac
+from tensorpac.stats import test_stationarity
+from tensorpac.utils import pac_trivec, ITC, PeakLockedTF
+from intanrhdreader import read_header
+import spikeinterface as si
+from spikeinterface.extractors.extractorlist import (
+    recording_extractor_full_dict,
+)
+
+from workflow.pipeline import probe, ephys, mua
 
 from workflow import DB_PREFIX, ORG_NAME, WORKFLOW_NAME
-
-from .ephys import ephys
 
 schema = dj.schema(DB_PREFIX + "analysis")
 
@@ -22,6 +39,9 @@ dj.config["stores"]["datajoint-blob"] = dict(
     secret_key=os.getenv("AWS_ACCESS_SECRET", None),
 )
 
+"""
+Spectral Analysis
+"""
 
 @schema
 class SpectralBand(dj.Lookup):
@@ -63,7 +83,6 @@ class LFPQC(dj.Computed):
     """
 
     def make(self, key):
-        import scipy.stats as stats
 
         lfp = (ephys.LFP.Trace & key).fetch1("lfp")
 
@@ -214,5 +233,1007 @@ class LFPSpectrogram(dj.Computed):
                 **key,
                 "delta_band_mean_power": delta_power.mean(),
                 "power_range_90pct": power_range_90pct,
+            }
+        )
+
+"""
+Coherence Analysis
+"""
+
+@schema
+class Coherence(dj.Computed):
+    """
+    Compute pairwise coherence between electrodes within an active time frame.
+    """
+
+    definition = """
+    -> ephys.LFP
+    ---
+    execution_duration: float  # Time taken to compute coherence (in minutes)
+    """
+
+    class Connectivity(dj.Part):
+        """
+        Pairwise coherence between electrodes (LFP signals).
+        """
+        definition = """
+        -> master
+        electrode_a: int  # Electrode in coherence calculation
+        electrode_b: int  # Electrode in coherence calculation
+        ---
+        f: longblob  # Frequency values
+        coherence: longblob  # Coherence values between electrode A and B
+        """
+    
+    class Synchrony(dj.Part):
+        """
+        Coherence between each electrode LFP signal to each frequency band signal
+        """
+        definition = """
+        -> master
+        -> SpectralBand
+        electrode: int  # Electrode index
+        ---
+        f: longblob  # Frequency values
+        synchrony: longblob  # Coherence between electrode LFP and frequency band signal
+        """
+        
+    def make(self, key):
+
+        execution_time = datetime.now(timezone.utc)
+
+        # define parameters
+        fs = 2500
+        max_freq = 200 # Hz
+        tw = 1
+        nperseg = int(tw*fs) # samples per window
+
+        # fetch traces
+        traces = (ephys.LFP.Trace & key).fetch("lfp", order_by="electrode")
+
+        # define synchronny parameters
+        order = 4
+        nyquist = fs/2
+
+        # apply low pass filter to each electrode trace
+        lfp_traces = []
+        for trace in traces:
+            sos = butter(order, np.array([1, max_freq])/nyquist, btype='bandpass', output='sos')
+            filtered = sosfiltfilt(sos, trace)
+
+            lfp_traces.append(filtered)
+        lfp_traces = np.array(lfp_traces)
+
+        # insert into parent table
+        self.insert1(
+            {
+                **key,
+                "execution_duration": 0, # placeholder
+            }
+        )
+
+        """ 
+        Connectivity Analysis
+        """
+
+        # loop through electrodes and find coherence between adjacent electrode pairs
+        num_elec = lfp_traces.shape[0]
+        for electrode_A in range(num_elec - 1):
+            for electrode_B in range(electrode_A + 1, num_elec):
+                
+                # get traces
+                el_A_trace = lfp_traces[electrode_A, :]
+                el_B_trace = lfp_traces[electrode_B, :]
+
+                # compute coherence
+                f, Cxy = coherence(el_A_trace, el_B_trace, fs=fs, nperseg=nperseg)
+
+                # remove frequencies greater than max_freq
+                frequencies = f[f <= max_freq]
+                connectivity = Cxy[f <= max_freq]
+
+                # insert into part table
+                self.Connectivity.insert1({
+                    **key,
+                    'electrode_a': electrode_A,
+                    'electrode_b': electrode_B,
+                    'f': frequencies,
+                    'coherence': connectivity,
+                })
+        
+        """
+        Synchrony Analysis
+        """
+
+        # loop through electrodes and find coherence between lfp signal and freq bands
+        for elec in range(num_elec):
+     
+            # get traces
+            elec_trace = lfp_traces[elec, :]
+
+            # loop through frequency bands and calculate coherence
+            for band in SpectralBand.fetch(as_dict=True, order_by="lower_freq"):
+
+                # get signal of specific frequency band
+                freq_cutoff = np.array([band['lower_freq']-1, band['upper_freq']+1]) # includes 1 Hz buffer
+                if freq_cutoff[0] < 1:
+                    freq_cutoff[0] = 1
+                sos = butter(order, freq_cutoff/nyquist, btype='bandpass', output='sos')
+                filtered = sosfiltfilt(sos, elec_trace)
+
+                # get magnitude of hilbert transform (doing instead of morlet wavelets)
+                hilbert_signal = hilbert(filtered)
+                freq_power_signal = np.abs(hilbert_signal) ** 2
+
+                # find coherence between original signal and the power signal (for each frequency)
+                f, Cxy = coherence(elec_trace, freq_power_signal, fs=fs, nperseg=nperseg)
+                # remove frequencies greater than max_freq
+                frequencies = f[f <= max_freq]
+                synchrony = Cxy[f <= max_freq]
+
+                # insert into part table
+                self.Synchrony.insert1({
+                    **key,
+                    'band_name': band['band_name'],
+                    'electrode': elec,
+                    'f': frequencies,
+                    'synchrony': synchrony,
+                })
+        
+        # update execution duration
+        self.update1(
+            {
+                **key,
+                "execution_duration": (
+                    datetime.now(timezone.utc) - execution_time
+                ).total_seconds()
+                / 60,
+            }
+        )
+
+"""
+Specparam (FOOOF)
+"""
+
+def interpolate_spectrum(frequency, spectrum, notch_freqs):
+    # create mask for frequencies to remove
+    mask = np.ones_like(frequency, dtype=bool)
+    for notch_freq in notch_freqs:
+        freq_mask = (notch_freq - 5 <= frequency) & (frequency <= notch_freq + 5)
+        mask = mask & (~freq_mask)
+    # interpolate
+    interp_func = interp1d(frequency[mask], spectrum[mask], kind='linear', fill_value="extrapolate")
+    interp_spectrum = interp_func(frequency)
+    
+    return interp_spectrum
+
+@schema
+class FOOOFParamset(dj.Lookup):
+    """
+    FOOOF parameter sets for spectral fitting.
+    """
+
+    definition = """ 
+    fooof_param_idx: int  # Unique identifier for the FOOOF parameter set
+    ---
+    peak_width_limits: blob  # Lower and upper bounds on peak widths in Hz. e.g. [1, 12]
+    max_n_peaks: int         # Maximum number of peaks the model can fit. e.g. 6
+    min_peak_height: float   # Minimum absolute height of a peak above the aperiodic component. e.g. 0.1
+    peak_threshold: float    # Relative threshold that candidate peaks must exceed to be included. e.g. 2.0
+    aperiodic_mode: varchar(16) # Form of the aperiodic fit. e.g. 'fixed', 'knee'
+    """
+
+    contents = [
+        (0, [1, 12], 6, 0.1, 2.0, 'fixed'),
+        (1, [5, 12], 3, .05, 3.5, 'fixed'),
+        (2, [5, 12], 3, .05, 3.5, 'knee')
+    ]
+
+@schema
+class FBOSCParamset(dj.Lookup):
+    """
+    fBOSC parameter sets for spectral fitting.
+    """
+
+    definition = """ 
+    fbosc_param_idx: int  # Unique identifier for the fBOSC parameter set
+    ---
+    dt: float  # Time resolution in seconds (for each epoch). e.g. 10
+    detection_thresh: float  # Chi-squared threshold for peak detection. (between 0 and 1)
+    """
+
+    contents = [
+        (0, 10, .99),
+        (1, 10, .95),
+        (2, 30, .99)
+    ]
+
+@schema
+class FOOOFandFBOSCSession(dj.Manual):
+    """
+    Manual insert of combined FOOOF spectral fitting and fBOSC oscillation extraction.
+    """
+
+    definition = """ 
+    -> ephys.LFP
+    -> FOOOFParamset
+    -> FBOSCParamset
+    start_freq: float  # Start frequency for FOOOF fitting
+    end_freq: float   # End frequency for FOOOF fitting
+    ---
+    analysis_electrodes: blob # List of electrodes to be averaged for analysis (if empty, will average across all electrodes)
+    """
+
+@schema
+class FOOOFAnalysis(dj.Computed):
+    """
+    Docstring for FOOOFandFBOSCAnalysis
+    """
+
+    definition = """
+    -> FOOOFandFBOSCSession
+    spec_param_idx: int  # Reference to SpectrogramParamset
+    ---
+    plot: longblob  # Plot of FOOOF fit (as json)
+    summary_params: longblob  # FOOOF parameters over entire session
+    frequency: longblob  # Frequency values for spectrogram
+    oscillatory_activity: longblob  # spectrogram power relative to aperiodic fit (over entire session)
+    aperiodic_offset: longblob  # Aperiodic offset over time
+    aperiodic_knee: longblob  # Aperiodic knee over time
+    aperiodic_exponent: longblob  # Aperiodic exponent over time
+    mean_absolute_error: longblob  # Mean absolute error of FOOOF fit over time
+    r_squared: longblob  # R^2 of FOOOF fit over time
+    """
+    class FBOSCAnalysis(dj.Part):
+        """
+        fBOSC detected oscillatory activity time points for each frequency band.
+        """
+
+        definition = """
+        -> master
+        -> SpectralBand
+        ---
+        oscillation_times: longblob  # Time points where oscillations were detected in this band (s from session start)
+        oscillation_heights: longblob  # Height of oscillations detected in this band (above aperiodic fit)
+        """
+
+    def make(self, key):
+
+        # fetch electrodes to analyze
+        analysis_electrodes = (FOOOFandFBOSCSession & key).fetch1("analysis_electrodes")
+
+        # fetch time and frequency information
+        time, frequency = np.array((LFPSpectrogram.ChannelSpectrogram & key).fetch("time", "frequency"))[:,0]
+
+        # fetch lfp spectrograms (averaged across electrodes)
+        if len(analysis_electrodes) > 0:
+            spectrograms = (LFPSpectrogram.ChannelSpectrogram & key & f"electrode IN {tuple(analysis_electrodes)}").fetch("spectrogram")
+        else:
+            spectrograms = (LFPSpectrogram.ChannelSpectrogram & key).fetch("spectrogram")
+        mean_spectrum = np.mean(np.stack(spectrograms, axis=-1), axis=2)  # shape: (frequency, time)
+
+        # fetch fooof parameters
+        peak_width_limits, max_n_peaks, min_peak_height, peak_threshold, aperiodic_mode = (FOOOFParamset & key).fetch1(
+            "peak_width_limits", "max_n_peaks", "min_peak_height", "peak_threshold", "aperiodic_mode"
+        )
+
+        # fetch fooof session parameters
+        start_freq, end_freq = (FOOOFandFBOSCSession & key).fetch1(
+            "start_freq", "end_freq"
+        )
+        bounded_frequency = frequency[(start_freq <= frequency) & (frequency <= end_freq)]
+
+        # get frequency band information (mask if frequency is within band)
+        frequency_band_masks = {
+            band['band_name']: (band['lower_freq'] <= bounded_frequency) & (bounded_frequency <= band['upper_freq'])
+            for band in SpectralBand.fetch(as_dict=True, order_by='lower_freq')
+            } 
+
+        # initialize model
+        fm = SpectralModel(
+            peak_width_limits=peak_width_limits,
+            max_n_peaks=max_n_peaks,
+            min_peak_height=min_peak_height,
+            peak_threshold=peak_threshold,
+            aperiodic_mode=aperiodic_mode,
+            verbose=False
+        )
+
+        # process summary fooof fit over all time bins
+        notch_freqs = np.arange(60, frequency.max(), 60)
+        interp_spectrum = interpolate_spectrum(frequency, np.mean(mean_spectrum, axis=1), notch_freqs)
+        fm.fit(frequency, interp_spectrum, freq_range=(start_freq, end_freq))
+
+        # generate plot
+        fm.plot()
+        mpl_fig = plt.gcf()
+        plotly_fig = tls.mpl_to_plotly(mpl_fig)
+        json_fig = pio.to_json(plotly_fig)
+
+        # extract summary parameters
+        summary_params = {name: fm.get_params(name) for name in ['aperiodic_params', 'peak_params', 'metrics']}
+
+        # get aperiodic fit
+        aperiodic_params = fm.get_params('aperiodic_params')
+        if aperiodic_mode == 'fixed':
+            offset, exponent = aperiodic_params
+            aperiodic_fit = 10**(offset - exponent * np.log10(bounded_frequency))
+        elif aperiodic_mode == 'knee':
+            offset, knee, exponent = aperiodic_params
+            aperiodic_fit = 10**(offset - np.log10(knee + bounded_frequency ** exponent))
+        else:
+            raise ValueError(f"Invalid aperiodic mode: {aperiodic_mode}")
+        
+        # find oscillatory activity relative to aperiodic fit
+        interp_spectrum = interp_spectrum[np.isin(frequency, bounded_frequency)]  # restrict to bounded frequency
+        oscillatory_activity = interp_spectrum - aperiodic_fit
+
+        # fetch bosc parameters
+        dt, detection_thresh = (FBOSCParamset & key).fetch1(
+            "dt", "detection_thresh")
+
+        # get chi-square factor for thresholding
+        chi2_factor = chi2.ppf(detection_thresh, df=2) / 2
+
+        # loop through time bins and perform fBOSC analysis
+        time_bins = np.arange(0, time[-1], dt)
+        epoch_data = {
+            **{f"{band_name}_times": [] for band_name in frequency_band_masks.keys()},
+            **{f"{band_name}_heights": [] for band_name in frequency_band_masks.keys()},
+            "aperiodic_offset": [],
+            "aperiodic_knee": [],
+            "aperiodic_exponent": [],
+            "mae": [],
+            "r_squared": [],
+            }
+        for t_start in time_bins:
+
+            # get spectrum within time bin
+            epoch_spectrum = np.mean(mean_spectrum[:, (t_start <= time) & (time < t_start + dt)], axis=1)
+
+            # interpolate mean_spectrum to account for 60 Hz line noise removal
+            interp_epoch_spectrum = interpolate_spectrum(frequency, epoch_spectrum, notch_freqs)
+
+            # fit model
+            fm.fit(frequency, interp_epoch_spectrum, freq_range=(start_freq, end_freq))
+            interp_epoch_spectrum = interp_epoch_spectrum[np.isin(frequency, bounded_frequency)]  # restrict to bounded frequency
+
+            # extract aperiodic fit parameters
+            aperiodic_params = fm.get_params('aperiodic_params')
+
+            # get aperiodic fit
+            if aperiodic_mode == 'fixed':
+                offset, exponent = aperiodic_params
+                aperiodic_fit = 10**(offset - exponent * np.log10(bounded_frequency))
+            elif aperiodic_mode == 'knee':
+                offset, knee, exponent = aperiodic_params
+                aperiodic_fit = 10**(offset - np.log10(knee + bounded_frequency ** exponent))
+            else:
+                raise ValueError(f"Invalid aperiodic mode: {aperiodic_mode}")
+            
+            # extract aperiodic metrics
+            epoch_data["aperiodic_offset"].append(offset)
+            epoch_data["aperiodic_knee"].append(knee if aperiodic_mode == 'knee' else 0)
+            epoch_data["aperiodic_exponent"].append(exponent)
+            
+            # get chi-square threshold for burst detection
+            threshold_spectrum = aperiodic_fit * chi2_factor
+
+            # extract if specific frequency bands have bursts (spectral power > threshold)
+            for band_name, band_mask in frequency_band_masks.items():
+                if np.any(interp_epoch_spectrum[band_mask] > threshold_spectrum[band_mask]):
+                    epoch_data[f"{band_name}_times"].append(t_start + dt/2) # store center time of bin
+                    epoch_data[f"{band_name}_heights"].append(np.max(interp_epoch_spectrum[band_mask] - aperiodic_fit[band_mask])) # store max height above aperiodic fit
+
+            # extract fit metrics
+            metrics = fm.get_params("metrics")
+            epoch_data["mae"].append(metrics["error_mae"])
+            epoch_data["r_squared"].append(metrics["gof_rsquared"])
+        
+        # convert lists to arrays
+        for key_name in epoch_data.keys():
+            epoch_data[key_name] = np.array(epoch_data[key_name])
+        
+        # insert into master table
+        self.insert1(
+            {
+                **key,
+                "spec_param_idx": (LFPSpectrogram & key).fetch("param_idx")[0],
+                "plot": json_fig,
+                "summary_params": summary_params,
+                "frequency": bounded_frequency,
+                "oscillatory_activity": oscillatory_activity,
+                "aperiodic_offset": epoch_data["aperiodic_offset"],
+                "aperiodic_knee": epoch_data["aperiodic_knee"],
+                "aperiodic_exponent": epoch_data["aperiodic_exponent"],
+                "mean_absolute_error": epoch_data["mae"],
+                "r_squared": epoch_data["r_squared"],
+            }
+        )
+
+        # insert into part table
+        for band_name in frequency_band_masks.keys():
+            self.BOSCAnalysis.insert1(
+                {
+                    **key,
+                    "spec_param_idx": (LFPSpectrogram & key).fetch("param_idx")[0],
+                    "band_name": band_name,
+                    "oscillation_times": epoch_data[f"{band_name}_times"],
+                    "oscillation_heights": epoch_data[f"{band_name}_heights"],
+                }
+            )
+
+"""
+STTFA (power spectrum based)
+"""
+@schema
+class STTFA(dj.Computed):
+    """
+    Spike-Triggered Time-Frequency Analysis (STTFA) for each electrodes. Shows the impact of spikes on LFP spectral power.
+    """
+
+    definition = """
+    -> analysis.LFPSpectrogram.ChannelSpectrogram
+    ---
+    spike_count: int # number of spikes 
+    a_sttfa: longblob  # average frequency power during spike-triggered time window 
+    r_sttfa: longblob # randomized STTFA (random spike times)
+    n_sttfa: longblob # normalized STTFA (log(STTFA) - log(rSTTFA))
+    frequency: longblob  # frequency values
+    """
+
+    @property
+    def key_source(self): # only process sessions with all MUA spikes processed
+
+        # find all unique start and end times for spectrogram sessions
+        spectrogram_time_keys = dj.U('organoid_id', 'start_time', 'end_time').aggr(
+            LFPSpectrogram
+        ).fetch(as_dict=True)
+
+        # extract mua session information
+        mua_organoid_ids, mua_start_times = (mua.MUASpikes).fetch('organoid_id', 'start_time')
+
+        # find times that have been compleely processed for MUA spikes
+        valid_time_keys = []
+        for time_key in spectrogram_time_keys:
+            
+            # determine the number of expected MUA sessions
+            num_expected_mua_sessions = np.ceil((time_key['end_time'] - time_key['start_time']) / timedelta(minutes=1)).astype(int)
+
+            # determine the number of existing MUA sessions
+            spectrogram_session_bool = (mua_organoid_ids == time_key['organoid_id']) & (mua_start_times >= (time_key['start_time'] - timedelta(seconds=59))) & (mua_start_times <= time_key['end_time'])
+            
+            # if there are too few mua sessions, don't process
+            num_mua_sessions = len(np.unique(mua_start_times[spectrogram_session_bool]))
+            if num_mua_sessions >= num_expected_mua_sessions: # will sometimes have 1 extra session due to boundaries
+                valid_time_keys.append(time_key)
+
+        return (
+            LFPSpectrogram.ChannelSpectrogram 
+            & valid_time_keys
+        )
+
+    def make(self, key):
+
+        # define parameters
+        fs = 20000 # sampling frequency in Hz
+        min_spikes = 10 # minimum number of spikes to perform STTFA 
+        max_freq = 200 # Hz
+        num_rand_iterations = 1000 # number of randomizations for rSTTFA
+
+        # find the channel idx for the spectrogram electrode
+        probe_type = set((ephys.EphysSessionProbe * probe.Probe & key).fetch('probe_type'))
+        if len(probe_type) != 1:
+            raise ValueError(
+                f"Couldn't identify probe type for {key} - expected one, found {len(probe_type)}"
+            )
+        channel_idx = map_channel_to_electrode(probe_type.pop(), input_indices=np.array([key['electrode']]), map_electrode_to_channel=True)[0]
+
+        # fetch MUA parameters within the spectrogram time window
+        spike_indices, start_times = (mua.MUASpikes.Channel & 
+                                                    f"organoid_id='{key['organoid_id']}'" &
+                                                    f"start_time BETWEEN '{key['start_time']}' AND '{key['end_time']}'" &
+                                                    f"channel_idx = '{channel_idx}'"
+                                                    ).fetch('spike_indices', 'start_time')
+        
+        # skip if not enough spikes
+        spike_count = len(np.hstack(spike_indices))
+        if spike_count < min_spikes:
+            return
+
+        # get array of all spike times (relative to frame start)
+        start_ms = (start_times - key['start_time']).astype('timedelta64[ms]') / np.timedelta64(1, 'ms') # ms from frame start
+        rel_spike_times_ms = spike_indices / fs / (np.timedelta64(1,'ms')/np.timedelta64(1,'s')) 
+        spike_times_ms = np.hstack(rel_spike_times_ms + start_ms).astype(int) # relative to spectrogram start time
+
+        # remove boundary spikes (account for MUA outside spectrogram time)
+        num_ms = (key['end_time'] - key['start_time']) / timedelta(milliseconds=1)
+        spike_times_ms = spike_times_ms[(0 <= spike_times_ms) & (spike_times_ms <= num_ms)]
+
+        # fetch spectrogram
+        freq, time, spectrogram = (LFPSpectrogram.ChannelSpectrogram & key).fetch1('frequency', 'time', 'spectrogram')
+
+        # convert time to ms
+        time_ms = (time * 1000).astype(int)  # in ms
+
+        # calculate STTFA
+        spike_indices_spec_bins = np.histogram(spike_times_ms, bins=np.concatenate([[0], time_ms]))[0]
+        a_sttfa = (spectrogram * spike_indices_spec_bins).sum(axis=1) / spike_count
+
+        a_sttfa = a_sttfa[freq <= max_freq]
+        frequency = freq[freq <= max_freq]
+
+        # calculate randomized STTFA
+        r_sttfa_list = []
+        for _ in range(num_rand_iterations):
+            rand_spike_times = np.random.choice(time_ms, size=spike_count, replace=False)
+
+            rand_spike_indices_spec_bins = np.histogram(rand_spike_times, bins=np.concatenate([[0], time_ms]))[0]
+            r_sttfa = (spectrogram * rand_spike_indices_spec_bins).sum(axis=1) / spike_count
+            r_sttfa_list.append(r_sttfa[freq <= max_freq])
+
+        r_sttfa = np.mean(np.vstack(r_sttfa_list), axis=0)
+
+        # calculate normalized STTFA
+        n_sttfa = np.log10(a_sttfa) - np.log10(r_sttfa)  # shape: (frequency)
+
+        # insert into table
+        self.insert1(
+            {
+                **key,
+                'spike_count': spike_count,
+                'a_sttfa': a_sttfa,
+                'r_sttfa': r_sttfa,
+                'n_sttfa': n_sttfa,
+                'frequency': frequency,
+            }
+        )
+
+"""
+Phase Amplitude Coupling
+"""
+
+@schema
+class TensorpacParamset(dj.Lookup):
+    """
+    Parameters for phase-amplitude coupling analysis with Tensorpac.
+    """
+
+    definition = """
+    tensorpac_param_idx: int # Unique identifier for the Tensorpac parameter set
+    ---
+    idpac: blob # tuple containing (PAC method, surrogate method, normalization method)
+    dcomplex: varchar(16) # method for calculating complex phase ('wavelet' or 'hilbert')
+    cycles: blob # number of cycles for wavelet convolution (phase, amplitude) (if dcomplex='wavelet')
+    width: float # width of morlet wavelet (if dcomplex='wavelet')
+    dt: float # time step in seconds for calculating PAC over time (length of epoch)
+    """
+    contents = [
+        (0, (1, 3, 4), 'wavelet', np.nan, 7, 10)
+    ]
+
+@schema
+class PhaseAmplitudeBands(dj.Lookup):
+    """
+    Manual insert of phase and amplitude frequency bands for coupling analysis.
+    """
+
+    definition = """ 
+    band_param_idx: int # Unique identifier for the frequency band parameter set
+    ---
+    f_pha: longblob # phase frequencies of interest (see CREATE_new_coupling_session for details)
+    f_amp: longblob # amplitude frequencies of interest (see CREATE_new_coupling_session for details)
+    """
+    contents = [
+        (0, 
+         [[2, 4], [4, 6], [6, 8], [8, 10], [10, 12]],
+         [[20, 25], [25, 30], [30, 35], [35, 40], [40, 45], [45, 50]]),
+        (1,
+         [[4, 6]],
+         [[20, 30], [30, 40], [40, 50]])
+
+    ]
+
+@schema
+class CouplingSession(dj.Manual):
+    """
+    Manual insert of Tensorpac coupling analysis (across entire session)
+    """
+
+    definition = """ 
+    -> ephys.LFP.Trace
+    -> TensorpacParamset
+    -> PhaseAmplitudeBands
+    """
+
+@schema
+class PhaseAmplitudeCoupling(dj.Computed):
+    """
+    Phase-amplitude coupling analysis using Tensorpac (tensorpac.Pac).
+    """
+
+    definition = """
+    -> CouplingSession
+    ---
+    pha_vec: longblob # phase frequency bin (center frequencies)
+    amp_vec: longblob # amplitude frequency bin (center frequencies)
+    pac_array: longblob # PAC values for each phase-amplitude pair (shape: amp_vec, pha_vec, num_epochs)
+    pvalues: longblob # p-values for each phase-amplitude pair (shape: amp_vec, pha_vec)
+    """
+
+    class PreferredPhase(dj.Part):
+        """
+        Phase in which amplitude is strongest for each phase-amplitude pair.
+        """
+
+        definition = """
+        -> PhaseAmplitudeCoupling
+        ---
+        preferred_phase: longblob # preferred phase for each amplitude frequency (shape: amp_vec, pha_vec, num_epochs)
+        vecbin: longblob # phase bins (-pi to pi) (shape: n_bins)
+        amplitude_values: longblob # amplitude values for each phase bin (shape: n_bins, amp_vec, pha_vec, num_epochs)
+        """
+
+    def make(self, key):
+
+        # fetch Tensorpac parameters
+        idpac, dcomplex, cycles, width, dt = (TensorpacParamset & key).fetch1(
+            "idpac", "dcomplex", "cycles", "width", "dt"
+        )
+        dcomplex = sys.intern(str(dcomplex))
+
+        # fetch frequency bands
+        f_pha, f_amp = (PhaseAmplitudeBands & key).fetch1("f_pha", "f_amp")
+
+        # fetch data
+        trace = (ephys.LFP.Trace & key).fetch1("lfp")
+        fs = (ephys.LFP & key).fetch1("lfp_sampling_rate")
+
+        # break data into epochs (data = num_epochs x epoch_len)
+        epoch_len = int(fs * dt)  # number of samples in each epoch
+        num_epochs = int(len(trace) // epoch_len)
+        data = trace[:num_epochs * epoch_len].reshape((num_epochs, epoch_len)) # cut off excess samples if dt not perfectly divisible
+
+        # initialize PAC object
+        # define PAC object
+        if dcomplex == 'wavelet':
+            p = Pac(idpac=idpac, f_pha=f_pha, f_amp=f_amp, dcomplex=dcomplex, width=width, verbose=False)
+        elif dcomplex == 'hilbert':
+            p = Pac(idpac=idpac, f_pha=f_pha, f_amp=f_amp, dcomplex=dcomplex, cycles=cycles, verbose=False)
+        else:
+            raise ValueError(f"Invalid dcomplex method: {dcomplex}")
+
+        # filter traces
+        pha = p.filter(fs, data, ftype='phase', n_jobs=-1) # (num_phase, num_epochs, epoch_len)
+        amp = p.filter(fs, data, ftype='amplitude', n_jobs=-1) # (num_amp, num_epochs, epoch_len)
+
+        # fit pac to phase and amplitude
+        pac = p.fit(pha, amp, n_perm=200, p=1, mcp='bonferroni', verbose=False) # (num_amp, num_phase, num_epochs)
+
+        # extract pac metrics
+        pha_vec = p.xvec  # phase frequency bin (center frequencies)
+        amp_vec = p.yvec  # amplitude frequency bin (center frequencies)
+        pvalues = p.pvalues  # average p-values across epochs (shape: num_amp, num_phase) (done with null distribution from permutations)
+
+        # initialize preferred phase object
+        if dcomplex == 'wavelet':
+            pp = PreferredPhase(f_pha=f_pha, f_amp=f_amp, dcomplex=dcomplex, width=width, verbose=False)
+        elif dcomplex == 'hilbert':
+            pp = PreferredPhase(f_pha=f_pha, f_amp=f_amp, dcomplex=dcomplex, cycles=cycles, verbose=False)
+        else:
+            raise ValueError(f"Invalid dcomplex method: {dcomplex}")
+
+        # fit preferred phase
+        ampbin, preferred_phase, vecbin = pp.fit(pha, amp, n_bins=72)
+
+        # insert into table
+        self.insert1(
+            {
+                **key,
+                'pha_vec': pha_vec,
+                'amp_vec': amp_vec,
+                'pac_array': pac,
+                'pvalues': pvalues,
+            }
+        )
+        self.PreferredPhase.insert1(
+            {
+                **key,
+                'preferred_phase': preferred_phase,
+                'vecbin': vecbin,
+                'amplitude_values': ampbin,
+            }
+        )
+
+@schema
+class UnitCouplingSession(dj.Manual):
+    """
+    Manual insert for Tensorpac Event-based Phase-Amplitude Coupling analysis (coupling during specific single unit spikes).
+    """
+    
+    definition = """ 
+    -> ephys.CuratedClustering.Unit
+    -> TensorpacParamset
+    -> PhaseAmplitudeBands
+    """
+
+@schema
+class EventBasedCoupling(dj.Computed):
+    """
+    Event-based phase-amplitude coupling analysis using Tensorpac (tensorpac.Pac). Shows coupling during specific single unit spikes.
+    """
+    
+    definition = """
+    -> UnitCouplingSession
+    ---
+    pha_vec: longblob # phase frequency bin (center frequencies)
+    amp_vec: longblob # amplitude frequency bin (center frequencies)
+    t: longblob # time vector relative to spike time 
+    erpac_array: longblob # Event-Related PAC values for each phase-amplitude pair (shape: amp_vec, pha_vec, time)
+    """
+
+    class InterTrialCoherence(dj.Part):
+        """
+        Inter-trial coherence (ITC) of phase for each phase frequency during specific single unit spikes.
+        """
+
+        definition = """
+        -> EventBasedCoupling
+        ---
+        itc_array: longblob # ITC values for each phase frequency and time point (shape: pha_vec, time)
+        """
+
+    class PeakLockedTF(dj.Part):
+        """
+        Peak-locked time-frequency analysis for each phase-amplitude pair during specific single unit spikes.
+        """
+
+        definition = """
+        -> EventBasedCoupling
+        ---
+        pltf_array: longblob # Peak-locked time-frequency amplitude for each phase-amplitude pair (shape: amp_vec, pha_vec, time)
+        """
+
+    def make(self, key):
+
+        spike_buffer = .5 # seconds extract around spike times (+/-)
+        edge = 10 # samples to trim from edges of extracted LFP epochs (to avoid edge artifacts in filtering) (only relavent for ITC)
+
+        # make sure an ephys.LFP session exists for the same time window (will use LFP trace for coupling analysis)
+        if not (ephys.LFP & key):
+            raise ValueError(f"No corresponding LFP session found for {key} - cannot perform event-based coupling analysis")
+
+        # fetch Tensorpac parameters
+        idpac, dcomplex, cycles, width, dt = (TensorpacParamset & key).fetch1(
+            "idpac", "dcomplex", "cycles", "width", "dt"
+        )
+        dcomplex = sys.intern(str(dcomplex))
+
+        # fetch frequency bands
+        f_pha, f_amp = (PhaseAmplitudeBands & key).fetch1("f_pha", "f_amp")
+
+        # fetch single unit spike info
+        electrode, spike_times, spike_sites = (ephys.CuratedClustering.Unit & key).fetch1("electrode", "spike_times", "spike_sites")
+        spike_times = spike_times[spike_sites == electrode] # only use spikes from the electrode corresponding to the LFP trace (will be used for coupling analysis)
+
+        # fetch LFP trace and sampling rate
+        trace = (ephys.LFP.Trace & key & f"electrode = '{electrode}'").fetch1("lfp")
+        lfp_fs = (ephys.LFP & key).fetch1("lfp_sampling_rate")
+
+        # get time vector (for lfp trace)
+        time_vector = np.arange(len(trace)) / lfp_fs
+
+        # remove boundary spikes
+        spike_times = spike_times[(spike_times > spike_buffer) & (spike_times < time_vector[-1] - spike_buffer)] # remove boundary spikes
+
+        # loop through spikes and extract lfp segments
+        lfp_epochs_itc = []
+        n_samples = int(spike_buffer * lfp_fs) + edge # number of samples to extract on either side of spike time (accounting for edge trimming)
+        for spike_time in spike_times:
+
+            # find nearest index in lfp trace to spike time
+            spike_idx = np.argmin(np.abs(time_vector - spike_time))
+
+            # get lfp segment around spike time (accounting for spike_buffer)
+            start_idx = spike_idx - n_samples
+            end_idx = spike_idx + n_samples
+            lfp_segment = trace[start_idx:end_idx]
+
+            lfp_epochs_itc.append(lfp_segment)
+        lfp_epochs_itc = np.array(lfp_epochs_itc)
+
+        # remove edge samples from epochs (for non itc analysis)
+        lfp_epochs = lfp_epochs_itc[:, edge:-edge]
+
+        # initialize preferred phase object
+        if dcomplex == 'wavelet':
+            p = EventRelatedPac(f_pha=f_pha, f_amp=f_amp, dcomplex=dcomplex, width=width, verbose=False)
+        elif dcomplex == 'hilbert':
+            p = EventRelatedPac(f_pha=f_pha, f_amp=f_amp, dcomplex=dcomplex, cycles=cycles, verbose=False)
+        else:
+            raise ValueError(f"Invalid dcomplex method: {dcomplex}")
+        
+        # extract phases and amplitudes
+        pha = p.filter(lfp_fs, lfp_epochs, ftype='phase')
+        amp = p.filter(lfp_fs, lfp_epochs, ftype='amplitude')
+
+        # compute the erpac
+        erpac_array = p.fit(pha, amp, method='gc', smooth=50)
+
+        # get pvalues
+        pha_vec = p.xvec  # phase frequency bin (center frequencies)
+        amp_vec = p.yvec  # amplitude frequency bin (center frequencies)
+        t = np.arange(-spike_buffer, spike_buffer, 1/lfp_fs) # time vector relative to spike time
+
+        # ITC analysis
+        if dcomplex == 'wavelet':
+            itc = ITC(lfp_epochs_itc, sf=lfp_fs, f_pha=f_pha, dcomplex=dcomplex, width=width, edges=edge, verbose=False)
+        elif dcomplex == 'hilbert':
+            itc = ITC(lfp_epochs_itc, sf=lfp_fs, f_pha=f_pha, dcomplex=dcomplex, cycle=cycles, edges=edge, verbose=False)
+        else:
+            raise ValueError(f"Invalid dcomplex method: {dcomplex}")
+
+        itc_array = itc.itc
+
+        # PeakLockedTF analysis
+        cue = 0
+        pltf_array = []
+        for phase_band in f_pha:
+            pltf = PeakLockedTF(lfp_epochs, lfp_fs, cue, times=t, f_pha=phase_band, f_amp=f_amp, verbose=False)
+            pltf_array.append(pltf.amp_a)
+        pltf_array = np.stack(pltf_array, axis=1) # shape = amp_vec, pha_vec, num_spikes, time
+        
+        # average across spikes
+        pltf_array = np.mean(pltf_array, axis=2) # shape = amp_vec, pha_vec, time
+
+        # insert into table
+        self.insert1(
+            {
+                **key,
+                'pha_vec': pha_vec,
+                'amp_vec': amp_vec,
+                't': t,
+                'erpac_array': erpac_array,
+            }
+        )
+
+        self.InterTrialCoherence.insert1(
+            {
+                **key,
+                'itc_array': itc_array,
+            }
+        )
+
+        self.PeakLockedTF.insert1(
+            {
+                **key,
+                'pltf_array': pltf_array,
+            }
+        )
+
+"""
+Longitudinal Spectral Analysis
+"""
+
+@schema
+class LongitudinalSpectralAnalysis(dj.Computed):
+    """
+    Mean frequency band power across single file (per electrode). Designed for longitudinal analysis of spectral power changes across development.
+    """
+
+    definition = """
+    -> culture.Experiment
+    -> ephys.EphysRawFile
+    ---
+    execution_duration: float # time of analysis execution (seconds)
+    channel_ids: longblob # channel ids for each electrode in the recording (not mapped)
+    """
+
+    class BandPower(dj.Part):
+
+        definition = """
+        -> master
+        -> SpectralBand
+        ---
+        band_power: longblob # mean power for each channel in the specified frequency band (shape: num_channels)
+        """
+
+    def make(self, key):
+        execution_time = datetime.now(timezone.utc)
+
+        file, acq_software = (ephys.EphysRawFile & key).fetch1("file_path", "acq_software")
+        si_extractor = recording_extractor_full_dict[acq_software.replace(" ", "").lower()]
+
+        # Read data. Concatenate if multiple files are found.
+        file_path = mua.find_full_path(ephys.get_ephys_root_data_dir(), file)
+
+        # Get stream name for this file
+        streams = si_extractor.get_streams(file_path)[0]
+        amplifier_streams = [s for s in streams if "amplifier" in s]
+        if not amplifier_streams:
+            raise ValueError(f"No amplifier stream found in file: {file_path}")
+        stream_name = amplifier_streams[0]
+
+        # Get recording object
+        si_recording = si_extractor(file_path, stream_name=stream_name)
+
+        # Figure out `Port ID` from the existing EphysSessionProbe
+        port_id = set((ephys.EphysSessionProbe & key).fetch("port_id"))
+
+        # Figure out `Port ID` from the existing EphysSession
+        if not (ephys.EphysSessionProbe & key):
+            raise ValueError(
+                f"No EphysSessionProbe found for the {key} - cannot determine the port ID"
+            )
+
+        # Check if there are multiple port IDs for the same experiment, if so, it needs to be fixed in the EphysSessionProbe table
+        if len(port_id) > 1:
+            raise ValueError(
+                f"Multiple Port IDs found for the {key} - cannot determine the port ID"
+            )
+        port_id = port_id.pop()
+
+        # read intan header
+        with open(file_path, "rb") as f:
+            header = read_header(f)
+        port_indices = np.array(
+            [
+                ind
+                for ind, ch in enumerate(header["amplifier_channels"])
+                if ch["port_prefix"] == port_id
+            ]
+        )  # get the row indices of the port
+
+        si_recording = si_recording.select_channels(
+            si_recording.channel_ids[port_indices]
+        )  # select only the port data
+
+        # Check if recording is unsigned and convert if necessary
+        # Please check the SI documentation for more details: https://spikeinterface.readthedocs.io/en/latest/how_to/unsigned_to_signed.html
+        if str(si_recording.get_dtype()).startswith("u"):
+            si_recording = si.preprocessing.unsigned_to_signed(si_recording)
+        
+        si_recording = si.preprocessing.common_reference(
+            recording=si_recording, operator="median"
+        )
+
+        fs = si_recording.get_sampling_frequency()
+        channel_ids = si_recording.channel_ids
+
+        traces = si_recording.get_traces()
+
+        # Simple PSD via Welch
+        dt = 1 * fs  # 1-second windows with 50% overlap
+        freqs, psd = welch(traces, fs=fs, nperseg=dt, noverlap=dt//2, axis=0)  # PSD in power/Hz
+
+        # insert into master
+        self.insert1(
+            {
+                **key,
+                "execution_duration": 0, # placeholder for now - will add timing code later
+                "channel_ids": channel_ids,
+            }
+        )
+
+        # calculate mean power in each frequency band
+        for band in SpectralBand.fetch(as_dict=True, order_by='lower_freq'):
+            band_mask = (band['lower_freq'] <= freqs) & (freqs <= band['upper_freq'])
+            mean_power = np.mean(psd[band_mask, :], axis=0)
+
+            # insert into part
+            self.BandPower.insert1(
+                {
+                    **key,
+                    "band_name": band['band_name'],
+                    "band_power": mean_power,
+                }
+            )
+        
+        # update execution time
+        self.update1(
+            {
+                **key,
+                "execution_duration": (datetime.now(timezone.utc) - execution_time).total_seconds(),
+                "channel_ids": channel_ids,
             }
         )
