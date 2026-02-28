@@ -1,7 +1,7 @@
 # Import Modules
 import datajoint as dj
 from workflow import DB_PREFIX
-from element_interface.utils import map_channel_to_electrode
+from element_array_ephys.ephys_no_curation import map_channel_to_electrode
 
 from workflow.pipeline import culture, ephys, mua, probe
 

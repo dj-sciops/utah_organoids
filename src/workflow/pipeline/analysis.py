@@ -20,8 +20,9 @@ import spikeinterface as si
 from spikeinterface.extractors.extractorlist import (
     recording_extractor_full_dict,
 )
-
-from workflow.pipeline import probe, ephys, mua
+from .ephys import ephys, probe
+# from .mua import mua
+from workflow.pipeline import mua, culture
 
 from workflow import DB_PREFIX, ORG_NAME, WORKFLOW_NAME
 
@@ -653,7 +654,7 @@ class FOOOFAnalysis(dj.Computed):
 
         # insert into part table
         for band_name in frequency_band_masks.keys():
-            self.BOSCAnalysis.insert1(
+            self.FBOSCAnalysis.insert1(
                 {
                     **key,
                     "spec_param_idx": (LFPSpectrogram & key).fetch("param_idx")[0],
@@ -673,7 +674,7 @@ class STTFA(dj.Computed):
     """
 
     definition = """
-    -> analysis.LFPSpectrogram.ChannelSpectrogram
+    -> LFPSpectrogram.ChannelSpectrogram
     ---
     spike_count: int # number of spikes 
     a_sttfa: longblob  # average frequency power during spike-triggered time window 

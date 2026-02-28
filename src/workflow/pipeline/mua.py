@@ -17,7 +17,8 @@ import quantities as pq
 from elephant.spike_train_correlation import spike_time_tiling_coefficient
 
 from workflow import DB_PREFIX
-from workflow.pipeline import culture, ephys, probe
+from workflow.pipeline import culture
+from .ephys import ephys, probe
 
 schema = dj.schema(DB_PREFIX + "mua")
 
@@ -381,7 +382,7 @@ def _build_si_recording_object(files, acq_software="intan"):
         si_recording: SI recording object
     """
 
-    from spikeinterface.extractors.extractor_classes import (
+    from spikeinterface.extractors.extractorlist import (
         recording_extractor_full_dict,
     )
 
@@ -461,7 +462,7 @@ class TraceSession(dj.Manual):
     """
 
     definition = """ 
-    -> mua.MUASpikes.Channel
+    -> MUASpikes.Channel
     """
 
 @schema
@@ -509,7 +510,7 @@ class TracePlot(dj.Computed):
         )
 
         # get electrode
-        probe_type = set((ephys.EphysSessionProbe * probe.Probe & key).fetch('probe_type'))
+        probe_type = set((ephys.EphysSessionProbe * probe.Probe & f"organoid_id = '{key['organoid_id']}'").fetch('probe_type'))
         if len(probe_type) != 1:
             raise ValueError(
                 f"Couldn't identify probe type for {key} - expected one, found {len(probe_type)}"

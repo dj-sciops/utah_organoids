@@ -43,6 +43,12 @@ dependencies = [
     # Patch-clamp dependencies (pyabf replaces stfio, ipfx replaces AllenSDK)
     "pyabf>=2.3.0",
     "ipfx>=1.0.0",
+    "bottleneck",
+    "neo",
+    "quantities",
+    "elephant",
+    "specparam @ git+https://github.com/fooof-tools/fooof.git",
+    "tensorpac @ git+https://github.com/EtienneCmb/tensorpac.git",
 ]
 
 [project.optional-dependencies]
