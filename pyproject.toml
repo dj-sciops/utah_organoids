@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "utah_organoids"
-version = "0.17.0"
+version = "0.19.0"
 description = "Organoids electrophysiology pipeline using the DataJoint elements"
 readme = "README.md"
 requires-python = "==3.10.*"
@@ -47,7 +47,12 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["black", "isort", "flake8", "pre-commit"]
-test = ["pytest"]
+test = [
+    "pytest>=7.0",
+    "pytest-cov>=7.0",
+    "python-dotenv>=1.0",
+    "testcontainers[mysql]>=4.0",
+]
 
 [project.scripts]
 run_workflow = "workflow.populate.process:cli"
@@ -67,6 +72,10 @@ namespaces = false
 minversion = "6.0"
 addopts = "-rA"
 testpaths = ["tests"]
+markers = [
+    "integration: Integration tests requiring MySQL database and sample data (auto-applied)",
+    "unit: Unit tests with no database dependency (auto-applied)",
+]
 
 [tool.black]
 line-length = 88

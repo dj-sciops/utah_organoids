@@ -147,15 +147,6 @@ class OrganoidCulture(dj.Manual):
 
 
 @schema
-class OrganoidImplantationImage(dj.Manual):
-    definition = """
-    -> OrganoidCulture
-    ---
-    organoid_implantation_image: attach  # Organoid implantation image (TIF file)
-    """
-
-
-@schema
 class OrganoidCultureCondition(dj.Manual):
     definition = """
     -> OrganoidCulture
@@ -199,6 +190,15 @@ class Experiment(dj.Manual):
     -> [nullable] Drug
     drug_concentration=null     : float # concentration in uM
     experiment_plan             : varchar(64) # e.g. mrna lysate, oct, protein lysate, or matrigel embedding, ephys, tracing
+    """
+
+
+@schema
+class OrganoidImplantationImage(dj.Manual):
+    definition = """
+    -> Experiment  # Use the Control experiment entry for each organoid
+    ---
+    organoid_implantation_image: attach
     """
 
 

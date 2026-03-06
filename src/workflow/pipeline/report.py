@@ -260,6 +260,46 @@ class PatchClampReport(dj.Computed):
         vi_plot: attach
         """
 
+    class FirstSpikeDerivative(dj.Part):
+        """First spike dV/dt plot attachment."""
+        definition = """
+        -> master
+        ---
+        spike_dvdt_plot: attach
+        """
+
+    class FirstSpikeSecondDerivative(dj.Part):
+        """First spike d²V/dt² plot attachment."""
+        definition = """
+        -> master
+        ---
+        spike_2nd_deriv_plot: attach
+        """
+
+    class FirstSpikeTrough(dj.Part):
+        """First spike with trough marker annotations."""
+        definition = """
+        -> master
+        ---
+        spike_trough_plot: attach
+        """
+
+    class CombinedPlot(dj.Part):
+        """Combined multi-panel plot (istep + FI + spike + phase)."""
+        definition = """
+        -> master
+        ---
+        combined_plot: attach
+        """
+
+    class AnimatedTrace(dj.Part):
+        """Animated current step trace (GIF)."""
+        definition = """
+        -> master
+        ---
+        animated_trace: attach
+        """
+
     def make(self, key):
         """
         Read plot file paths from patch_clamp tables and store as attachments.
@@ -325,3 +365,58 @@ class PatchClampReport(dj.Computed):
                     self.VICurve.insert1({**key, 'vi_plot': str(full_path)})
                 else:
                     logger.warning(f"V-I plot not found: {full_path}")
+
+        # First Spike Derivative (dV/dt)
+        dvdt_query = patch_clamp.FirstSpikeFirstDerivativePlots & key
+        if dvdt_query:
+            dvdt_path = dvdt_query.fetch1('spike_dvdt_png_path')
+            if dvdt_path:
+                full_path = directory / dvdt_path
+                if full_path.exists():
+                    self.FirstSpikeDerivative.insert1({**key, 'spike_dvdt_plot': str(full_path)})
+                else:
+                    logger.warning(f"First spike dV/dt plot not found: {full_path}")
+
+        # First Spike Second Derivative (d²V/dt²)
+        d2vdt2_query = patch_clamp.FirstSpikeSecondDerivativePlots & key
+        if d2vdt2_query:
+            d2vdt2_path = d2vdt2_query.fetch1('spike_2nd_derivative_png_path')
+            if d2vdt2_path:
+                full_path = directory / d2vdt2_path
+                if full_path.exists():
+                    self.FirstSpikeSecondDerivative.insert1({**key, 'spike_2nd_deriv_plot': str(full_path)})
+                else:
+                    logger.warning(f"First spike d²V/dt² plot not found: {full_path}")
+
+        # First Spike Trough Markers
+        trough_query = patch_clamp.FirstSpikePlotsMarkersTrough & key
+        if trough_query:
+            trough_path = trough_query.fetch1('spike_other_markers_png_path')
+            if trough_path:
+                full_path = directory / trough_path
+                if full_path.exists():
+                    self.FirstSpikeTrough.insert1({**key, 'spike_trough_plot': str(full_path)})
+                else:
+                    logger.warning(f"First spike trough plot not found: {full_path}")
+
+        # Combined Plot
+        combined_query = patch_clamp.CombinedPlotsWithText & key
+        if combined_query:
+            combined_path = combined_query.fetch1('large_fi_vi_spike_phase')
+            if combined_path:
+                full_path = directory / combined_path
+                if full_path.exists():
+                    self.CombinedPlot.insert1({**key, 'combined_plot': str(full_path)})
+                else:
+                    logger.warning(f"Combined plot not found: {full_path}")
+
+        # Animated Trace (GIF)
+        anim_query = patch_clamp.AnimatedCurrentStepPlots & key
+        if anim_query:
+            anim_path = anim_query.fetch1('istep_gif_path')
+            if anim_path:
+                full_path = directory / anim_path
+                if full_path.exists():
+                    self.AnimatedTrace.insert1({**key, 'animated_trace': str(full_path)})
+                else:
+                    logger.warning(f"Animated trace not found: {full_path}")

@@ -1,5 +1,16 @@
 # Changelog
 
+## `V0.19.0`
+
+### Features
+
+- refactor: redesign `OrganoidImplantationImage` to reference `Experiment` instead of `OrganoidCulture`, matching the per-organoid image data structure
+
+### Migration Notes
+
+- The old `OrganoidImplantationImage` table (under `OrganoidCulture`) must be dropped before activating this version
+- Images are inserted at the Control experiment level for each organoid
+
 ## `V0.18.1`
 
 ### Features
