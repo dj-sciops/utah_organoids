@@ -8,6 +8,8 @@ The **Utah Organoids DataJoint pipelines** facilitate **cerebral organoid charac
 
 - **Array Ephys Pipeline**: Manages and analyzes ephys recordings, including spike sorting and quality metrics.
 
+- **Patch-Clamp Ephys Pipeline**: Processes whole-cell patch-clamp recordings (ABF files) through feature extraction (AP threshold, input resistance, firing rate), plot generation, and dashboard visualization.
+
 ## Accessing the Pipelines
 
 1. **Request Access**: Contact the DataJoint support team for an account.
@@ -119,6 +121,51 @@ The **Utah Organoids DataJoint pipelines** facilitate **cerebral organoid charac
           - Open the `DOWNLOAD_spike_sorted_data.ipynb` notebook in VS Code.
           - Click on the "Run Cell" button in the top right corner of each code cell to execute the code.
           - Follow the instructions in the notebook to download spike sorting results.
+
+## Patch-Clamp Ephys Pipeline
+
+### **Data Organization**
+
+Patch-clamp data must follow this folder structure:
+```
+patch_clamp/
+  <experiment>/          # e.g. 2020-08-28
+    <experiment>/        # double-nested (same name)
+      <experiment>.xlsx  # Excel metadata file
+      *.abf              # ABF recording files
+```
+
+Each experiment folder contains an Excel file with animal metadata (strain, age, solutions) and cell/recording information, plus ABF files from the patch-clamp rig.
+
+### **Register a New Experiment**
+
+  1. Upload ABF files and Excel metadata to S3 via Axon.
+  2. Register the experiment using [CREATE_patch_clamp_experiment.ipynb](./notebooks/CREATE_patch_clamp_experiment.ipynb).
+     - This inserts entries in `EphysExperimentsForAnalysis` and `CurrentStepTimeParams`.
+
+### **Run the Pipeline**
+
+  1. Open [RUN_patch_clamp.ipynb](./notebooks/RUN_patch_clamp.ipynb).
+  2. Execute all cells to run the full pipeline:
+     - **Metadata extraction**: Parses Excel files to register animals, cells, and recordings.
+     - **Feature extraction**: Reads ABF files and computes AP threshold, input resistance, max firing rate, F-I curve slope, and other intrinsic properties.
+     - **Plot generation**: Creates current step traces, F-I curves, V-I curves, spike waveforms, phase planes, derivative plots, combined summary plots, and animated GIFs.
+     - **Report population**: Converts plot files to dashboard-compatible attachments.
+  3. **Prerequisites**: `ffmpeg` must be installed for animated GIF/MP4 generation (`brew install ffmpeg` on macOS).
+
+### **Explore Results**
+
+  1. Open [EXPLORE_patch_clamp.ipynb](./notebooks/EXPLORE_patch_clamp.ipynb) to inspect:
+     - Pipeline coverage (entries per table)
+     - Recording metadata and AP status
+     - Feature statistics and strain comparisons
+     - Example plot visualization
+  2. View results in the Dashboard under **Images & Plots**:
+     - **Patch-Clamp Feature Plots** — F-I curves, V-I curves, spike waveforms, phase planes
+     - **Patch-Clamp Traces** — Current step traces
+     - **Patch-Clamp Spike Analysis** — dV/dt and d²V/dt² derivative plots
+     - **Patch-Clamp Combined Plots** — Multi-panel summary plots
+     - **Patch-Clamp Animated Traces** — Animated GIF recordings
 
 ## Troubleshooting
 
