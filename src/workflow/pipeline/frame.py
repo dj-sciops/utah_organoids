@@ -41,9 +41,9 @@ class FrameSession(dj.Manual):
 
     definition = """ 
     -> culture.Experiment
+    -> TimeFrameParamset
     start_boundary     : datetime # Start datetime for analysis
     end_boundary       : datetime # End datetime for analysis
-    frame_param_idx   : int     # Reference to TimeFrameParamset
     """
 
 # Define Computed Table
