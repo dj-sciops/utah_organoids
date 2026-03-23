@@ -17,9 +17,9 @@ from tensorpac.stats import test_stationarity
 from tensorpac.utils import pac_trivec, ITC, PeakLockedTF
 from intanrhdreader import read_header
 import spikeinterface as si
-from spikeinterface.extractors.extractorlist import (
-    recording_extractor_full_dict,
-)
+from spikeinterface.extractors.extractor_classes import (
+      recording_extractor_full_dict,
+)      
 from .ephys import ephys, probe
 # from .mua import mua
 from workflow.pipeline import mua, culture
@@ -154,10 +154,10 @@ class LFPSpectrogram(dj.Computed):
         std_power: float             # Std dev of band power (μV²/Hz)
         """
 
-    @property
-    def key_source(self):
-        # Use only the default param_idx for high-gamma windowing params for automated population
-        return ephys.LFP.Trace * SpectrogramParameters & "param_idx=2"
+    # @property
+    # def key_source(self):
+    #     # Use only the default param_idx for high-gamma windowing params for automated population
+    #     return ephys.LFP.Trace * SpectrogramParameters & "param_idx=2"
 
     def make(self, key):
         # Load LFP trace and sampling rate
@@ -719,7 +719,7 @@ class STTFA(dj.Computed):
         # define parameters
         fs = 20000 # sampling frequency in Hz
         min_spikes = 10 # minimum number of spikes to perform STTFA 
-        max_freq = 200 # Hz
+        max_freq = 300 # Hz
         num_rand_iterations = 1000 # number of randomizations for rSTTFA
 
         # find the channel idx for the spectrogram electrode
@@ -728,7 +728,7 @@ class STTFA(dj.Computed):
             raise ValueError(
                 f"Couldn't identify probe type for {key} - expected one, found {len(probe_type)}"
             )
-        channel_idx = map_channel_to_electrode(probe_type.pop(), input_indices=np.array([key['electrode']]), map_electrode_to_channel=True)[0]
+        channel_idx = map_channel_to_electrode(probe_type.pop(), input_indices=np.array([key['electrode']]), electrode_to_channel=True)[0]
 
         # fetch MUA parameters within the spectrogram time window
         spike_indices, start_times = (mua.MUASpikes.Channel & 
@@ -756,10 +756,11 @@ class STTFA(dj.Computed):
 
         # convert time to ms
         time_ms = (time * 1000).astype(int)  # in ms
+        times_array = np.arange(0, time_ms[-1] + 1)  # array of all ms time points within spectrogram duration
 
         # calculate STTFA
-        spike_indices_spec_bins = np.histogram(spike_times_ms, bins=np.concatenate([[0], time_ms]))[0]
-        a_sttfa = (spectrogram * spike_indices_spec_bins).sum(axis=1) / spike_count
+        spike_spec_bins = np.histogram(spike_times_ms, bins=np.concatenate([[0], time_ms]))[0].astype(bool) # binary array indicating which spectrogram time bins have spikes
+        a_sttfa = np.mean(spectrogram[:, spike_spec_bins], axis=1)
 
         a_sttfa = a_sttfa[freq <= max_freq]
         frequency = freq[freq <= max_freq]
@@ -767,10 +768,9 @@ class STTFA(dj.Computed):
         # calculate randomized STTFA
         r_sttfa_list = []
         for _ in range(num_rand_iterations):
-            rand_spike_times = np.random.choice(time_ms, size=spike_count, replace=False)
-
-            rand_spike_indices_spec_bins = np.histogram(rand_spike_times, bins=np.concatenate([[0], time_ms]))[0]
-            r_sttfa = (spectrogram * rand_spike_indices_spec_bins).sum(axis=1) / spike_count
+            rand_spike_times = np.random.choice(times_array, size=spike_count, replace=False)
+            rand_spike_indices_spec_bins = np.histogram(rand_spike_times, bins=np.concatenate([[0], time_ms]))[0].astype(bool)
+            r_sttfa = np.mean(spectrogram[:, rand_spike_indices_spec_bins], axis=1)
             r_sttfa_list.append(r_sttfa[freq <= max_freq])
 
         r_sttfa = np.mean(np.vstack(r_sttfa_list), axis=0)
