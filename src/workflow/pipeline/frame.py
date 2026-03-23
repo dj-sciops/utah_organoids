@@ -9,6 +9,7 @@ import numpy as np
 from random import randint
 import bottleneck as bn
 from scipy.signal import find_peaks
+from datetime import timedelta
 
 # Set up schema (connects to database and manages table creation)
 schema = dj.schema(DB_PREFIX + "frame")
@@ -54,6 +55,9 @@ class FrameAnalysis(dj.Computed):
     """
     definition = """
     -> FrameSession
+    ---
+    num_processed_sessions: int # Number of sessions with available data within the analysis boundaries
+    num_available_files: int # Number of available ephys files within the analysis boundaries
     """
 
     class ActiveTimeFrames(dj.Part):
@@ -77,18 +81,15 @@ class FrameAnalysis(dj.Computed):
         # fetch frame parameters
         num_frames, min_per_frame = (TimeFrameParamset & key).fetch1('num_frames', 'min_per_frame')
 
+        # fetch number of processed sessions and available files
+        num_processed_sessions = len(mua.MUASpikes & f"organoid_id='{key['organoid_id']}'" & f"start_time BETWEEN '{key['start_boundary']}' AND '{key['end_boundary']}'")
+        num_files = len(ephys.EphysRawFile & f"file_time BETWEEN '{key['start_boundary']}' AND '{key['end_boundary']}'")
+
         # fetch MUA values (needs to be previously )
         spike_rates, start_times, channel_ids = (mua.MUASpikes.Channel & 
-                                                 f"organoid_id='{key['organoid_id']}'" &
-                                                 f"start_time BETWEEN '{key['start_boundary']}' AND '{key['end_boundary']}'"
-                                                 ).fetch('spike_rate', 'start_time', 'channel_idx')
-        
-        # ensure all files within boundaries have been processed in MUASpikes table
-        num_files = len(ephys.EphysRawFile & f"file_time BETWEEN '{key['start_boundary']}' AND '{key['end_boundary']}'")
-        if len(spike_rates) != num_files:   
-            raise ValueError(
-                f"Number of spike rate entries ({len(spike_rates)}) does not match number of raw files ({num_files}) within the defined boundaries for {key} - please process all raw files with the MUASpikes table before running FrameAnalysis"
-            )
+                                                    f"organoid_id='{key['organoid_id']}'" &
+                                                    f"start_time BETWEEN '{key['start_boundary']}' AND '{key['end_boundary']}'"
+                                                    ).fetch('spike_rate', 'start_time', 'channel_idx')
 
         # convert channel ids to electrode indices
         probe_type = set((ephys.EphysSessionProbe * probe.Probe & key).fetch('probe_type'))
@@ -101,13 +102,16 @@ class FrameAnalysis(dj.Computed):
         time_vector, population_firing_vector = create_population_firing_vector(spike_rates, start_times, electrode_ids, num_elec_inside)
 
         # filter population firing vector - boxcar with the length of min_per_frame
-        population_firing_vector = bn.move_mean(population_firing_vector, window=min_per_frame, min_count=1)
+        filtered_population_firing_vector = bn.move_mean(population_firing_vector, window=min_per_frame, min_count=1)
 
         # find active frames
-        active_frames = find_active_frames(start_times, time_vector, population_firing_vector, num_frames, min_per_frame)
+        active_frames = find_active_frames(start_times, time_vector, filtered_population_firing_vector, population_firing_vector, num_frames, min_per_frame)
 
         # insert the parent FrameAnalysis record
-        self.insert1(key)
+        self.insert1({
+            **key, 
+            'num_processed_sessions': num_processed_sessions, 
+            'num_available_files': num_files})
 
         # insert active frames (and acompannying ephys sessions)
         for active_frame in active_frames:
@@ -142,10 +146,10 @@ def create_population_firing_vector(spike_rates, start_times, electrode_ids, num
     
     return time_vector, population_firing_vector
 
-def find_active_frames(start_times, time_vector, population_firing_vector, num_frames, min_per_frame):
+def find_active_frames(start_times, time_vector, filtered_population_firing_vector, population_firing_vector, num_frames, min_per_frame):
 
     # find active frames
-    frame_indices, properties = find_peaks(population_firing_vector, height=0, distance=min_per_frame)
+    frame_indices, properties = find_peaks(filtered_population_firing_vector, height=0, distance=min_per_frame)
     frame_amplitudes = properties['peak_heights']
 
     # remove boundary peaks (these will raise an error when trying to extract burst windows)
@@ -156,20 +160,12 @@ def find_active_frames(start_times, time_vector, population_firing_vector, num_f
     
     # find most active regions -> extract windows
     active_frame_indices = frame_indices[np.argsort(frame_amplitudes)[-num_frames:]]  # indexes of the most active peaks
-
-    # account if not enough peaks -> use random windows
-    while len(active_frame_indices) < num_frames:
-
-        rand_idx = randint(0, len(population_firing_vector))
-
-        if not np.any(np.isin(np.arange(rand_idx-min_per_frame, rand_idx+1), active_frame_indices)):
-            active_frame_indices = np.concatenate([active_frame_indices, [rand_idx]])
     
     active_frames = []
     for active_frame_idx in active_frame_indices:
         
         # determine frame boundaries
-        frame_bounds = np.array([-min_per_frame, 0]) + active_frame_idx
+        frame_bounds = np.array([-min_per_frame, 0]) + active_frame_idx + 1
 
         # find frame metrics
         start_time, end_time = np.unique(start_times[np.isin(start_times.astype("datetime64[m]"), time_vector[frame_bounds])])
@@ -179,9 +175,9 @@ def find_active_frames(start_times, time_vector, population_firing_vector, num_f
         active_frames.append(
             {
                 'frame_start': start_time,
-                'frame_end': end_time,
+                'frame_end': end_time - timedelta(seconds = 1),
                 'frame_firing_rate': frame_firing_rate
             }
         )
     
-    return active_frames           
+    return active_frames      
