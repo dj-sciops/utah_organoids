@@ -12,9 +12,11 @@ from scipy.interpolate import interp1d
 import plotly.tools as tls
 import plotly.io as pio
 from element_array_ephys.ephys_no_curation import map_channel_to_electrode, get_probe_type
+from element_interface.utils import find_full_path
 from tensorpac import Pac, PreferredPhase, EventRelatedPac
 from tensorpac.stats import test_stationarity
 from tensorpac.utils import pac_trivec, ITC, PeakLockedTF
+import intanrhdreader
 from intanrhdreader import read_header
 import spikeinterface as si
 from spikeinterface.extractors.extractor_classes import (
@@ -1142,11 +1144,14 @@ class LongitudinalSpectralAnalysis(dj.Computed):
     def make(self, key):
         execution_time = datetime.now(timezone.utc)
 
+        POWERLINE_NOISE_FREQ = 60  # Default powerline noise frequency in Hz
+        TARGET_SAMPLING_RATE = 2500 # Target sampling rate for LFP analysis in Hz
+
         file, acq_software = (ephys.EphysRawFile & key).fetch1("file_path", "acq_software")
         si_extractor = recording_extractor_full_dict[acq_software.replace(" ", "").lower()]
 
         # Read data. Concatenate if multiple files are found.
-        file_path = mua.find_full_path(ephys.get_ephys_root_data_dir(), file)
+        file_path = find_full_path(ephys.get_ephys_root_data_dir(), file)
 
         # Get stream name for this file
         streams = si_extractor.get_streams(file_path)[0]
@@ -1157,16 +1162,19 @@ class LongitudinalSpectralAnalysis(dj.Computed):
 
         # Get recording object
         si_recording = si_extractor(file_path, stream_name=stream_name)
+        fs = si_recording.get_sampling_frequency()
 
-        # Figure out `Port ID` from the existing EphysSessionProbe
+        # Calculate downsampling factor
+        true_ratio = fs / TARGET_SAMPLING_RATE
+        downsample_factor = int(np.round(true_ratio))
+
+        # Get LFP indices (row index of the LFP matrix to be used)
         port_id = set((ephys.EphysSessionProbe & key).fetch("port_id"))
-
         # Figure out `Port ID` from the existing EphysSession
         if not (ephys.EphysSessionProbe & key):
             raise ValueError(
                 f"No EphysSessionProbe found for the {key} - cannot determine the port ID"
             )
-
         # Check if there are multiple port IDs for the same experiment, if so, it needs to be fixed in the EphysSessionProbe table
         if len(port_id) > 1:
             raise ValueError(
@@ -1174,38 +1182,35 @@ class LongitudinalSpectralAnalysis(dj.Computed):
             )
         port_id = port_id.pop()
 
-        # read intan header
-        with open(file_path, "rb") as f:
-            header = read_header(f)
+        # Get LFP channels
+        channel_ids = si_recording.get_channel_ids()
+
         port_indices = np.array(
             [
                 ind
-                for ind, ch in enumerate(header["amplifier_channels"])
-                if ch["port_prefix"] == port_id
+                for ind, ch in enumerate(channel_ids)
+                if ch.startswith(port_id)
             ]
-        )  # get the row indices of the port
+        )
+        channel_ids = channel_ids[port_indices]
 
-        si_recording = si_recording.select_channels(
-            si_recording.channel_ids[port_indices]
-        )  # select only the port data
+        # Get Traces
+        raw_lfps = si_recording.get_traces(channel_ids=channel_ids)
 
-        # Check if recording is unsigned and convert if necessary
-        # Please check the SI documentation for more details: https://spikeinterface.readthedocs.io/en/latest/how_to/unsigned_to_signed.html
-        if str(si_recording.get_dtype()).startswith("u"):
-            si_recording = si.preprocessing.unsigned_to_signed(si_recording)
-        
-        si_recording = si.preprocessing.common_reference(
-            recording=si_recording, operator="median"
+        # Design notch filter
+        notch_b, notch_a = signal.iirnotch(
+            w0=POWERLINE_NOISE_FREQ, Q=30, fs=fs
         )
 
-        fs = si_recording.get_sampling_frequency()
-        channel_ids = si_recording.channel_ids
+        # Apply notch filter
+        lfps = signal.filtfilt(notch_b, notch_a, raw_lfps, axis=0)
 
-        traces = si_recording.get_traces()
+        # Downsample the signal with `decimate`
+        lfps = signal.decimate(lfps, downsample_factor, ftype="fir", zero_phase=True, axis=0)
 
         # Simple PSD via Welch
-        dt = 1 * fs  # 1-second windows with 50% overlap
-        freqs, psd = welch(traces, fs=fs, nperseg=dt, noverlap=dt//2, axis=0)  # PSD in power/Hz
+        dt = 3 * TARGET_SAMPLING_RATE  # 3-second windows with 50% overlap
+        freqs, psd = welch(lfps, fs=TARGET_SAMPLING_RATE, nperseg=dt, noverlap=dt//2, axis=0)  # PSD in power/Hz
 
         # insert into master
         self.insert1(
@@ -1218,6 +1223,8 @@ class LongitudinalSpectralAnalysis(dj.Computed):
 
         # calculate mean power in each frequency band
         for band in SpectralBand.fetch(as_dict=True, order_by='lower_freq'):
+
+            # average power across frequencies within band
             band_mask = (band['lower_freq'] <= freqs) & (freqs <= band['upper_freq'])
             mean_power = np.mean(psd[band_mask, :], axis=0)
 
@@ -1229,7 +1236,7 @@ class LongitudinalSpectralAnalysis(dj.Computed):
                     "band_power": mean_power,
                 }
             )
-        
+
         # update execution time
         self.update1(
             {
