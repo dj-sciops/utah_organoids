@@ -686,39 +686,46 @@ class STTFA(dj.Computed):
     @property
     def key_source(self): # only process sessions with all MUA spikes processed
 
-        # find all unique start and end times for spectrogram sessions
-        spectrogram_time_keys = dj.U('organoid_id', 'start_time', 'end_time').aggr(
-            LFPSpectrogram
-        ).fetch(as_dict=True)
+        min_spikes = 10
 
-        # extract mua session information
-        mua_organoid_ids, mua_start_times = (mua.MUASpikes).fetch('organoid_id', 'start_time')
+        lfp_table = dj.U("organoid_id", "start_time", "end_time").aggr(LFPSpectrogram)
+        
+        electrode_map = probe.ElectrodeConfig.Electrode.proj("channel_idx")
 
-        # find times that have been compleely processed for MUA spikes
-        valid_time_keys = []
-        for time_key in spectrogram_time_keys:
+        valid_keys = []
+        for lfp_key in lfp_table.fetch(as_dict=True):
             
-            # determine the number of expected MUA sessions
-            num_expected_mua_sessions = np.ceil((time_key['end_time'] - time_key['start_time']) / timedelta(minutes=1)).astype(int)
+            lfp_with_channel = ((LFPSpectrogram & lfp_key) * electrode_map).proj("channel_idx")
 
-            # determine the number of existing MUA sessions
-            spectrogram_session_bool = (mua_organoid_ids == time_key['organoid_id']) & (mua_start_times >= (time_key['start_time'] - timedelta(seconds=59))) & (mua_start_times <= time_key['end_time'])
+            mua_keys = (mua.MUASpikes 
+                        & f"organoid_id = '{lfp_key['organoid_id']}'" 
+                        & f"start_time >= '{lfp_key['start_time']}'" 
+                        & f"start_time < '{lfp_key['end_time']}'").fetch("KEY")
             
-            # if there are too few mua sessions, don't process
-            num_mua_sessions = len(np.unique(mua_start_times[spectrogram_session_bool]))
-            if num_mua_sessions >= num_expected_mua_sessions: # will sometimes have 1 extra session due to boundaries
-                valid_time_keys.append(time_key)
+            summed_spikes_table = lfp_with_channel.aggr(
+                (mua.MUASpikes.Channel & mua_keys).proj("spike_count", mua_start="start_time"),
+                "channel_idx",
+                total_spike_count="sum(spike_count)"
+            )
+
+            electrodes, total_spikes = summed_spikes_table.fetch("electrode", "total_spike_count")
+
+            min_spikes_bool = total_spikes >= min_spikes
+            for electrode in electrodes[min_spikes_bool]:
+                valid_keys.append({
+                    **lfp_key,
+                    "electrode": electrode
+                })
 
         return (
             LFPSpectrogram.ChannelSpectrogram 
-            & valid_time_keys
+            & valid_keys
         )
 
     def make(self, key):
 
         # define parameters
         fs = 20000 # sampling frequency in Hz
-        min_spikes = 10 # minimum number of spikes to perform STTFA 
         max_freq = 300 # Hz
         num_rand_iterations = 1000 # number of randomizations for rSTTFA
 
@@ -736,11 +743,6 @@ class STTFA(dj.Computed):
                                                     f"start_time BETWEEN '{key['start_time']}' AND '{key['end_time']}'" &
                                                     f"channel_idx = '{channel_idx}'"
                                                     ).fetch('spike_indices', 'start_time')
-        
-        # skip if not enough spikes
-        spike_count = len(np.hstack(spike_indices))
-        if spike_count < min_spikes:
-            return
 
         # get array of all spike times (relative to frame start)
         start_ms = (start_times - key['start_time']).astype('timedelta64[ms]') / np.timedelta64(1, 'ms') # ms from frame start
@@ -750,6 +752,8 @@ class STTFA(dj.Computed):
         # remove boundary spikes (account for MUA outside spectrogram time)
         num_ms = (key['end_time'] - key['start_time']) / timedelta(milliseconds=1)
         spike_times_ms = spike_times_ms[(0 <= spike_times_ms) & (spike_times_ms <= num_ms)]
+
+        spike_count = len(spike_times_ms)
 
         # fetch spectrogram
         freq, time, spectrogram = (LFPSpectrogram.ChannelSpectrogram & key).fetch1('frequency', 'time', 'spectrogram')
