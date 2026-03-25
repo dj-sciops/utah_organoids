@@ -147,15 +147,6 @@ class OrganoidCulture(dj.Manual):
 
 
 @schema
-class OrganoidImplantationImage(dj.Manual):
-    definition = """
-    -> OrganoidCulture
-    ---
-    organoid_implantation_image: attach  # Organoid implantation image (TIF file)
-    """
-
-
-@schema
 class OrganoidCultureCondition(dj.Manual):
     definition = """
     -> OrganoidCulture
@@ -186,26 +177,6 @@ class Drug(dj.Lookup):
         ("Tetrodotoxin", "Na channel blocker"),
     ]
 
-@schema
-class NumElectrodesInside(dj.Lookup):
-    """
-    Number of electrodes inside the organoid for each session (defined by organoid images).
-    """
-
-    definition = """
-    organoid_id: varchar(4) # e.g. O17
-    ---
-    num_electrodes: int  # Number of electrodes inside the organoid
-    """
-    contents = [
-        ("O09", 32), ("O10", 16), ("O11", 20), ("O12", 14), # Control Batch 1
-        ("O13", 25), ("O14", 13), ("O15", 11), ("O16", 11), # Control Batch 2
-        ("O17", 22), ("O18", 19), ("O19", 20), ("O20", 17), # GBM Batch 1
-        ("O21", 18), ("O22", 21), ("O23", 22), ("O24", 23), # Control Batch 3
-        ("O25", 20), ("O26", 32), ("O27", 26), ("O28", 24), # GBM Batch 2
-        ("O29", 22), ("O30", 20), ("O31", 20), ("O32", 20), # Control Batch 4
-    ]
-
 
 @schema
 class Experiment(dj.Manual):
@@ -219,6 +190,16 @@ class Experiment(dj.Manual):
     -> [nullable] Drug
     drug_concentration=null     : float # concentration in uM
     experiment_plan             : varchar(64) # e.g. mrna lysate, oct, protein lysate, or matrigel embedding, ephys, tracing
+    """
+
+
+@schema
+class OrganoidImplantationImage(dj.Manual):
+    definition = """
+    -> Experiment  # Use the Control experiment entry for each organoid
+    ---
+    organoid_implantation_image: attach
+    num_electrodes_inside=null: int  # number of electrodes inside the organoid (as seen in implantation image)
     """
 
 
