@@ -670,10 +670,10 @@ class PopulationBursts(dj.Computed):
                 elec_spike_times = np.hstack(spike_times_ms[electrode_ids == elec_idx])
 
                 # find spikes within burst window
-                burst_spike_times = elec_spike_times[((index-num_burst_samples) <= elec_spike_times) & (elec_spike_times <= (index+num_burst_samples))]
+                burst_spike_times = elec_spike_times[((index-num_burst_samples) <= elec_spike_times) & (elec_spike_times < (index+num_burst_samples))]
 
                 # convert to indices within burst spike array
-                burst_spike_indices = (burst_spike_times - (index-num_burst_samples) - 1).astype(int)
+                burst_spike_indices = (burst_spike_times - (index-num_burst_samples)).astype(int)
                 burst_spike_array[burst_idx, elec_idx, burst_spike_indices] = True
         burst_bounds = np.array(burst_windows)
 
