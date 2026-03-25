@@ -11,7 +11,7 @@ from specparam import SpectralModel
 from scipy.interpolate import interp1d
 import plotly.tools as tls
 import plotly.io as pio
-from element_array_ephys.ephys_no_curation import map_channel_to_electrode
+from element_array_ephys.ephys_no_curation import map_channel_to_electrode, get_probe_type
 from tensorpac import Pac, PreferredPhase, EventRelatedPac
 from tensorpac.stats import test_stationarity
 from tensorpac.utils import pac_trivec, ITC, PeakLockedTF
@@ -730,12 +730,8 @@ class STTFA(dj.Computed):
         num_rand_iterations = 1000 # number of randomizations for rSTTFA
 
         # find the channel idx for the spectrogram electrode
-        probe_type = set((ephys.EphysSessionProbe * probe.Probe & key).fetch('probe_type'))
-        if len(probe_type) != 1:
-            raise ValueError(
-                f"Couldn't identify probe type for {key} - expected one, found {len(probe_type)}"
-            )
-        channel_idx = map_channel_to_electrode(probe_type.pop(), input_indices=np.array([key['electrode']]), electrode_to_channel=True)[0]
+        probe_type = get_probe_type(key)
+        channel_idx = map_channel_to_electrode(probe_type, input_indices=np.array([key['electrode']]), electrode_to_channel=True)[0]
 
         # fetch MUA parameters within the spectrogram time window
         spike_indices, start_times = (mua.MUASpikes.Channel & 

@@ -1,7 +1,7 @@
 # Import Modules
 import datajoint as dj
 from workflow import DB_PREFIX
-from element_array_ephys.ephys_no_curation import map_channel_to_electrode
+from element_array_ephys.ephys_no_curation import map_channel_to_electrode, get_probe_type
 
 from workflow.pipeline import culture, ephys, mua, probe
 
@@ -92,12 +92,8 @@ class FrameAnalysis(dj.Computed):
                                                     ).fetch('spike_rate', 'start_time', 'channel_idx')
 
         # convert channel ids to electrode indices
-        probe_type = set((ephys.EphysSessionProbe * probe.Probe & key).fetch('probe_type'))
-        if len(probe_type) != 1:
-            raise ValueError(
-                f"Couldn't identify probe type for {key} - expected one, found {len(probe_type)}"
-            )
-        electrode_ids = map_channel_to_electrode(probe_type.pop(), input_indices=channel_ids)
+        probe_type = get_probe_type(key)
+        electrode_ids = map_channel_to_electrode(probe_type, input_indices=channel_ids)
 
         time_vector, population_firing_vector = create_population_firing_vector(spike_rates, start_times, electrode_ids, num_elec_inside)
 

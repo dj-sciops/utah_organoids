@@ -11,7 +11,7 @@ from spikeinterface.extractors.extractor_classes import (
       recording_extractor_full_dict,
 )      
 from element_interface.utils import find_full_path
-from element_array_ephys.ephys_no_curation import map_channel_to_electrode
+from element_array_ephys.ephys_no_curation import map_channel_to_electrode, get_probe_type
 from scipy.signal import find_peaks
 import bottleneck as bn
 from scipy.ndimage import gaussian_filter1d
@@ -591,12 +591,8 @@ class PopulationBursts(dj.Computed):
             raise ValueError(f"Not all time windows have MUA spike data for {key} - cannot perform burst detection")
 
         # convert channel ids to electrode indices
-        probe_type = set((ephys.EphysSessionProbe * probe.Probe & key).fetch('probe_type'))
-        if len(probe_type) != 1:
-            raise ValueError(
-                f"Couldn't identify probe type for {key} - expected one, found {len(probe_type)}"
-            )
-        electrode_ids = map_channel_to_electrode(probe_type.pop(), input_indices=channel_ids)
+        probe_type = get_probe_type(key)
+        electrode_ids = map_channel_to_electrode(probe_type, input_indices=channel_ids)
 
         # get array of all spike times (relative to frame start)
         start_ms = (start_times - key['start_time']).astype('timedelta64[ms]') / np.timedelta64(1, 'ms') # ms from frame start
