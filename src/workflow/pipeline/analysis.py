@@ -1029,6 +1029,33 @@ class EventBasedCoupling(dj.Computed):
         # remove boundary spikes
         spike_times = spike_times[(spike_times > spike_buffer) & (spike_times < time_vector[-1] - spike_buffer)] # remove boundary spikes
 
+        # insert empty arrays if no spikes remain after removing boundary spikes
+        if len(spike_times) == 0:
+            self.insert1(
+                {
+                    **key,
+                    'pha_vec': np.array([]),
+                    'amp_vec': np.array([]),
+                    't': np.array([]),
+                    'erpac_array': np.array([]),
+                }
+            )
+
+            self.InterTrialCoherence.insert1(
+                {
+                    **key,
+                    'itc_array': np.array([]),
+                }
+            )
+
+            self.PeakLockedTF.insert1(
+                {
+                    **key,
+                    'pltf_array': np.array([]),
+                }
+            )
+            return
+
         # loop through spikes and extract lfp segments
         lfp_epochs_itc = []
         n_samples = int(spike_buffer * lfp_fs) + edge # number of samples to extract on either side of spike time (accounting for edge trimming)
