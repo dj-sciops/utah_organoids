@@ -466,6 +466,10 @@ class TraceSession(dj.Manual):
 
 @schema
 class TracePlot(dj.Computed):
+    """
+    Generate plot of the inserted MUA trace with detected spike peaks.
+    """
+    
     definition = """
     -> TraceSession
     ---
@@ -560,7 +564,7 @@ class BurstSession(dj.Manual):
 @schema
 class PopulationBursts(dj.Computed):
     """
-    Detect population bursts within an active time frame using specified burst detection parameters.
+    Detect population bursts within a time frame using specified burst detection parameters.
     """
 
     definition = """
@@ -719,3 +723,4 @@ class PopulationBursts(dj.Computed):
             'burst_spike_array': burst_spike_array,
             'weighted_sttc': weighted_sttc,
         })
+        

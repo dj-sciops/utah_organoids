@@ -3,10 +3,9 @@ import datajoint as dj
 from workflow import DB_PREFIX
 from element_array_ephys.ephys_no_curation import map_channel_to_electrode, get_probe_type
 
-from workflow.pipeline import culture, ephys, mua, probe
+from workflow.pipeline import culture, ephys, mua
 
 import numpy as np
-from random import randint
 import bottleneck as bn
 from scipy.signal import find_peaks
 from datetime import timedelta

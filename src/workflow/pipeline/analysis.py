@@ -14,17 +14,12 @@ import plotly.io as pio
 from element_array_ephys.ephys_no_curation import map_channel_to_electrode, get_probe_type
 from element_interface.utils import find_full_path
 from tensorpac import Pac, PreferredPhase, EventRelatedPac
-from tensorpac.stats import test_stationarity
-from tensorpac.utils import pac_trivec, ITC, PeakLockedTF
-import intanrhdreader
-from intanrhdreader import read_header
-import spikeinterface as si
+from tensorpac.utils import ITC, PeakLockedTF
 from spikeinterface.extractors.extractor_classes import (
       recording_extractor_full_dict,
 )      
 from .ephys import ephys, probe
-# from .mua import mua
-from workflow.pipeline import mua, culture
+from workflow.pipeline import mua
 
 from workflow import DB_PREFIX, ORG_NAME, WORKFLOW_NAME
 
@@ -470,7 +465,7 @@ class FOOOFandFBOSCSession(dj.Manual):
 @schema
 class FOOOFAnalysis(dj.Computed):
     """
-    Docstring for FOOOFandFBOSCAnalysis
+    Runs FOOOF's spectral decomposition analysis, then quantifies oscillatory activity using fBOSC.
     """
 
     definition = """
