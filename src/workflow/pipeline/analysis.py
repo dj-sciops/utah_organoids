@@ -1154,6 +1154,9 @@ class LongitudinalSpectralAnalysis(dj.Computed):
     """
 
     class BandPower(dj.Part):
+        """
+        Mean frequency band power per electrode for a single recording file.
+        """
 
         definition = """
         -> master
