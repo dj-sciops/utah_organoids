@@ -74,8 +74,10 @@ class FrameAnalysis(dj.Computed):
 
     def make(self, key):
         
-        # fetch electrode parameters
-        num_elec_inside = (culture.NumElectrodesInside & key).fetch1('num_electrodes')
+        # fetch electrode count from implantation image (source of truth)
+        num_elec_inside = (culture.OrganoidImplantationImage & {"organoid_id": key["organoid_id"]}).fetch1("num_electrodes_inside")
+        if num_elec_inside is None:
+            raise ValueError(f"num_electrodes_inside is not set in OrganoidImplantationImage for organoid_id='{key['organoid_id']}'")
 
         # fetch frame parameters
         num_frames, min_per_frame = (TimeFrameParamset & key).fetch1('num_frames', 'min_per_frame')

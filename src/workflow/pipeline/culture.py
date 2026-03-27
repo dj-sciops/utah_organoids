@@ -198,8 +198,8 @@ class OrganoidImplantationImage(dj.Manual):
     definition = """
     -> Experiment  # Use the Control experiment entry for each organoid
     ---
-    organoid_implantation_image: attach
     num_electrodes_inside=null: int  # number of electrodes inside the organoid (as seen in implantation image)
+    organoid_implantation_image: attach
     """
 
 

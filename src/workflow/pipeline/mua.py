@@ -598,8 +598,10 @@ class PopulationBursts(dj.Computed):
         rel_spike_times_ms = spike_indices / fs / (np.timedelta64(1,'ms')/np.timedelta64(1,'s')) 
         spike_times_ms = rel_spike_times_ms + start_ms
 
-        # remove electrodes outside organoid
-        num_elec_inside = (culture.NumElectrodesInside & f"organoid_id='{key['organoid_id']}'").fetch1('num_electrodes')
+        # fetch electrode count from implantation image (source of truth)
+        num_elec_inside = (culture.OrganoidImplantationImage & {"organoid_id": key["organoid_id"]}).fetch1("num_electrodes_inside")
+        if num_elec_inside is None:
+            raise ValueError(f"num_electrodes_inside is not set in OrganoidImplantationImage for organoid_id='{key['organoid_id']}'")
         elec_bool = (electrode_ids < num_elec_inside)
 
         # create population spike time series (1 ms bins)
