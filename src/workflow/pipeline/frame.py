@@ -154,8 +154,8 @@ def find_active_frames(start_times, time_vector, filtered_population_firing_vect
     frame_indices, properties = find_peaks(filtered_population_firing_vector, height=0, distance=min_per_frame)
     frame_amplitudes = properties['peak_heights']
 
-    # remove boundary peaks (these will raise an error when trying to extract burst windows)
-    boundary_bool = (min_per_frame <= frame_indices)
+    # remove boundary peaks (lower and upper) — frame window must fit within time_vector
+    boundary_bool = (min_per_frame <= frame_indices) & (frame_indices + 1 < len(time_vector))
 
     frame_indices = frame_indices[boundary_bool]
     frame_amplitudes = frame_amplitudes[boundary_bool]
