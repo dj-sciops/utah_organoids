@@ -1192,16 +1192,14 @@ class LongitudinalSpectralAnalysis(dj.Computed):
         downsample_factor = int(np.round(true_ratio))
 
         # Get LFP indices (row index of the LFP matrix to be used)
-        port_id = set((ephys.EphysSessionProbe & key).fetch("port_id"))
-        # Figure out `Port ID` from the existing EphysSession
         if not (ephys.EphysSessionProbe & key):
             raise ValueError(
-                f"No EphysSessionProbe found for the {key} - cannot determine the port ID"
+                f"No EphysSessionProbe found for {key} - cannot determine the port ID"
             )
-        # Check if there are multiple port IDs for the same experiment, if so, it needs to be fixed in the EphysSessionProbe table
+        port_id = set((ephys.EphysSessionProbe & key).fetch("port_id"))
         if len(port_id) > 1:
             raise ValueError(
-                f"Multiple Port IDs found for the {key} - cannot determine the port ID"
+                f"Multiple Port IDs found for {key} - cannot determine the port ID"
             )
         port_id = port_id.pop()
 
