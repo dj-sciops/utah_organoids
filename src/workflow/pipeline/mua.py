@@ -12,9 +12,6 @@ from element_array_ephys.ephys_no_curation import map_channel_to_electrode, get_
 from scipy.signal import find_peaks
 import bottleneck as bn
 from scipy.ndimage import gaussian_filter1d
-import neo
-import quantities as pq
-from elephant.spike_train_correlation import spike_time_tiling_coefficient
 
 from workflow import DB_PREFIX
 from workflow.pipeline import culture
@@ -577,6 +574,9 @@ class PopulationBursts(dj.Computed):
     """
 
     def make(self, key):
+        import neo
+        import quantities as pq
+        from elephant.spike_train_correlation import spike_time_tiling_coefficient
 
         # define parameters
         fs = 20000 # sampling frequency in Hz
@@ -710,8 +710,13 @@ class PopulationBursts(dj.Computed):
                     # calculate weight (number of spike pairs)
                     weight_array[b_idx, i, j] = len(spike_times_i) * len(spike_times_j)
 
-        # determine weighted average STTC for each burst
-        weighted_sttc = (sttc_array * weight_array).sum(axis=(1,2)) / weight_array.sum(axis=(1,2))
+        # determine weighted average STTC for each burst; NaN for bursts with no spike pairs
+        total_weight = weight_array.sum(axis=(1, 2))
+        weighted_sttc = np.where(
+            total_weight > 0,
+            (sttc_array * weight_array).sum(axis=(1, 2)) / total_weight,
+            np.nan,
+        )
 
         # insert into table
         self.insert1({
