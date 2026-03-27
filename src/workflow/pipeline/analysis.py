@@ -19,7 +19,7 @@ from spikeinterface.extractors.extractor_classes import (
       recording_extractor_full_dict,
 )      
 from .ephys import ephys, probe
-from workflow.pipeline import mua
+from workflow.pipeline import mua, frame
 
 from workflow import DB_PREFIX, ORG_NAME, WORKFLOW_NAME
 
@@ -249,6 +249,16 @@ class Coherence(dj.Computed):
     ---
     execution_duration: float  # Time taken to compute coherence (in minutes)
     """
+
+    @property
+    def key_source(self):
+
+        # rename frame table to match ephys session notation
+        frame_entries = frame.FrameAnalysis.ActiveTimeFrames.proj(
+                            start_time = "frame_start",
+                            end_time = "frame_end"
+                        )
+        return ephys.LFP & frame_entries # only process LFP sessions that have active time frames defined
 
     class Connectivity(dj.Part):
         """
