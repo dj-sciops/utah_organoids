@@ -577,7 +577,7 @@ class PopulationBursts(dj.Computed):
         from elephant.spike_train_correlation import spike_time_tiling_coefficient
 
         # define parameters
-        fs = 20000 # sampling frequency in Hz
+        fs = 20000 # sampling frequency in Hz — Intan acquisition rate; hardcoded since MUASpikes.spike_indices are stored as raw sample indices at this rate and changing acquisition systems would require repopulating MUASpikes
         burst_extract_dur = np.timedelta64(1, 's') # time for extracting burst spike array (+ and - from peak)
         burst_bound_thresh = 0.1 # threshold for defining burst bounds (percentage of peak height)
 
