@@ -303,7 +303,7 @@ class Coherence(dj.Computed):
         self.insert1(
             {
                 **key,
-                "execution_duration": 0, # placeholder
+                "execution_duration": 0, # transient; updated with actual duration via update1() below
             }
         )
 
@@ -1240,7 +1240,7 @@ class LongitudinalSpectralAnalysis(dj.Computed):
         self.insert1(
             {
                 **key,
-                "execution_duration": 0, # placeholder for now - will add timing code later
+                "execution_duration": 0, # transient; updated with actual duration via update1() below
                 "channel_ids": channel_ids,
             }
         )
