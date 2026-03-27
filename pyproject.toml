@@ -47,8 +47,8 @@ dependencies = [
     "neo>=0.14.4",
     "quantities>=0.16.4",
     "elephant>=1.1.1",
-    "specparam @ git+https://github.com/fooof-tools/fooof.git",
-    "tensorpac @ git+https://github.com/EtienneCmb/tensorpac.git",
+    "specparam>=2.0.0",
+    "tensorpac>=0.6.5",
 ]
 
 [project.optional-dependencies]
