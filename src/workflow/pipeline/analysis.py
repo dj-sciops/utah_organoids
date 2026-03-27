@@ -15,9 +15,6 @@ from element_array_ephys.ephys_no_curation import map_channel_to_electrode, get_
 from element_interface.utils import find_full_path
 from tensorpac import Pac, PreferredPhase, EventRelatedPac
 from tensorpac.utils import ITC, PeakLockedTF
-from spikeinterface.extractors.extractor_classes import (
-      recording_extractor_full_dict,
-)      
 from .ephys import ephys, probe
 from workflow.pipeline import mua
 
@@ -151,10 +148,10 @@ class LFPSpectrogram(dj.Computed):
         std_power: float             # Std dev of band power (μV²/Hz)
         """
 
-    # @property
-    # def key_source(self):
-    #     # Use only the default param_idx for high-gamma windowing params for automated population
-    #     return ephys.LFP.Trace * SpectrogramParameters & "param_idx=2"
+    @property
+    def key_source(self):
+        # Use only the default param_idx for high-gamma windowing params for automated population
+        return ephys.LFP.Trace * SpectrogramParameters & "param_idx=2"
 
     def make(self, key):
         # Load LFP trace and sampling rate
@@ -470,7 +467,7 @@ class FOOOFAnalysis(dj.Computed):
 
     definition = """
     -> FOOOFandFBOSCSession
-    spec_param_idx: int  # Reference to SpectrogramParamset
+    -> SpectrogramParameters
     ---
     plot: longblob  # Plot of FOOOF fit (as json)
     summary_params: longblob  # FOOOF parameters over entire session
@@ -494,6 +491,10 @@ class FOOOFAnalysis(dj.Computed):
         oscillation_times: longblob  # Time points where oscillations were detected in this band (s from session start)
         oscillation_heights: longblob  # Height of oscillations detected in this band (above aperiodic fit)
         """
+
+    @property
+    def key_source(self):
+        return FOOOFandFBOSCSession * SpectrogramParameters & LFPSpectrogram
 
     def make(self, key):
 
@@ -636,7 +637,6 @@ class FOOOFAnalysis(dj.Computed):
         self.insert1(
             {
                 **key,
-                "spec_param_idx": (LFPSpectrogram & key).fetch("param_idx")[0],
                 "plot": json_fig,
                 "summary_params": summary_params,
                 "frequency": bounded_frequency,
@@ -654,7 +654,6 @@ class FOOOFAnalysis(dj.Computed):
             self.FBOSCAnalysis.insert1(
                 {
                     **key,
-                    "spec_param_idx": (LFPSpectrogram & key).fetch("param_idx")[0],
                     "band_name": band_name,
                     "oscillation_times": epoch_data[f"{band_name}_times"],
                     "oscillation_heights": epoch_data[f"{band_name}_heights"],
@@ -1164,6 +1163,8 @@ class LongitudinalSpectralAnalysis(dj.Computed):
         """
 
     def make(self, key):
+        from spikeinterface.extractors.extractor_classes import recording_extractor_full_dict
+
         execution_time = datetime.now(timezone.utc)
 
         POWERLINE_NOISE_FREQ = 60  # Default powerline noise frequency in Hz

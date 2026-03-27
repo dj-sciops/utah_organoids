@@ -7,9 +7,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats
 import spikeinterface as si
-from spikeinterface.extractors.extractor_classes import (
-      recording_extractor_full_dict,
-)      
 from element_interface.utils import find_full_path
 from element_array_ephys.ephys_no_curation import map_channel_to_electrode, get_probe_type
 from scipy.signal import find_peaks
@@ -385,6 +382,8 @@ def _build_si_recording_object(files, acq_software="intan"):
         si_recording: SI recording object
     """
     
+    from spikeinterface.extractors.extractor_classes import recording_extractor_full_dict
+
     si_recording = None
 
     si_extractor = recording_extractor_full_dict[acq_software.replace(" ", "").lower()]
