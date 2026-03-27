@@ -509,8 +509,10 @@ class TracePlot(dj.Computed):
         )
 
         # get electrode
-        probe_type = get_probe_type(key)
-        electrode = map_channel_to_electrode(probe_type, input_indices=np.array([channel_idx]))[0]
+        probe_type = set((ephys.EphysSessionProbe * probe.Probe & f"organoid_id = '{key['organoid_id']}'").fetch('probe_type'))
+        if len(probe_type) != 1:
+            raise ValueError(f"Expected exactly one probe type for organoid_id='{key['organoid_id']}', found {len(probe_type)}")
+        electrode = map_channel_to_electrode(probe_type.pop(), input_indices=np.array([channel_idx]))[0]
 
         self.insert1(
             {
