@@ -75,7 +75,12 @@ class FrameAnalysis(dj.Computed):
     def make(self, key):
         
         # fetch electrode count from implantation image (source of truth)
-        num_elec_inside = (culture.OrganoidImplantationImage & {"organoid_id": key["organoid_id"]}).fetch1("num_electrodes_inside")
+        img_query = culture.OrganoidImplantationImage & {"organoid_id": key["organoid_id"]}
+        if not img_query:
+            raise ValueError(f"No OrganoidImplantationImage entry found for organoid_id='{key['organoid_id']}' - insert a row before running this computation")
+        if len(img_query) > 1:
+            raise ValueError(f"Multiple OrganoidImplantationImage entries found for organoid_id='{key['organoid_id']}' - expected exactly one")
+        num_elec_inside = img_query.fetch1("num_electrodes_inside")
         if num_elec_inside is None:
             raise ValueError(f"num_electrodes_inside is not set in OrganoidImplantationImage for organoid_id='{key['organoid_id']}'")
 
