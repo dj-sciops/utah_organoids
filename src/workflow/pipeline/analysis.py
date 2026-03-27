@@ -278,7 +278,7 @@ class Coherence(dj.Computed):
         execution_time = datetime.now(timezone.utc)
 
         # define parameters
-        fs = 2500
+        fs = (ephys.LFP & key).fetch1("lfp_sampling_rate")
         max_freq = 200 # Hz
         tw = 1
         nperseg = int(tw*fs) # samples per window
