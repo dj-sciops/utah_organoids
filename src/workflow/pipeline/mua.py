@@ -609,7 +609,7 @@ class PopulationBursts(dj.Computed):
         num_elec_inside = img_query.fetch1("num_electrodes_inside")
         if num_elec_inside is None:
             raise ValueError(f"num_electrodes_inside is not set in OrganoidImplantationImage for organoid_id='{key['organoid_id']}'")
-        elec_bool = (electrode_ids < num_elec_inside)
+        elec_bool = (electrode_ids >= 0) & (electrode_ids < num_elec_inside)
 
         # create population spike time series (1 ms bins)
         time_bins = np.arange(0, np.timedelta64(key['end_time'] - key['start_time'], 'ms') / np.timedelta64(1, 'ms') + 1) # 1 ms bins

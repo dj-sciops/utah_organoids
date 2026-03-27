@@ -140,7 +140,7 @@ def create_population_firing_vector(spike_rates, start_times, electrode_ids, num
         time_bool = (start_times == start_time)
 
         # only consider electrodes inside organoid
-        elec_bool = (electrode_ids < num_elec_inside)
+        elec_bool = (electrode_ids >= 0) & (electrode_ids < num_elec_inside)
 
         # sum valid electrodes for each time window (minute)
         time_index = np.where(time_vector == np.datetime64(start_time, 'm'))[0][0]
