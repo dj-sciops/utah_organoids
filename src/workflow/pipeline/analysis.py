@@ -15,9 +15,6 @@ from element_array_ephys.ephys_no_curation import map_channel_to_electrode, get_
 from element_interface.utils import find_full_path
 from tensorpac import Pac, PreferredPhase, EventRelatedPac
 from tensorpac.utils import ITC, PeakLockedTF
-from spikeinterface.extractors.extractor_classes import (
-      recording_extractor_full_dict,
-)      
 from .ephys import ephys, probe
 from workflow.pipeline import mua, frame
 
@@ -151,10 +148,10 @@ class LFPSpectrogram(dj.Computed):
         std_power: float             # Std dev of band power (μV²/Hz)
         """
 
-    # @property
-    # def key_source(self):
-    #     # Use only the default param_idx for high-gamma windowing params for automated population
-    #     return ephys.LFP.Trace * SpectrogramParameters & "param_idx=2"
+    @property
+    def key_source(self):
+        # Use only the default param_idx for high-gamma windowing params for automated population
+        return ephys.LFP.Trace * SpectrogramParameters & "param_idx=2"
 
     def make(self, key):
         # Load LFP trace and sampling rate
@@ -291,7 +288,7 @@ class Coherence(dj.Computed):
         execution_time = datetime.now(timezone.utc)
 
         # define parameters
-        fs = 2500
+        fs = (ephys.LFP & key).fetch1("lfp_sampling_rate")
         max_freq = 200 # Hz
         tw = 1
         nperseg = int(tw*fs) # samples per window
@@ -316,7 +313,7 @@ class Coherence(dj.Computed):
         self.insert1(
             {
                 **key,
-                "execution_duration": 0, # placeholder
+                "execution_duration": 0, # transient; updated with actual duration via update1() below
             }
         )
 
@@ -480,7 +477,7 @@ class FOOOFAnalysis(dj.Computed):
 
     definition = """
     -> FOOOFandFBOSCSession
-    spec_param_idx: int  # Reference to SpectrogramParamset
+    -> SpectrogramParameters
     ---
     plot: longblob  # Plot of FOOOF fit (as json)
     summary_params: longblob  # FOOOF parameters over entire session
@@ -504,6 +501,10 @@ class FOOOFAnalysis(dj.Computed):
         oscillation_times: longblob  # Time points where oscillations were detected in this band (s from session start)
         oscillation_heights: longblob  # Height of oscillations detected in this band (above aperiodic fit)
         """
+
+    @property
+    def key_source(self):
+        return FOOOFandFBOSCSession * SpectrogramParameters & LFPSpectrogram
 
     def make(self, key):
 
@@ -646,7 +647,6 @@ class FOOOFAnalysis(dj.Computed):
         self.insert1(
             {
                 **key,
-                "spec_param_idx": (LFPSpectrogram & key).fetch("param_idx")[0],
                 "plot": json_fig,
                 "summary_params": summary_params,
                 "frequency": bounded_frequency,
@@ -664,7 +664,6 @@ class FOOOFAnalysis(dj.Computed):
             self.FBOSCAnalysis.insert1(
                 {
                     **key,
-                    "spec_param_idx": (LFPSpectrogram & key).fetch("param_idx")[0],
                     "band_name": band_name,
                     "oscillation_times": epoch_data[f"{band_name}_times"],
                     "oscillation_heights": epoch_data[f"{band_name}_heights"],
@@ -1165,6 +1164,9 @@ class LongitudinalSpectralAnalysis(dj.Computed):
     """
 
     class BandPower(dj.Part):
+        """
+        Mean frequency band power per electrode for a single recording file.
+        """
 
         definition = """
         -> master
@@ -1174,6 +1176,8 @@ class LongitudinalSpectralAnalysis(dj.Computed):
         """
 
     def make(self, key):
+        from spikeinterface.extractors.extractor_classes import recording_extractor_full_dict
+
         execution_time = datetime.now(timezone.utc)
 
         POWERLINE_NOISE_FREQ = 60  # Default powerline noise frequency in Hz
@@ -1201,16 +1205,14 @@ class LongitudinalSpectralAnalysis(dj.Computed):
         downsample_factor = int(np.round(true_ratio))
 
         # Get LFP indices (row index of the LFP matrix to be used)
-        port_id = set((ephys.EphysSessionProbe & key).fetch("port_id"))
-        # Figure out `Port ID` from the existing EphysSession
         if not (ephys.EphysSessionProbe & key):
             raise ValueError(
-                f"No EphysSessionProbe found for the {key} - cannot determine the port ID"
+                f"No EphysSessionProbe found for {key} - cannot determine the port ID"
             )
-        # Check if there are multiple port IDs for the same experiment, if so, it needs to be fixed in the EphysSessionProbe table
+        port_id = set((ephys.EphysSessionProbe & key).fetch("port_id"))
         if len(port_id) > 1:
             raise ValueError(
-                f"Multiple Port IDs found for the {key} - cannot determine the port ID"
+                f"Multiple Port IDs found for {key} - cannot determine the port ID"
             )
         port_id = port_id.pop()
 
@@ -1248,7 +1250,7 @@ class LongitudinalSpectralAnalysis(dj.Computed):
         self.insert1(
             {
                 **key,
-                "execution_duration": 0, # placeholder for now - will add timing code later
+                "execution_duration": 0, # transient; updated with actual duration via update1() below
                 "channel_ids": channel_ids,
             }
         )

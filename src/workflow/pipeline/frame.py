@@ -74,8 +74,15 @@ class FrameAnalysis(dj.Computed):
 
     def make(self, key):
         
-        # fetch electrode parameters
-        num_elec_inside = (culture.NumElectrodesInside & key).fetch1('num_electrodes')
+        # fetch electrode count from implantation image (source of truth)
+        img_query = culture.OrganoidImplantationImage & {"organoid_id": key["organoid_id"]}
+        if not img_query:
+            raise ValueError(f"No OrganoidImplantationImage entry found for organoid_id='{key['organoid_id']}' - insert a row before running this computation")
+        if len(img_query) > 1:
+            raise ValueError(f"Multiple OrganoidImplantationImage entries found for organoid_id='{key['organoid_id']}' - expected exactly one")
+        num_elec_inside = img_query.fetch1("num_electrodes_inside")
+        if num_elec_inside is None:
+            raise ValueError(f"num_electrodes_inside is not set in OrganoidImplantationImage for organoid_id='{key['organoid_id']}'")
 
         # fetch frame parameters
         num_frames, min_per_frame = (TimeFrameParamset & key).fetch1('num_frames', 'min_per_frame')
@@ -133,7 +140,7 @@ def create_population_firing_vector(spike_rates, start_times, electrode_ids, num
         time_bool = (start_times == start_time)
 
         # only consider electrodes inside organoid
-        elec_bool = (electrode_ids < num_elec_inside)
+        elec_bool = (electrode_ids >= 0) & (electrode_ids < num_elec_inside)
 
         # sum valid electrodes for each time window (minute)
         time_index = np.where(time_vector == np.datetime64(start_time, 'm'))[0][0]
@@ -147,8 +154,8 @@ def find_active_frames(start_times, time_vector, filtered_population_firing_vect
     frame_indices, properties = find_peaks(filtered_population_firing_vector, height=0, distance=min_per_frame)
     frame_amplitudes = properties['peak_heights']
 
-    # remove boundary peaks (these will raise an error when trying to extract burst windows)
-    boundary_bool = (min_per_frame <= frame_indices)
+    # remove boundary peaks (lower and upper) — frame window must fit within time_vector
+    boundary_bool = (min_per_frame <= frame_indices) & (frame_indices + 1 < len(time_vector))
 
     frame_indices = frame_indices[boundary_bool]
     frame_amplitudes = frame_amplitudes[boundary_bool]

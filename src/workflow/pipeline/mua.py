@@ -7,17 +7,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats
 import spikeinterface as si
-from spikeinterface.extractors.extractor_classes import (
-      recording_extractor_full_dict,
-)      
 from element_interface.utils import find_full_path
 from element_array_ephys.ephys_no_curation import map_channel_to_electrode, get_probe_type
 from scipy.signal import find_peaks
 import bottleneck as bn
 from scipy.ndimage import gaussian_filter1d
-import neo
-import quantities as pq
-from elephant.spike_train_correlation import spike_time_tiling_coefficient
 
 from workflow import DB_PREFIX
 from workflow.pipeline import culture
@@ -385,6 +379,8 @@ def _build_si_recording_object(files, acq_software="intan"):
         si_recording: SI recording object
     """
     
+    from spikeinterface.extractors.extractor_classes import recording_extractor_full_dict
+
     si_recording = None
 
     si_extractor = recording_extractor_full_dict[acq_software.replace(" ", "").lower()]
@@ -515,9 +511,7 @@ class TracePlot(dj.Computed):
         # get electrode
         probe_type = set((ephys.EphysSessionProbe * probe.Probe & f"organoid_id = '{key['organoid_id']}'").fetch('probe_type'))
         if len(probe_type) != 1:
-            raise ValueError(
-                f"Couldn't identify probe type for {key} - expected one, found {len(probe_type)}"
-            )
+            raise ValueError(f"Expected exactly one probe type for organoid_id='{key['organoid_id']}', found {len(probe_type)}")
         electrode = map_channel_to_electrode(probe_type.pop(), input_indices=np.array([channel_idx]))[0]
 
         self.insert1(
@@ -578,9 +572,12 @@ class PopulationBursts(dj.Computed):
     """
 
     def make(self, key):
+        import neo
+        import quantities as pq
+        from elephant.spike_train_correlation import spike_time_tiling_coefficient
 
         # define parameters
-        fs = 20000 # sampling frequency in Hz
+        fs = 20000 # sampling frequency in Hz — Intan acquisition rate; hardcoded since MUASpikes.spike_indices are stored as raw sample indices at this rate and changing acquisition systems would require repopulating MUASpikes
         burst_extract_dur = np.timedelta64(1, 's') # time for extracting burst spike array (+ and - from peak)
         burst_bound_thresh = 0.1 # threshold for defining burst bounds (percentage of peak height)
 
@@ -603,9 +600,16 @@ class PopulationBursts(dj.Computed):
         rel_spike_times_ms = spike_indices / fs / (np.timedelta64(1,'ms')/np.timedelta64(1,'s')) 
         spike_times_ms = rel_spike_times_ms + start_ms
 
-        # remove electrodes outside organoid
-        num_elec_inside = (culture.NumElectrodesInside & f"organoid_id='{key['organoid_id']}'").fetch1('num_electrodes')
-        elec_bool = (electrode_ids < num_elec_inside)
+        # fetch electrode count from implantation image (source of truth)
+        img_query = culture.OrganoidImplantationImage & {"organoid_id": key["organoid_id"]}
+        if not img_query:
+            raise ValueError(f"No OrganoidImplantationImage entry found for organoid_id='{key['organoid_id']}' - insert a row before running this computation")
+        if len(img_query) > 1:
+            raise ValueError(f"Multiple OrganoidImplantationImage entries found for organoid_id='{key['organoid_id']}' - expected exactly one")
+        num_elec_inside = img_query.fetch1("num_electrodes_inside")
+        if num_elec_inside is None:
+            raise ValueError(f"num_electrodes_inside is not set in OrganoidImplantationImage for organoid_id='{key['organoid_id']}'")
+        elec_bool = (electrode_ids >= 0) & (electrode_ids < num_elec_inside)
 
         # create population spike time series (1 ms bins)
         time_bins = np.arange(0, np.timedelta64(key['end_time'] - key['start_time'], 'ms') / np.timedelta64(1, 'ms') + 1) # 1 ms bins
@@ -711,8 +715,13 @@ class PopulationBursts(dj.Computed):
                     # calculate weight (number of spike pairs)
                     weight_array[b_idx, i, j] = len(spike_times_i) * len(spike_times_j)
 
-        # determine weighted average STTC for each burst
-        weighted_sttc = (sttc_array * weight_array).sum(axis=(1,2)) / weight_array.sum(axis=(1,2))
+        # determine weighted average STTC for each burst; NaN for bursts with no spike pairs
+        total_weight = weight_array.sum(axis=(1, 2))
+        weighted_sttc = np.where(
+            total_weight > 0,
+            (sttc_array * weight_array).sum(axis=(1, 2)) / total_weight,
+            np.nan,
+        )
 
         # insert into table
         self.insert1({
